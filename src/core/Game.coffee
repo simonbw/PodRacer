@@ -1,6 +1,7 @@
-GameRenderer = require 'GameRenderer'
-IO = require 'IO'
+GameRenderer = require 'core/GameRenderer'
+IO = require 'core/IO'
 p2 = require 'p2'
+Profiler = require 'util/Profiler'
 
 # Top Level control structure
 class Game
@@ -25,7 +26,17 @@ class Game
 
     @framerate = 60
 
-  # 
+    @profiler = new Profiler()
+    @profiler.addPhase('frame')
+    @profiler.addPhase('system', 'frame')
+    @profiler.addPhase('loop', 'frame')
+    @profiler.addPhase('cleanup', 'loop')
+    @profiler.addPhase('tick', 'loop')
+    @profiler.addPhase('physics', 'loop')
+    @profiler.addPhase('afterTick', 'loop')
+    @profiler.addPhase('render', 'loop')
+
+  # Length of 1 frame in seconds
   @property 'timestep',
     get: ->
       return 1 / @framerate
@@ -38,12 +49,31 @@ class Game
   
   # The main loop. Calls handlers, applies physics, and renders.
   loop: () =>
+    @profiler.end('system')
+    @profiler.end('frame')
+    @profiler.start('frame')
+
+    @profiler.start('loop')
     window.requestAnimationFrame(@loop)
+
+    @profiler.start('tick')
     @tick()
+    @profiler.end('tick')
+
+    @profiler.start('physics')
     @world.step(@timestep)
+    @profiler.end('physics')
+
+    @profiler.start('afterTick')
     @afterTick()
+    @profiler.end('afterTick')
+
+    @profiler.start('render')
     @render()
-    @renderer.render()
+    @profiler.end('render')
+
+    @profiler.end('loop')
+    @profiler.start('system')
 
   # Add an entity to the game.
   addEntity: (entity) =>
@@ -65,6 +95,9 @@ class Game
     if entity.onRightDown? then @io.on(IO.RIGHT_DOWN, entity.onRightDown)
     if entity.onRightUp? then @io.on(IO.RIGHT_UP, entity.onRightUp)
     if entity.onKeyDown? then @io.on(IO.KEY_DOWN, entity.onKeyDown)
+    if entity.onKeyUp? then @io.on(IO.KEY_UP, entity.onKeyUp)
+    if entity.onButtonDown? then @io.on(IO.BUTTON_DOWN, entity.onButtonDown)
+    if entity.onButtonUp? then @io.on(IO.BUTTON_UP, entity.onButtonUp)
 
     if entity.sprite? then @renderer.add(entity.sprite, entity.layer)
     if entity.body? then @world.addBody(entity.body)
@@ -83,6 +116,7 @@ class Game
   cleanupEntities: =>
     # TODO: Do we really need a separate removal pass?
     # TODO: I think this can be more efficient.
+    @profiler.start('cleanup')
     while @entities.toRemove.length
       entity = @entities.toRemove.pop()
       @entities.all.splice(@entities.all.indexOf(entity), 1)
@@ -105,10 +139,14 @@ class Game
       if entity.onRightDown? then @io.off(IO.RIGHT_DOWN, entity.onRightDown)
       if entity.onRightUp? then @io.off(IO.RIGHT_UP, entity.onRightUp)
       if entity.onKeyDown? then @io.off(IO.KEY_DOWN, entity.onKeyDown)
+      if entity.onKeyUp? then @io.off(IO.KEY_UP, entity.onKeyUp)
+      if entity.onButtonDown? then @io.off(IO.BUTTON_DOWN, entity.onButtonDown)
+      if entity.onButtonUp? then @io.off(IO.BUTTON_UP, entity.onButtonUp)
       
       if entity.destroyed?
         entity.destroyed(this)
       entity.game = null
+    @profiler.end('cleanup')
 
   # Called before physics
   tick: =>
@@ -124,12 +162,13 @@ class Game
     @cleanupEntities()
     for entity in @entities.afterTick
       entity.afterTick()
-  
+
   # Called before rendering
   render: =>
     @cleanupEntities()
     for entity in @entities.render
       entity.render()
+    @renderer.render()
 
   # Handle collision begin between things.
   # Fired during narrowphase of collision detection.
