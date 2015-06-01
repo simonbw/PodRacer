@@ -3,13 +3,13 @@
 # 
 # All the following methods are meant to be overridden.
 # 
-# @method #added()
+# @method #onAdd()
 #   Called right before being added to the game
 #
-# @method #render()
+# @method #onRender()
 #   Called before rendering
 #
-# @method #tick()
+# @method #onTick()
 #   Called right before physics
 #
 # @method #beforeTick()
@@ -18,10 +18,7 @@
 # @method #afterTick()
 #   Called after updating
 #
-# @method #afterAdded()
-#   Called after being added
-#
-# @method #destroed()
+# @method #onDestroy()
 #   Called after being removed from the game
 # 
 # @method #onClick()

@@ -38,7 +38,7 @@ class Camera extends Entity
       @velocity[1] = value
 
   # Called on render
-  render: () =>
+  onRender: () =>
     @x += @vx * @game.timestep
     @y += @vy * @game.timestep
 

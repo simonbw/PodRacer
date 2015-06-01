@@ -39,7 +39,7 @@ class Racer extends Entity
           damping: 0.5
         }))
 
-  added: (game) =>
+  onAdd: (game) =>
     console.log "racer added"
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
@@ -48,7 +48,7 @@ class Racer extends Entity
     for spring in @springs
       game.world.addSpring(spring)
 
-  render: () =>
+  onRender: () =>
     # TODO: Draw ropes
     # TODO: Draw engine couplings
 
@@ -57,7 +57,7 @@ class Racer extends Entity
     y = (@leftEngine.body.position[1] + @rightEngine.body.position[1] + @pod.body.position[1]) / 3.0
     return [x, y]
 
-  destroy: (game) =>
+  onDestroy: (game) =>
     for spring in @springs
       game.world.removeSpring(spring)
 

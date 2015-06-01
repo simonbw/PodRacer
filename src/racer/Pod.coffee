@@ -22,10 +22,10 @@ class Pod extends Entity
     shape = new p2.Rectangle(w, h)
     @body.addShape(shape, [0, 0], 0)
 
-  added: () =>
+  onAdd: () =>
     console.log "pod added"
 
-  render: () =>
+  onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
 
