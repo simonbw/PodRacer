@@ -13,7 +13,7 @@ class FPSCounter extends Entity
     @fps = 0.9 * @fps + 0.1 * (1000 / (now - @lastTick))
     @lastTick = now
 
-    if @frame % 60 == 0
+    if @frame % Math.round(@fps) == 0
       console.log Math.round(@fps)
 
 module.exports = FPSCounter

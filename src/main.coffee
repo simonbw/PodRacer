@@ -7,10 +7,18 @@ Function::property = (prop, desc) ->
 
 FPSCounter = require 'util/FPSCounter'
 Game = require 'core/Game'
+Racer = require 'racer/Racer'
+PlayerRacerController = require 'racer/PlayerRacerController'
+CameraController = require 'CameraController'
 
 # TODO: Preloader
 window.onload = ->
   console.log "loaded"
   window.game = game = new Game()
-  # game.addEntity(new FPSCounter())
+  racer = new Racer([0, 0])
+  racerController = new PlayerRacerController(racer)
+  cameraController = new CameraController(racer, game.camera)
+  game.addEntity(racer)
+  game.addEntity(racerController)
+  game.addEntity(cameraController)
   game.start()
