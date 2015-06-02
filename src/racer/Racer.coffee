@@ -40,9 +40,6 @@ class Racer extends Entity
           damping: 0.5
         }))
 
-    # sprite at (0,0) for drawing in world coordinates
-    @sprite = new Pixi.Graphics()
-
   onAdd: (game) =>
     console.log "racer added"
     game.addEntity(@pod)
@@ -54,8 +51,8 @@ class Racer extends Entity
 
   onRender: () =>
     # draw pod->engine ropes
-    @sprite.clear()
-    @sprite.lineStyle(0.05, 0xFFFFFF, 1.0)
+    # @sprite.clear()
+    # @sprite.lineStyle(0.05, 0xFFFFFF, 1.0)
 
     globalLeftEngine = [0,0]
     @leftEngine.body.toWorldFrame(globalLeftEngine, [0, 0.5 * @leftEngine.size[1]])
@@ -66,10 +63,13 @@ class Racer extends Entity
     globalPod = [0,0]
     @pod.body.toWorldFrame(globalPod, [0, -0.5 * @pod.size[1]])
 
-    @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
-    @sprite.lineTo(globalLeftEngine[0] - 0.5, globalLeftEngine[1] - 0.5)
-    @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
-    @sprite.lineTo(globalRightEngine[0] - 0.5, globalRightEngine[1] - 0.5)
+    # @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
+    # @sprite.lineTo(globalLeftEngine[0] - 0.5, globalLeftEngine[1] - 0.5)
+    # @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
+    # @sprite.lineTo(globalRightEngine[0] - 0.5, globalRightEngine[1] - 0.5)
+
+    @game.draw.line(globalPod, globalLeftEngine, 0.02)
+    @game.draw.line(globalPod, globalRightEngine, 0.02)
 
   getWorldCenter: () =>
     x = (@leftEngine.body.position[0] + @rightEngine.body.position[0] + @pod.body.position[0]) / 3.0

@@ -2,6 +2,7 @@ GameRenderer = require 'core/GameRenderer'
 IO = require 'core/IO'
 p2 = require 'p2'
 Profiler = require 'util/Profiler'
+Drawing = require 'util/Drawing'
 
 # Top Level control structure
 class Game
@@ -23,6 +24,7 @@ class Game
     @world.on('endContact', @endContact)
     @world.on('impact', @endContact)
     @io = new IO(@renderer.pixiRenderer.view)
+    @draw = new Drawing()
 
     @framerate = 60
 
@@ -44,6 +46,7 @@ class Game
   # Begin everything
   start: =>
     @addEntity(@camera)
+    @addEntity(@draw)
     console.log "Game Started"
     window.requestAnimationFrame(@loop)
   
