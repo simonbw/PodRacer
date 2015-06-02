@@ -12,6 +12,8 @@ class Pod extends Entity
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
 
+    @size = [w, h]
+
     @body = new p2.Body {
       position: [x, y]
       mass: 1

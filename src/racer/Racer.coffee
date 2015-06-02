@@ -2,6 +2,7 @@ Entity = require 'core/Entity'
 Engine = require 'racer/Engine'
 Pod = require 'racer/Pod'
 p2 = require 'p2'
+Pixi = require 'pixi.js'
 LinearSpring = p2.LinearSpring # TODO: Custom spring for ropes
 
 
@@ -39,6 +40,9 @@ class Racer extends Entity
           damping: 0.5
         }))
 
+    # sprite at (0,0) for drawing in world coordinates
+    @sprite = new Pixi.Graphics()
+
   added: (game) =>
     console.log "racer added"
     game.addEntity(@pod)
@@ -49,7 +53,23 @@ class Racer extends Entity
       game.world.addSpring(spring)
 
   render: () =>
-    # TODO: Draw ropes
+    # draw pod->engine ropes
+    @sprite.clear()
+    @sprite.lineStyle(0.05, 0xFFFFFF, 1.0)
+
+    globalLeftEngine = [0,0]
+    @leftEngine.body.toWorldFrame(globalLeftEngine, [0, 0.5 * @leftEngine.size[1]])
+
+    globalRightEngine = [0,0]
+    @rightEngine.body.toWorldFrame(globalRightEngine, [0, 0.5 * @rightEngine.size[1]])
+
+    globalPod = [0,0]
+    @pod.body.toWorldFrame(globalPod, [0, -0.5 * @pod.size[1]])
+
+    @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
+    @sprite.lineTo(globalLeftEngine[0] - 0.5, globalLeftEngine[1] - 0.5)
+    @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
+    @sprite.lineTo(globalRightEngine[0] - 0.5, globalRightEngine[1] - 0.5)
     # TODO: Draw engine couplings
 
   getWorldCenter: () =>
