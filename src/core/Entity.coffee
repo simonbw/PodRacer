@@ -1,3 +1,4 @@
+Pixi = require 'pixi.js'
 # Base class for everything in the game.
 # You should extend this to make anything.
 # 
@@ -43,9 +44,21 @@
 #   IO Event Handler
 # 
 class Entity
-
+  # Remove this entity from the game it is in
   destroy: () =>
     @game.removeEntity(this)
+
+  # Convert local coordinates to world coordinates
+  # Requires either a body or a sprite
+  localToWorld: (point) =>
+    if @body?
+      result = [0, 0]
+      @body.toWorldFrame(result, point)
+      return result
+    if @sprite?
+      result = @sprite.toGlobal(new Pixi.Point(point[0], point[1]))
+      return [result.x, result.y]
+    return [0, 0]
 
   # Pixi.DisplayObject] sprite
   #   added to renderer when added to game.

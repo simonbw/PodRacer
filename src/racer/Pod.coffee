@@ -24,6 +24,9 @@ class Pod extends Entity
     shape = new p2.Rectangle(w, h)
     @body.addShape(shape, [0, 0], 0)
 
+    @leftRopePoint = [-0.4 * w, -0.45 * h] # point the left rope connects in local coordinates
+    @rightRopePoint = [0.4 * w, -0.45 * h] # point the right rope connects in local coordinates
+
   onAdd: () =>
     console.log "pod added"
 

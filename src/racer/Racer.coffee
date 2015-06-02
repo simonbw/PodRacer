@@ -18,18 +18,13 @@ class Racer extends Entity
     # Springs
     @springs = []
     # ropes
-    @springs.push(new LinearSpring(@pod.body, @leftEngine.body, {
-        localAnchorA: [podSize[0] * -0.4, podSize[1] * -0.4],
-        localAnchorB: [0, engineSize[1] * 0.45],
-        stiffness: 10,
-        damping: 1
-      }))
-    @springs.push(new LinearSpring(@pod.body, @rightEngine.body, {
-        localAnchorA: [podSize[0] * 0.4, podSize[1] * -0.4],
-        localAnchorB: [0, engineSize[1] * 0.45],
-        stiffness: 10,
-        damping: 1
-      }))
+    for [engine, podPoint] in [[@leftEngine, @pod.leftRopePoint], [@rightEngine, @pod.rightRopePoint]]
+      @springs.push(new LinearSpring(@pod.body, engine.body, {
+          localAnchorA: podPoint,
+          localAnchorB: engine.ropePoint,
+          stiffness: 10,
+          damping: 1
+        }))
 
     # engine couplings
     for [y1, y2] in [[-1, -1], [-1, 1], [1, -1], [1, 1]]
@@ -50,26 +45,14 @@ class Racer extends Entity
       game.world.addSpring(spring)
 
   onRender: () =>
-    # draw pod->engine ropes
-    # @sprite.clear()
-    # @sprite.lineStyle(0.05, 0xFFFFFF, 1.0)
-
-    globalLeftEngine = [0,0]
-    @leftEngine.body.toWorldFrame(globalLeftEngine, [0, 0.5 * @leftEngine.size[1]])
-
-    globalRightEngine = [0,0]
-    @rightEngine.body.toWorldFrame(globalRightEngine, [0, 0.5 * @rightEngine.size[1]])
-
-    globalPod = [0,0]
-    @pod.body.toWorldFrame(globalPod, [0, -0.5 * @pod.size[1]])
-
-    # @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
-    # @sprite.lineTo(globalLeftEngine[0] - 0.5, globalLeftEngine[1] - 0.5)
-    # @sprite.moveTo(globalPod[0] - 0.5, globalPod[1] - 0.5)
-    # @sprite.lineTo(globalRightEngine[0] - 0.5, globalRightEngine[1] - 0.5)
-
-    @game.draw.line(globalPod, globalLeftEngine, 0.02)
-    @game.draw.line(globalPod, globalRightEngine, 0.02)
+    width = 0.03 # width in meters of the rope
+    color = 0x444444
+    podLeftPoint = @pod.localToWorld(@pod.leftRopePoint)
+    podRightPoint = @pod.localToWorld(@pod.rightRopePoint)
+    leftEnginePoint = @leftEngine.localToWorld(@leftEngine.ropePoint)
+    rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
+    @game.draw.line(podLeftPoint, leftEnginePoint, width, color)
+    @game.draw.line(podRightPoint, rightEnginePoint, width, color)
 
   getWorldCenter: () =>
     x = (@leftEngine.body.position[0] + @rightEngine.body.position[0] + @pod.body.position[0]) / 3.0

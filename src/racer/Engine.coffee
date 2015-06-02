@@ -26,6 +26,7 @@ class Engine extends Entity
     @body.addShape(shape, [0, 0], 0)
 
     @throttle = 0.0
+    @ropePoint = [0, 0.45 * h] # point the rope connects in local coordinates
 
   onAdd: () =>
     console.log "engine added"

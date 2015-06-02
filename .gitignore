@@ -1,3 +1,5 @@
 node_modules/
 
+bin/main.js
 *.sublime-workspace
+*.DS_Store
