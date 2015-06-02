@@ -2,6 +2,7 @@ Entity = require 'core/Entity'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
 Util = require 'util/Util'
+Aero = require 'physics/Aerodynamics'
 
 
 class Engine extends Entity
@@ -36,6 +37,7 @@ class Engine extends Entity
     @sprite.rotation = @body.angle
 
   onTick: () =>
+    Aero.applyAerodynamics(@body, Aero.defaultDrag, Aero.defaultLift)
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce

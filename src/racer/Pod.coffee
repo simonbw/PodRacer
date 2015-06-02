@@ -1,6 +1,7 @@
 Entity = require 'core/Entity'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
+Aero = require 'physics/Aerodynamics'
 
 
 class Pod extends Entity
@@ -33,6 +34,9 @@ class Pod extends Entity
   onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
+
+  onTick: () =>
+    Aero.applyAerodynamics(@body, Aero.defaultDrag * 10, Aero.defaultLift * 0.1)
 
 
 module.exports = Pod
