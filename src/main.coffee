@@ -10,10 +10,19 @@ Game = require 'core/Game'
 Racer = require 'racer/Racer'
 PlayerRacerController = require 'racer/PlayerRacerController'
 CameraController = require 'CameraController'
+Ground = require 'Ground'
+Pixi = require 'pixi.js'
 
-# TODO: Preloader
+
 window.onload = ->
-  console.log "loaded"
+  console.log "loading..."
+  Pixi.loader.add('images/ground.jpg')
+  Pixi.loader.load ->
+    console.log 'loader finished'
+    start()
+
+start = ->
+  console.log "ready to go"
   window.game = game = new Game()
   racer = new Racer([0, 0])
   racer2 = new Racer([0, -15])
@@ -23,4 +32,5 @@ window.onload = ->
   game.addEntity(racer2)
   game.addEntity(racerController)
   game.addEntity(cameraController)
+  game.addEntity(new Ground())
   game.start()
