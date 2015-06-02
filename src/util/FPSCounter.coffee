@@ -7,7 +7,7 @@ class FPSCounter extends Entity
     @lastTick = Date.now()
     @fps = 60
 
-  tick: () =>
+  onTick: () =>
     @frame++
     now = Date.now()
     @fps = 0.9 * @fps + 0.1 * (1000 / (now - @lastTick))

@@ -5,7 +5,7 @@ class CameraController extends Entity
   constructor: (@racer, @camera) ->
 
 
-  render: () ->
+  onRender: () ->
     @camera.center(@racer.getWorldCenter())
 
 

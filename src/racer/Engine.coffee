@@ -26,25 +26,24 @@ class Engine extends Entity
     @body.addShape(shape, [0, 0], 0)
 
     @throttle = 0.0
-    @maxForce = 10.0
 
-  getMaxForce: () =>
-    return 15.0
-
-  added: () =>
+  onAdd: () =>
     console.log "engine added"
 
-  render: () =>
+  onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
 
-  tick: () =>
+  onTick: () =>
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce
     fy = Math.sin(@body.angle - Math.PI / 2) * @throttle * maxForce
     @body.force[0] += fx
     @body.force[1] += fy
+
+  getMaxForce: () =>
+    return 15.0
 
 
 module.exports = Engine

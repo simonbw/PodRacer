@@ -8,8 +8,8 @@ class Game
   constructor: ->
     @entities = {
       all: []
-      render: []
-      tick: []
+      onRender: []
+      onTick: []
       beforeTick: []
       afterTick: []
       toRemove: []
@@ -78,13 +78,13 @@ class Game
   # Add an entity to the game.
   addEntity: (entity) =>
     entity.game = this
-    if entity.added? then entity.added(this)
+    if entity.onAdd? then entity.onAdd(this)
     @entities.all.push(entity)
     
     # Game events
-    if entity.render? then @entities.render.push(entity)
+    if entity.onRender? then @entities.onRender.push(entity)
     if entity.beforeTick? then @entities.beforeTick.push(entity)
-    if entity.tick? then @entities.tick.push(entity)
+    if entity.onTick? then @entities.onTick.push(entity)
     if entity.afterTick? then @entities.afterTick.push(entity)
     
     # IO events
@@ -102,7 +102,6 @@ class Game
     if entity.sprite? then @renderer.add(entity.sprite, entity.layer)
     if entity.body? then @world.addBody(entity.body)
 
-    if entity.afterAdded? then entity.afterAdded(this)
     return entity
 
   # Slates an entity for removal.
@@ -120,10 +119,10 @@ class Game
     while @entities.toRemove.length
       entity = @entities.toRemove.pop()
       @entities.all.splice(@entities.all.indexOf(entity), 1)
-      if entity.render?
-        @entities.render.splice(@entities.render.indexOf(entity), 1)
-      if entity.tick?
-        @entities.tick.splice(@entities.tick.indexOf(entity), 1)
+      if entity.onRender?
+        @entities.onRender.splice(@entities.onRender.indexOf(entity), 1)
+      if entity.onTick?
+        @entities.onTick.splice(@entities.onTick.indexOf(entity), 1)
       if entity.afterTick?
         @entities.afterTick.splice(@entities.afterTick.indexOf(entity), 1)
       
@@ -143,8 +142,8 @@ class Game
       if entity.onButtonDown? then @io.off(IO.BUTTON_DOWN, entity.onButtonDown)
       if entity.onButtonUp? then @io.off(IO.BUTTON_UP, entity.onButtonUp)
       
-      if entity.destroyed?
-        entity.destroyed(this)
+      if entity.onDestroy?
+        entity.onDestroy(this)
       entity.game = null
     @profiler.end('cleanup')
 
@@ -154,8 +153,8 @@ class Game
     for entity in @entities.beforeTick
       entity.beforeTick()
     @cleanupEntities()
-    for entity in @entities.tick
-      entity.tick()
+    for entity in @entities.onTick
+      entity.onTick()
 
   # Called after physics
   afterTick: =>
@@ -166,8 +165,8 @@ class Game
   # Called before rendering
   render: =>
     @cleanupEntities()
-    for entity in @entities.render
-      entity.render()
+    for entity in @entities.onRender
+      entity.onRender()
     @renderer.render()
 
   # Handle collision begin between things.
