@@ -3,9 +3,9 @@ Engine = require 'racer/Engine'
 Pod = require 'racer/Pod'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
-LinearSpring = p2.LinearSpring # TODO: Custom spring for ropes
 ControlFlap = require 'racer/ControlFlap'
-
+LinearSpring = p2.LinearSpring
+RopeSpring = require 'physics/RopeSpring'
 
 class Racer extends Entity
   constructor: ([x, y]) ->
@@ -28,7 +28,7 @@ class Racer extends Entity
     @springs = []
     # ropes
     for [engine, podPoint] in [[@leftEngine, @pod.leftRopePoint], [@rightEngine, @pod.rightRopePoint]]
-      @springs.push(new LinearSpring(@pod.body, engine.body, {
+      @springs.push(new RopeSpring(@pod.body, engine.body, {
           localAnchorA: podPoint,
           localAnchorB: engine.ropePoint,
           stiffness: 10,
