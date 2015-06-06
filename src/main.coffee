@@ -12,7 +12,7 @@ PlayerRacerController = require 'racer/PlayerRacerController'
 CameraController = require 'CameraController'
 Ground = require 'Ground'
 Pixi = require 'pixi.js'
-
+Race = require 'race/Race'
 
 window.onload = ->
   console.log "loading..."
@@ -28,9 +28,19 @@ start = ->
   racer2 = new Racer([0, -15])
   racerController = new PlayerRacerController(racer)
   cameraController = new CameraController(racer, game.camera)
+
   game.addEntity(racer)
   game.addEntity(racer2)
   game.addEntity(racerController)
   game.addEntity(cameraController)
   game.addEntity(new Ground())
+
+  race = new Race()
+  race.addRacer(racer)
+  # race.addRacer(racer2)
+  race.addWaypoint([10, 10])
+  race.addWaypoint([50, 10])
+  race.addWaypoint([70, -10])
+  game.addEntity(race)
+  
   game.start()

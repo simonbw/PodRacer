@@ -46,7 +46,7 @@ class Engine extends Entity
     @body.force[1] += fy
 
   getMaxForce: () =>
-    return 15.0
+    return 150.0
 
 
 module.exports = Engine
