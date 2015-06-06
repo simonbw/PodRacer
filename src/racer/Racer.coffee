@@ -4,6 +4,7 @@ Pod = require 'racer/Pod'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
 LinearSpring = p2.LinearSpring # TODO: Custom spring for ropes
+ControlFlap = require 'racer/ControlFlap'
 
 
 class Racer extends Entity
@@ -14,6 +15,14 @@ class Racer extends Entity
     @pod = new Pod([x, y], [1, 1.5])
     @leftEngine = new Engine([x - 1, y - 8], engineSize)
     @rightEngine = new Engine([x + 1, y - 8], engineSize)
+
+    #TODO add flaps to engines here?
+    @rightFlaps = [] # controlled by right trigger
+    @leftFlaps = [] # controlled by left trigger
+
+    # @rightFlaps.push(new ControlFlap(@pod.body, [0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 1))
+    # @leftFlaps.push(new ControlFlap(@pod.body, [-0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 0))
+
 
     # Springs
     @springs = []
@@ -40,6 +49,10 @@ class Racer extends Entity
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
+    for flap in @rightFlaps
+      game.addEntity(flap)
+    for flap in @leftFlaps
+      game.addEntity(flap)
 
     for spring in @springs
       game.world.addSpring(spring)

@@ -20,6 +20,9 @@ class IO
   @B_X = 2
   @B_Y = 3
 
+  @B_RIGHT_TRIG = 7
+  @B_LEFT_TRIG = 6
+
   @MOUSE_MOVE = MOUSE_MOVE = 'mousemove'
   @CLICK = CLICK = 'click'
   @RIGHT_CLICK = RIGHT_CLICK = 'rightclick'

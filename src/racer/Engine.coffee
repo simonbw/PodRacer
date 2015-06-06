@@ -37,7 +37,7 @@ class Engine extends Entity
     @sprite.rotation = @body.angle
 
   onTick: () =>
-    Aero.applyAerodynamics(@body, Aero.defaultDrag, Aero.defaultLift)
+    Aero.applyAerodynamics(@body, 1, 1)
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce

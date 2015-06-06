@@ -36,7 +36,7 @@ class Pod extends Entity
     @sprite.rotation = @body.angle
 
   onTick: () =>
-    Aero.applyAerodynamics(@body, Aero.defaultDrag * 10, Aero.defaultLift * 0.1)
+    Aero.applyAerodynamics(@body, 2, 2)
 
 
 module.exports = Pod

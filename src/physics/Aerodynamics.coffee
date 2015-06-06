@@ -1,51 +1,59 @@
 p2 = require 'p2'
 Entity = require 'core/Entity'
 
-class Aerodynamics
-  @defaultLift = 0.0001
-  @defaultDrag = 0.0001
+DRAG = 0.1
+LIFT = 0.1
 
+class Aerodynamics
   @applyAerodynamics: (body, dragAmount, liftAmount) =>
     for shape in body.shapes
-      if shape.type == p2.Shape.RECTANGLE
+      if shape.type == p2.Shape.RECTANGLE or shape.type == p2.Shape.CONVEX
         for i in [0...shape.vertices.length]
           v1 = shape.vertices[i]
           v2 = shape.vertices[(i + 1) % shape.vertices.length]
-          @applyAerodynamicsToEdge(body, v1, v2, dragAmount, liftAmount)
+          @applyAerodynamicsToEdge(body, v1, v2, dragAmount * DRAG, liftAmount * LIFT)
 
   @applyAerodynamicsToEdge: (body, v1, v2, dragAmount, liftAmount) =>
     # ????
-    if liftAmount < 0
+    if not liftAmount?
       liftAmount = dragAmount
 
     # calculate some numbers relating to the edge 
-    midpoint = [0.5 * (v1[0] + v2[0]), 0.5 * (v1[1] + v2[1])]
-    midpointWorld = [0,0]
-    body.toWorldFrame(midpointWorld, midpoint)
+    v1World = []
+    body.toWorldFrame(v1World, v1)
+    v2World = []
+    body.toWorldFrame(v2World, v2)
 
-    edge = [v2[0] - v1[0], v2[1] - v1[1]]
+    midpoint = [0.5 * (v1World[0] + v2World[0]), 0.5 * (v1World[1] + v2World[1])]
+
+    edge = [v2World[0] - v1World[0], v2World[1] - v1World[1]]
     edgeLength = p2.vec2.length(edge)
-    edgeNormal = [0,0]
-    p2.vec2.scale(edgeNormal, edge, -1)
-    airVelocity = body.velocity
+    p2.vec2.normalize(edge, edge)   # edge is normalized
+    edgeNormal = []
+    p2.vec2.rotate90cw(edgeNormal, edge)  # vector pointing out of the rectangle
+
+    # TODO write getLinearVelocityFromWorldPoin method?
+    # TODO physicsUtil class?
+    airVelocity = [body.velocity[0], body.velocity[1]] # opposite direction to actual air velocity
+
     airSpeed = p2.vec2.length(airVelocity)
+    p2.vec2.normalize(airVelocity, airVelocity)
 
     airDotEdgeNormal = p2.vec2.dot(airVelocity, edgeNormal)
     airDotEdge = p2.vec2.dot(airVelocity, edge)
     if airDotEdgeNormal < 0
       return
 
-    # drag
     dragMagnitude = airDotEdgeNormal * edgeLength * airSpeed * dragAmount
-    drag = [0,0]
+    drag = []
     p2.vec2.scale(drag, airVelocity, -1 * dragMagnitude)
-    body.applyForce(drag, midpointWorld)
+    body.applyForce(drag, midpoint)
 
-    # lift
-    liftMagnitude = airDotEdge * airDotEdgeNormal * edgeLength * airSpeed * liftAmount
-    lift = [0,0]
-    p2.vec2.scale(lift, airVelocity, liftMagnitude)
-    body.applyForce(lift, midpointWorld)
+    liftMagnitude = airDotEdge * airDotEdgeNormal * edgeLength * airSpeed * dragAmount
+    lift = []
+    p2.vec2.rotate90cw(airVelocity, airVelocity)
+    p2.vec2.scale(lift, airVelocity, -1 * liftMagnitude)
+    body.applyForce(lift, midpoint)
 
 
 

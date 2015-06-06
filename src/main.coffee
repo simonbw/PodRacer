@@ -25,11 +25,14 @@ start = ->
   console.log "ready to go"
   window.game = game = new Game()
   racer = new Racer([0, 0])
-  racer2 = new Racer([0, -15])
+  #racer2 = new Racer([0, -15])
   racerController = new PlayerRacerController(racer)
   cameraController = new CameraController(racer, game.camera)
+
+  #game.addEntity(new FPSCounter())
+
   game.addEntity(racer)
-  game.addEntity(racer2)
+  #game.addEntity(racer2)
   game.addEntity(racerController)
   game.addEntity(cameraController)
   game.addEntity(new Ground())
