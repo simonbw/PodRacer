@@ -32,9 +32,11 @@ class Aerodynamics
     edgeNormal = []
     p2.vec2.rotate90cw(edgeNormal, edge)  # vector pointing out of the rectangle
 
-    # TODO write getLinearVelocityFromWorldPoin method?
-    # TODO physicsUtil class?
     airVelocity = [body.velocity[0], body.velocity[1]] # opposite direction to actual air velocity
+    offset = [midpoint[0] - body.position[0], midpoint[1] - body.position[1]]
+    p2.vec2.rotate90cw(offset, offset)
+    p2.vec2.scale(offset, offset, -1 * body.angularVelocity)
+    p2.vec2.add(airVelocity, airVelocity, offset)
 
     airSpeed = p2.vec2.length(airVelocity)
     p2.vec2.normalize(airVelocity, airVelocity)
