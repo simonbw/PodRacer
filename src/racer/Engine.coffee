@@ -6,19 +6,19 @@ Aero = require 'physics/Aerodynamics'
 
 
 class Engine extends Entity
-  constructor: ([x, y], [w, h]) ->
+  constructor: ([x, y], @engineDef) ->
     console.log "new engine at #{[x, y]}"
     
+    [w, h] = @engineDef.size
+
     @sprite = new Pixi.Graphics()
-    @sprite.beginFill(0x0000FF)
+    @sprite.beginFill(@engineDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
 
-    @size = [w, h]
-
     @body = new p2.Body {
       position: [x, y]
-      mass: 1
+      mass: @engineDef.mass
       angularDamping: 0.01
       damping: 0.0
     }
@@ -37,7 +37,7 @@ class Engine extends Entity
     @sprite.rotation = @body.angle
 
   onTick: () =>
-    Aero.applyAerodynamics(@body, 1, 1)
+    Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce
@@ -46,7 +46,7 @@ class Engine extends Entity
     @body.force[1] += fy
 
   getMaxForce: () =>
-    return 15.0
+    return @engineDef.maxForce
 
 
 module.exports = Engine
