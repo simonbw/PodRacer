@@ -6,7 +6,7 @@ class Ground extends Entity
     @sprite = new Pixi.Graphics
     @layer = 'world_back'
 
-    @sprite = Pixi.extras.TilingSprite.fromImage('images/ground.jpg', 100000, 100000)
+    @sprite = Pixi.extras.TilingSprite.fromImage('images/ground.jpg', 1000000, 1000000)
     @sprite.anchor.x = 0.5
     @sprite.anchor.y = 0.5
 

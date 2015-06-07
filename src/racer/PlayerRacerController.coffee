@@ -1,5 +1,5 @@
 Entity = require 'core/Entity'
-
+Util = require 'util/Util'
 
 LEFT_THROTTLE = 88
 LEFT_FLAP = 90
@@ -15,8 +15,8 @@ class PlayerRacerController extends Entity
     @racer.rightEngine.throttle = -@game.io.getAxis(3) + @game.io.keys[RIGHT_THROTTLE]
 
     for flap in @racer.flaps
-      flap.rightControl = @game.io.getButton(7).value
-      flap.leftControl = @game.io.getButton(6).value
+      flap.leftControl = Util.clamp(@game.io.getButton(6).value + @game.io.keys[LEFT_FLAP], 0, 1)
+      flap.rightControl = Util.clamp(@game.io.getButton(7).value + @game.io.keys[RIGHT_FLAP], 0, 1)
       
 
 

@@ -190,6 +190,6 @@ class IO
     gamepad = navigator.getGamepads()[0]
     if gamepad?
       return gamepad.buttons[button]
-    return 0
+    return {'value': 0, 'pressed': false}
 
 module.exports = IO
