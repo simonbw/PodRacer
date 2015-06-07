@@ -5,11 +5,14 @@ Aero = require 'physics/Aerodynamics'
 
 
 class Pod extends Entity
-  constructor: ([x, y], [w, h]) ->
+  constructor: ([x, y], @podDef) ->
     console.log "new pod at #{[x, y]}"
 
+    [w, h] = @podDef.size
+    @size = @podDef.size
+
     @sprite = new Pixi.Graphics()
-    @sprite.beginFill(0x0000FF)
+    @sprite.beginFill(@podDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
 
@@ -17,7 +20,7 @@ class Pod extends Entity
 
     @body = new p2.Body {
       position: [x, y]
-      mass: 1
+      mass: @podDef.mass
       angularDamping: 0.01
       damping: 0.0
     }
@@ -36,7 +39,7 @@ class Pod extends Entity
     @sprite.rotation = @body.angle
 
   onTick: () =>
-    Aero.applyAerodynamics(@body, 2, 2)
+    Aero.applyAerodynamics(@body, @podDef.drag, @podDef.drag)
 
 
 module.exports = Pod

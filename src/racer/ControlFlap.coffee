@@ -6,7 +6,7 @@ Aero = require 'physics/Aerodynamics'
 
 class ControlFlap extends Entity
   # body to attach to, position vector [x,y], length, default angle, direction to open (0 left, 1 right)
-  constructor: (body, [x, y], length, direction) ->
+  constructor: (body, [x, y], length, direction, drag, lift) ->
     console.log "new flippy flappy at #{[x,y]}"
     @attachedBody = body
     @position = [x, y]
@@ -16,6 +16,8 @@ class ControlFlap extends Entity
     @leftControl = 0
     @rightControl = 0
     @direction = direction
+    @drag = drag
+    @lift = lift
 
   onTick: () =>
     if @direction == 1
@@ -24,12 +26,12 @@ class ControlFlap extends Entity
       @angle = 1.5 * Math.PI - @leftControl
 
     if @rightControl != 0   # flap isn't there if it's not flapping
-        end = [@position[0] + @length * Math.cos(@angle), @position[1]]# + @length * Math.sin(@angle)]
-        Aero.applyAerodynamicsToEdge(@attachedBody, @position, end, 0.3, 0)
+        end = [@position[0] + @length * @rightControl, @position[1]]# + @length * Math.sin(@angle)]
+        Aero.applyAerodynamicsToEdge(@attachedBody, @position, end, @drag, @lift)
 
     if @leftControl != 0
-        end = [@position[0] + @length * Math.cos(@angle), @position[1]]# + @length * Math.sin(@angle)]
-        Aero.applyAerodynamicsToEdge(@attachedBody, end, @position, 0.3, 0)
+        end = [@position[0] - @length * @leftControl, @position[1]]# + @length * Math.sin(@angle)]
+        Aero.applyAerodynamicsToEdge(@attachedBody, end, @position, @drag, @lift)
 
   onRender: () =>  
     # draw line to indicate flap
