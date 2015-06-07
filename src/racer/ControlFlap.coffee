@@ -13,13 +13,23 @@ class ControlFlap extends Entity
     @length = length
     @defaultAngle = -0.5 * Math.PI
     @angle = -0.5 * Math.PI
+    @leftControl = 0
+    @rightControl = 0
     @direction = direction
 
   onTick: () =>
-    # apply aerodynamics
-    if @angle != @defaultAngle # flap isn't there if it's not flapping
-      end = [@position[0] + @length * Math.cos(@angle), @position[1] + @length * Math.sin(@angle)]
-      Aero.applyAerodynamicsToEdge(@attachedBody, @position, end, 1, 1)
+    if @direction == 1
+      @angle = @rightControl - 0.5 * Math.PI
+    else 
+      @angle = 1.5 * Math.PI - @leftControl
+
+    if @rightControl != 0   # flap isn't there if it's not flapping
+        end = [@position[0] + @length * Math.cos(@angle), @position[1]]# + @length * Math.sin(@angle)]
+        Aero.applyAerodynamicsToEdge(@attachedBody, @position, end, 0.3, 0)
+
+    if @leftControl != 0
+        end = [@position[0] + @length * Math.cos(@angle), @position[1]]# + @length * Math.sin(@angle)]
+        Aero.applyAerodynamicsToEdge(@attachedBody, end, @position, 0.3, 0)
 
   onRender: () =>  
     # draw line to indicate flap

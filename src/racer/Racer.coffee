@@ -17,11 +17,20 @@ class Racer extends Entity
     @rightEngine = new Engine([x + 1, y - 8], engineSize)
 
     #TODO add flaps to engines here?
-    @rightFlaps = [] # controlled by right trigger
-    @leftFlaps = [] # controlled by left trigger
+    @flaps = [] # controlled by right trigger
 
-    # @rightFlaps.push(new ControlFlap(@pod.body, [0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 1))
-    # @leftFlaps.push(new ControlFlap(@pod.body, [-0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 0))
+    # pod flaps TODO change with new RacerDefs
+    @flaps.push(new ControlFlap(@pod.body, [0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 1))  # right
+    @flaps.push(new ControlFlap(@pod.body, [-0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 0))  # left
+
+    # left engine flaps 
+    @flaps.push(new ControlFlap(@leftEngine.body, [0.5*@leftEngine.size[0], -0.5*@leftEngine.size[1]], 1, 1))
+    @flaps.push(new ControlFlap(@leftEngine.body, [-0.5*@leftEngine.size[0], -0.5*@leftEngine.size[1]], 1, 0))
+
+    # right engine flaps
+    @flaps.push(new ControlFlap(@rightEngine.body, [0.5*@rightEngine.size[0], -0.5*@rightEngine.size[1]], 1, 1)) 
+    @flaps.push(new ControlFlap(@rightEngine.body, [-0.5*@rightEngine.size[0], -0.5*@rightEngine.size[1]], 1, 0))
+
 
 
     # Springs
@@ -49,9 +58,7 @@ class Racer extends Entity
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
-    for flap in @rightFlaps
-      game.addEntity(flap)
-    for flap in @leftFlaps
+    for flap in @flaps
       game.addEntity(flap)
 
     for spring in @springs
