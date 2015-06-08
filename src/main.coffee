@@ -5,14 +5,15 @@
 Function::property = (prop, desc) ->
   Object.defineProperty this.prototype, prop, desc
 
+CameraController = require 'CameraController'
 FPSCounter = require 'util/FPSCounter'
 Game = require 'core/Game'
-Racer = require 'racer/Racer'
-PlayerRacerController = require 'racer/PlayerRacerController'
-CameraController = require 'CameraController'
 Ground = require 'Ground'
 Pixi = require 'pixi.js'
+PlayerRacerController = require 'racer/PlayerRacerController'
 Race = require 'race/Race'
+Racer = require 'racer/Racer'
+RacerDefs = require 'racer/RacerDefs'
 
 window.onload = ->
   console.log "loading..."
@@ -24,7 +25,7 @@ window.onload = ->
 start = ->
   console.log "ready to go"
   window.game = game = new Game()
-  racer = new Racer([0, 0])
+  racer = new Racer([0, 0], RacerDefs.test)
   racer2 = new Racer([0, -15])
   racerController = new PlayerRacerController(racer)
   cameraController = new CameraController(racer, game.camera)
@@ -37,7 +38,7 @@ start = ->
 
   race = new Race()
   race.addRacer(racer)
-  # race.addRacer(racer2)
+  race.addRacer(racer2)
   race.addWaypoint([10, 10])
   race.addWaypoint([50, 10])
   race.addWaypoint([70, -10])
