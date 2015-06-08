@@ -14,7 +14,6 @@ class Engine extends Entity
     @size = @engineDef.size
 
     @sprite = new Pixi.Graphics()
-    @sprite.lineStyle(0.01, 0xFFFFFF)
     @sprite.beginFill(@engineDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
