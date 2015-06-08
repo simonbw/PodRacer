@@ -5,45 +5,45 @@ Util = require 'util/Util'
 Aero = require 'physics/Aerodynamics'
 
 class ControlFlap extends Entity
+  @LEFT = false
+  @RIGHT = true
+
   # body to attach to, position vector [x,y], length, default angle, direction to open (0 left, 1 right)
-  constructor: (body, [x, y], length, direction, drag, lift) ->
-    console.log "new flippy flappy at #{[x,y]}"
-    @attachedBody = body
-    @position = [x, y]
-    @length = length
-    @defaultAngle = -0.5 * Math.PI
-    @angle = -0.5 * Math.PI
-    @leftControl = 0
-    @rightControl = 0
-    @direction = direction
-    @drag = drag
-    @lift = lift
+  constructor: (@attachedBody, @flapDef) ->
+    console.log "new flippy flappy at #{@flapDef.position}"
+    @direction = @flapDef.direction
+    @position = @flapDef.position
+    @control = 0
+
+  setControl: (value) =>
+    @control = Util.clamp(value, 0, 1)
+  
+  getAngle: () =>
+    angle = @flapDef.maxAngle * @control
+    if @direction == ControlFlap.LEFT
+      angle *= -1
+    return angle - Math.PI / 2
 
   onTick: () =>
-    if @direction == 1
-      @angle = @rightControl - 0.5 * Math.PI
-    else 
-      @angle = 1.5 * Math.PI - @leftControl
-
-    if @rightControl != 0   # flap isn't there if it's not flapping
-        end = [@position[0] + @length * @rightControl, @position[1]]# + @length * Math.sin(@angle)]
-        Aero.applyAerodynamicsToEdge(@attachedBody, @position, end, @drag, @lift)
-
-    if @leftControl != 0
-        end = [@position[0] - @length * @leftControl, @position[1]]# + @length * Math.sin(@angle)]
-        Aero.applyAerodynamicsToEdge(@attachedBody, end, @position, @drag, @lift)
+    angle = @getAngle()
+    start = @position
+    if @direction == ControlFlap.LEFT
+      end = [start[0] - @control, start[1]]
+      Aero.applyAerodynamicsToEdge(@attachedBody, end, start, @flapDef.drag, 0)
+    else if @direction == ControlFlap.RIGHT
+      end = [start[0] + @control, start[1]]
+      Aero.applyAerodynamicsToEdge(@attachedBody, start, end, @flapDef.drag, 0)
 
   onRender: () =>  
     # draw line to indicate flap
-    startPoint = []
+    startPoint = [0, 0]
     @attachedBody.toWorldFrame(startPoint, @position)
-    #TODO change depending on left or right
-    end = [@position[0] + @length * Math.cos(@angle), @position[1] + @length * Math.sin(@angle)]
-    endPoint = []
-    @attachedBody.toWorldFrame(endPoint, end)
+
+    angle = @getAngle()
+    end = [@position[0] + @flapDef.length * Math.cos(angle), @position[1] + @flapDef.length * Math.sin(angle)]
+    @attachedBody.toWorldFrame(end, end)
 
     width = 0.1
-    color = 0x000000
-    @game.draw.line(startPoint, endPoint, width, color)
+    @game.draw.line(startPoint, end, width, @flapDef.color)
 
 module.exports = ControlFlap
