@@ -3,7 +3,6 @@ Engine = require 'racer/Engine'
 Pod = require 'racer/Pod'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
-ControlFlap = require 'racer/ControlFlap'
 LinearSpring = p2.LinearSpring
 RopeSpring = require 'physics/RopeSpring'
 RacerDefs = require 'racer/RacerDefs'
@@ -13,23 +12,12 @@ class Racer extends Entity
   constructor: ([x, y], @racerDef=RacerDefs.default) ->
     console.log "new racer"
 
-    @pod = new Pod([x, y], @racerDef.pod)
-    @leftEngine = new Engine([x - 1, y - 8], @racerDef.engine)
-    @rightEngine = new Engine([x + 1, y - 8], @racerDef.engine)
-    #TODO add flaps to engines here?
-    @flaps = [] # controlled by right trigger
-
-    # pod flaps TODO change with new RacerDefs
-    @flaps.push(new ControlFlap(@pod.body, [0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 1, 1.3, 0))  # right
-    @flaps.push(new ControlFlap(@pod.body, [-0.5*@pod.size[0], 0.5*@pod.size[1]], 1, 0, 1.3, 0))  # left
-
-    # left engine flaps 
-    @flaps.push(new ControlFlap(@leftEngine.body, [0.5*@leftEngine.size[0], -0.5*@leftEngine.size[1]], 1, 1, 0.7, 0))
-    @flaps.push(new ControlFlap(@leftEngine.body, [-0.5*@leftEngine.size[0], -0.5*@leftEngine.size[1]], 1, 0, 0.7, 0))
-
-    # right engine flaps
-    @flaps.push(new ControlFlap(@rightEngine.body, [0.5*@rightEngine.size[0], -0.5*@rightEngine.size[1]], 1, 1, 0.7, 0)) 
-    @flaps.push(new ControlFlap(@rightEngine.body, [-0.5*@rightEngine.size[0], -0.5*@rightEngine.size[1]], 1, 0, 0.7, 0))
+    podPosition = p2.vec2.add([0, 0], [x, y], @racerDef.podPosition)
+    leftEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.leftEnginePosition)
+    rightEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.rightEnginePosition)
+    @pod = new Pod(podPosition, @racerDef.pod)
+    @leftEngine = new Engine(leftEnginePosition, 'left', @racerDef.engine)
+    @rightEngine = new Engine(rightEnginePosition, 'right', @racerDef.engine)
 
     # Springs
     @springs = []
@@ -57,9 +45,6 @@ class Racer extends Entity
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
 
-    for flap in @flaps
-      game.addEntity(flap)
-
     for spring in @springs
       game.world.addSpring(spring)
 
@@ -72,6 +57,14 @@ class Racer extends Entity
     rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
     @game.draw.line(podLeftPoint, leftEnginePoint, width, color)
     @game.draw.line(podRightPoint, rightEnginePoint, width, color)
+  
+  # Set the control value on all the racer's flaps
+  # @param left {number} - between 0 and 1
+  # @param right {number} - between 0 and 1
+  setFlaps: (left, right) =>
+    @pod.setFlaps(left, right)
+    @leftEngine.setFlaps(left, right)
+    @rightEngine.setFlaps(left, right)
 
   getWorldCenter: () =>
     x = (@leftEngine.body.position[0] + @rightEngine.body.position[0] + @pod.body.position[0]) / 3.0
