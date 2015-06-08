@@ -1,7 +1,7 @@
 p2 = require 'p2'
 Entity = require 'core/Entity'
 
-DEBUG_DRAW = true
+DEBUG_DRAW = false
 
 DRAG = 0.1
 LIFT = 0.1

@@ -7,6 +7,7 @@ ControlFlap = require 'racer/ControlFlap'
 LinearSpring = p2.LinearSpring
 RopeSpring = require 'physics/RopeSpring'
 RacerDefs = require 'racer/RacerDefs'
+Coupling = require 'racer/Coupling'
 
 # 
 class Racer extends Entity
@@ -16,6 +17,8 @@ class Racer extends Entity
     @pod = new Pod([x, y], @racerDef.pod)
     @leftEngine = new Engine([x - 1, y - 8], @racerDef.engine)
     @rightEngine = new Engine([x + 1, y - 8], @racerDef.engine)
+
+    @coupling = new Coupling(@leftEngine, @rightEngine, 0, 0, 0xFF22AA, 1)
     #TODO add flaps to engines here?
     @flaps = [] # controlled by right trigger
 
@@ -56,6 +59,8 @@ class Racer extends Entity
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
+
+    game.addEntity(@coupling)
 
     for flap in @flaps
       game.addEntity(flap)
