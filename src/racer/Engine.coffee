@@ -29,7 +29,10 @@ class Engine extends Entity
     @body.addShape(shape, [0, 0], 0)
 
     @throttle = 0.0
-    @ropePoint = [0, 0.45 * h] # point the rope connects in local coordinates
+    if @side == 'right'
+      @ropePoint = [-0.4 * w, 0.45 * h] # point the rope connects in local coordinates
+    else
+      @ropePoint = [0.4 * w, 0.45 * h]
 
     @flaps = []
     for flapDef in @engineDef.flaps
