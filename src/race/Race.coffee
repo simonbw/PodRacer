@@ -41,7 +41,7 @@ class Race extends Entity
   onRender: () =>
     for waypoint, i in @waypoints
       nextWaypoint = @waypoints[(i + 1) % @waypoints.length]
-      @game.draw.line(waypoint.center, nextWaypoint.center, 0.1, 0x00FF00, 0.5)
+      @game.draw.line(waypoint.center, nextWaypoint.center, 0.1, 0x0044FF, 0.5, 'world_back')
 
   # Returns the current waypoint a racer is headed to 
   getRacerWaypoint: (racer) =>
