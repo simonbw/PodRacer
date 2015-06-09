@@ -19,6 +19,7 @@ class Racer extends Entity
     @pod = new Pod(podPosition, @racerDef.pod)
     @leftEngine = new Engine(leftEnginePosition, 'left', @racerDef.engine)
     @rightEngine = new Engine(rightEnginePosition, 'right', @racerDef.engine)
+    @coupling = new Coupling(@leftEngine, @rightEngine, 0, 0, 0xFF22AA, 1)
 
     # Springs
     @springs = []
