@@ -6,6 +6,7 @@ Pixi = require 'pixi.js'
 LinearSpring = p2.LinearSpring
 RopeSpring = require 'physics/RopeSpring'
 RacerDefs = require 'racer/RacerDefs'
+Coupling = require 'racer/Coupling'
 
 # 
 class Racer extends Entity
@@ -18,6 +19,7 @@ class Racer extends Entity
     @pod = new Pod(podPosition, @racerDef.pod)
     @leftEngine = new Engine(leftEnginePosition, 'left', @racerDef.engine)
     @rightEngine = new Engine(rightEnginePosition, 'right', @racerDef.engine)
+    @coupling = new Coupling(@leftEngine, @rightEngine, 0, 0, 0xFF22AA, 1)
 
     # Springs
     @springs = []
@@ -44,6 +46,8 @@ class Racer extends Entity
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
+
+    game.addEntity(@coupling)
 
     for spring in @springs
       game.world.addSpring(spring)

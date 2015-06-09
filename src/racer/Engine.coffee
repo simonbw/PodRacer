@@ -66,6 +66,25 @@ class Engine extends Entity
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
 
+    left = [-0.5 * @size[0], 0.5 * @size[1]]
+    right = [0.5 * @size[0], 0.5 * @size[1]]
+    leftWorld = @localToWorld(left)
+    rightWorld = @localToWorld(right)
+
+    rand = Math.random()
+
+    endPoint = @localToWorld([(left[0] + right[0]) / 2, (2.5 + rand) * @throttle + 0.5 * @size[1]])
+    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x0000FF, 0.2)
+
+    endPoint = @localToWorld([(left[0] + right[0]) / 2, (1.6 + rand) * @throttle + 0.5 * @size[1]])
+    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00AAFF, 0.4)
+
+    endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.5 + rand) * @throttle + 0.5 * @size[1]])
+    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00FFFF, 0.6)
+
+    endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.15 + rand) * @throttle + 0.5 * @size[1]])
+    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0xFFFFFF, 0.8)
+
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
     
@@ -73,11 +92,10 @@ class Engine extends Entity
     maxForce = @getMaxForce()
     fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce
     fy = Math.sin(@body.angle - Math.PI / 2) * @throttle * maxForce
-    @body.force[0] += fx
-    @body.force[1] += fy
+    @body.applyForce([fx,fy], @localToWorld([0, 0.5 * @size[1]]))
 
   getMaxForce: () =>
-    return @engineDef.maxForce
+    return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce
 
   onDestroy: (game) =>
     for flap in @flaps

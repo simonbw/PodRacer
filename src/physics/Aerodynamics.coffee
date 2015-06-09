@@ -3,8 +3,8 @@ Entity = require 'core/Entity'
 
 DEBUG_DRAW = false
 
-DRAG = 0.1
-LIFT = 0.1
+DRAG = 0.7
+LIFT = 0.7
 
 MAGIC_NUMBER = 1 # For some reason this makes pods stop spinning
 
