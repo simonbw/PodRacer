@@ -11,8 +11,6 @@ Coupling = require 'racer/Coupling'
 # 
 class Racer extends Entity
   constructor: ([x, y], @racerDef=RacerDefs.default) ->
-    console.log "new racer"
-
     podPosition = p2.vec2.add([0, 0], [x, y], @racerDef.podPosition)
     leftEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.leftEnginePosition)
     rightEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.rightEnginePosition)
@@ -42,7 +40,6 @@ class Racer extends Entity
         }))
 
   onAdd: (game) =>
-    console.log "racer added"
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)

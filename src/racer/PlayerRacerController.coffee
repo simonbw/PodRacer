@@ -11,8 +11,10 @@ class PlayerRacerController extends Entity
   constructor: (@racer) ->
 
   beforeTick: () =>
-    @racer.leftEngine.setThrottle(-@game.io.getAxis(1) + @game.io.keys[LEFT_THROTTLE])
-    @racer.rightEngine.setThrottle(-@game.io.getAxis(3) + @game.io.keys[RIGHT_THROTTLE])
+    leftStick = Math.sqrt(Util.clamp(-@game.io.getAxis(1), 0, 1))
+    rightStick = Math.sqrt(Util.clamp(-@game.io.getAxis(3), 0, 1))
+    @racer.leftEngine.setThrottle(leftStick + @game.io.keys[LEFT_THROTTLE])
+    @racer.rightEngine.setThrottle(rightStick + @game.io.keys[RIGHT_THROTTLE])
 
     leftFlap = Util.clamp(@game.io.getButton(6).value + @game.io.keys[LEFT_FLAP], 0, 1)
     rightFlap = Util.clamp(@game.io.getButton(7).value + @game.io.keys[RIGHT_FLAP], 0, 1)

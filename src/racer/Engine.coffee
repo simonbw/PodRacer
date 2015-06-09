@@ -8,8 +8,6 @@ ControlFlap = require 'racer/ControlFlap'
 
 class Engine extends Entity
   constructor: ([x, y], @side, @engineDef) ->
-    console.log "new engine at #{[x, y]}"
-    
     [w, h] = @engineDef.size
     @size = @engineDef.size
 
@@ -21,7 +19,7 @@ class Engine extends Entity
     @body = new p2.Body {
       position: [x, y]
       mass: @engineDef.mass
-      angularDamping: 0.01
+      angularDamping: 0.3
       damping: 0.0
     }
 
@@ -58,7 +56,6 @@ class Engine extends Entity
         flap.setControl(right)
 
   onAdd: (game) =>
-    console.log "engine added"
     for flap in @flaps
       game.addEntity(flap)
 
