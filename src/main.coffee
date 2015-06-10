@@ -1,9 +1,7 @@
 # This is the entry point of our code.
 
-# Allows defining of properties on classes.
-# It is a little sketchy and may disappear soon.
-Function::property = (prop, desc) ->
-  Object.defineProperty this.prototype, prop, desc
+require 'core/Hacks'
+require 'core/Vector'
 
 CameraController = require 'CameraController'
 FPSCounter = require 'util/FPSCounter'
