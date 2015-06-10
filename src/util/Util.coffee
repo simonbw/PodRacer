@@ -19,9 +19,16 @@ Util = {
   clamp: (value, min=-1, max=1) ->
     return Math.max(min, Math.min(max, value))
 
-  # Return the length of a vector.
-  length: ([x, y]) ->
-    return Math.sqrt(x * x + y * y)
+  # The smoothstep function between 0 and 1
+  smoothStep: (value) ->
+    value = Util.clamp(value, 0, 1)
+    return value * value * (3 - 2 * value)
+  
+  # Return the difference between two angles
+  angleDelta: (a, b) ->
+    diff = b - a
+    return Util.mod(diff + Math.PI, Math.PI * 2) - Math.PI;
+
 }
 
 module.exports = Util

@@ -44,8 +44,8 @@ class Race extends Entity
       @game.draw.line(waypoint.center, nextWaypoint.center, 0.1, 0x0044FF, 0.5, 'world_back')
 
   # Returns the current waypoint a racer is headed to 
-  getRacerWaypoint: (racer) =>
-    return @waypoints[@racerWaypointIndexes.get(racer)]
+  getRacerWaypoint: (racer, next=0) =>
+    return @waypoints[Util.mod(@racerWaypointIndexes.get(racer) + next, @waypoints.length)]
 
   # Return the current lap a racer is on
   getRacerLap: (racer) =>

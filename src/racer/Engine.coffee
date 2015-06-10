@@ -87,9 +87,13 @@ class Engine extends Entity
     
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
-    fx = Math.cos(@body.angle - Math.PI / 2) * @throttle * maxForce
-    fy = Math.sin(@body.angle - Math.PI / 2) * @throttle * maxForce
+    fx = Math.cos(@getDirection()) * @throttle * maxForce
+    fy = Math.sin(@getDirection()) * @throttle * maxForce
     @body.applyForce([fx,fy], @localToWorld([0, 0.5 * @size[1]]))
+
+  # Return the angle the engine is pointing in
+  getDirection: () =>
+    return @body.angle - Math.PI / 2
 
   getMaxForce: () =>
     return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce

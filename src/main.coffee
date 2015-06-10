@@ -5,6 +5,7 @@
 Function::property = (prop, desc) ->
   Object.defineProperty this.prototype, prop, desc
 
+AIRacerController = require 'racer/AIRacerController'
 CameraController = require 'CameraController'
 FPSCounter = require 'util/FPSCounter'
 Game = require 'core/Game'
@@ -25,27 +26,29 @@ window.onload = ->
 start = ->
   console.log "ready to go"
   window.game = game = new Game()
-  racer = new Racer([0, 0], RacerDefs.test)
-  racer2 = new Racer([0, -15])
+  race = new Race()
+  racer = new Racer([5, 0], RacerDefs.test)
+  racer2 = new Racer([-5, 0])
   racerController = new PlayerRacerController(racer)
-  cameraController = new CameraController(racer, game.camera)
+  racerController2 = new AIRacerController(racer2, race)
+  cameraController = new CameraController(racer2, game.camera)
 
   game.addEntity(racer)
   game.addEntity(racer2)
   game.addEntity(racerController)
+  game.addEntity(racerController2)
   game.addEntity(cameraController)
   game.addEntity(new Ground())
 
-  race = new Race()
   race.addRacer(racer)
   race.addRacer(racer2)
-  race.addWaypoint([0, 0], 10)
-  race.addWaypoint([150, -150], 40)
-  race.addWaypoint([280, 0], 50)
-  race.addWaypoint([150, 150], 40)
-  race.addWaypoint([-150, -150], 40)
-  race.addWaypoint([-280, 0], 50)
-  race.addWaypoint([-150, 150], 40)
+  race.addWaypoint([0, 0], 5)
+  race.addWaypoint([250, -250], 40)
+  race.addWaypoint([400, 0], 50)
+  race.addWaypoint([250, 250], 40)
+  race.addWaypoint([-250, -250], 40)
+  race.addWaypoint([-400, 0], 50)
+  race.addWaypoint([-250, 250], 40)
   game.addEntity(race)
   
   game.start()
