@@ -53,8 +53,9 @@ RacerDefs = {}
 RacerDefs.default = new RacerDef()
 
 RacerDefs.test = new RacerDef()
-RacerDefs.test.pod.color = 0x000000
-RacerDefs.test.rope.color = 0x000000
-RacerDefs.test.engine.color = 0x000000
+RacerDefs.test.pod.color = 0x2222BB
+RacerDefs.test.rope.color = 0x444444
+RacerDefs.test.engine.color = 0x2222BB
+RacerDefs.test.pod.flaps[0].color = 0x1111AA
 
 module.exports = RacerDefs
