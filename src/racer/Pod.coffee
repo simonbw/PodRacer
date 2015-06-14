@@ -8,8 +8,6 @@ ControlFlap = require 'racer/ControlFlap'
 
 class Pod extends Entity
   constructor: ([x, y], @podDef) ->
-    console.log "new pod at #{[x, y]}"
-
     [w, h] = @podDef.size
     @size = @podDef.size
 
@@ -46,6 +44,12 @@ class Pod extends Entity
       @flaps.push(new ControlFlap(@body, leftDef))
       @flaps.push(new ControlFlap(@body, rightDef))
 
+  onAdd: (game) =>
+    for flap in @flaps
+      game.addEntity(flap)
+    @light = game.lights.newPointLight()
+    @light.intensity = 0.3
+
   # Set the control value on all the racer's flaps
   # @param left {number} - between 0 and 1
   # @param right {number} - between 0 and 1
@@ -56,14 +60,11 @@ class Pod extends Entity
       if flap.direction == ControlFlap.RIGHT
         flap.setControl(right)
 
-  onAdd: (game) =>
-    console.log "pod added"
-    for flap in @flaps
-      game.addEntity(flap)
 
   onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
+    @light.position.set(@body.position...)
 
   onTick: () =>
     Aero.applyAerodynamics(@body, @podDef.drag, @podDef.drag)
@@ -71,6 +72,6 @@ class Pod extends Entity
   onDestroy: (game) =>
     for flap in @flaps
       flap.destoy()
-
+    @light.destroy()
 
 module.exports = Pod

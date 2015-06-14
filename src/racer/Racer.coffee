@@ -7,12 +7,11 @@ LinearSpring = p2.LinearSpring
 RopeSpring = require 'physics/RopeSpring'
 RacerDefs = require 'racer/RacerDefs'
 Coupling = require 'racer/Coupling'
+Lights = require 'lighting/Lights'
 
 # 
 class Racer extends Entity
   constructor: ([x, y], @racerDef=RacerDefs.default) ->
-    console.log "new racer"
-
     podPosition = p2.vec2.add([0, 0], [x, y], @racerDef.podPosition)
     leftEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.leftEnginePosition)
     rightEnginePosition = p2.vec2.add([0, 0], [x, y], @racerDef.rightEnginePosition)
@@ -42,7 +41,6 @@ class Racer extends Entity
         }))
 
   onAdd: (game) =>
-    console.log "racer added"
     game.addEntity(@pod)
     game.addEntity(@leftEngine)
     game.addEntity(@rightEngine)
@@ -61,6 +59,7 @@ class Racer extends Entity
     rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
     @game.draw.line(podLeftPoint, leftEnginePoint, width, color)
     @game.draw.line(podRightPoint, rightEnginePoint, width, color)
+
   
   # Set the control value on all the racer's flaps
   # @param left {number} - between 0 and 1
@@ -78,5 +77,6 @@ class Racer extends Entity
   onDestroy: (game) =>
     for spring in @springs
       game.world.removeSpring(spring)
+    @light.destroy()
 
 module.exports = Racer
