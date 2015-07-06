@@ -1,5 +1,7 @@
 node_modules/
-
+.idea
 bin/main.js
+
+# General crap
 *.sublime-workspace
 *.DS_Store
