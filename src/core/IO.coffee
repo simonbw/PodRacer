@@ -36,6 +36,8 @@ class IO
   @BUTTON_DOWN = BUTTON_DOWN = 'buttondown'
   @BUTTON_UP = BUTTON_UP = 'buttonup'
 
+  @DEADZONE = 0
+
   constructor: (@view) ->
     @view.onclick = @click
     @view.onmousedown = @mousedown
@@ -182,7 +184,7 @@ class IO
 
   getAxis: (axis) =>
     gamepad = navigator.getGamepads()[0]
-    if gamepad?
+    if gamepad? #and Math.abs(gamepad.axes[axis]) >= @DEADZONE
       return gamepad.axes[axis]
     return 0
 

@@ -11,7 +11,7 @@ Pixi = require 'pixi.js'
 PlayerRacerController = require 'racer/PlayerRacerController'
 Racer = require 'racer/Racer'
 RacerDefs = require 'racer/RacerDefs'
-Menu = require 'menu/Menu'
+MainMenu = require 'menu/MainMenu'
 
 window.onload = ->
   console.log "loading..."
@@ -24,8 +24,10 @@ start = ->
   console.log "ready to go"
   # here we need to open up a new menu
   window.game = game = new Game()
-  window.menu = menu = new Menu(game)
-  menu.begin("main", ["option 1", "option 2", "option 3"])
+  game.addEntity(new MainMenu())
+  game.addEntity(new Ground())
+
+  window.game.start()
   # racer = new Racer([0, 0], RacerDefs.test)
   # racer2 = new Racer([0, -15])
   # racerController = new PlayerRacerController(racer)
