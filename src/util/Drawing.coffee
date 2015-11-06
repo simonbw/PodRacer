@@ -11,8 +11,8 @@ class Drawing extends Entity
     @guaranteeSprite(layer)
     sprite = @sprites[layer]
     sprite.lineStyle(width, color, alpha)
-    sprite.moveTo(x1 - 0.5, y1 - 0.5) # the -0.5 is because pixi sucks
-    sprite.lineTo(x2 - 0.5, y2 - 0.5) # the -0.5 is because pixi sucks
+    sprite.moveTo(x1, y1) # the -0.5 is because pixi sucks
+    sprite.lineTo(x2, y2) # the -0.5 is because pixi sucks
 
   # Guarantee that a layer exists
   guaranteeSprite: (layerName) =>

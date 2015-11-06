@@ -70,6 +70,10 @@ class Racer extends Entity
     @leftEngine.setFlaps(left, right)
     @rightEngine.setFlaps(left, right)
 
+  # Get the velocity of the racer's pod
+  getPodVelocity: () ->
+    return @pod.body.velocity()
+
   getWorldCenter: () =>
     x = (@leftEngine.body.position[0] + @rightEngine.body.position[0] + @pod.body.position[0]) / 3.0
     y = (@leftEngine.body.position[1] + @rightEngine.body.position[1] + @pod.body.position[1]) / 3.0
