@@ -16,25 +16,25 @@ class ListMenu extends Entity
     @sprite = new Pixi.Graphics()
 
   onAdd: () =>
-    x = @game.camera.getViewportSize()[0]/2
-    y = @game.camera.getViewportSize()[1]/2
-
-    @text = new Pixi.Text("Super Pod Racer",{font : '50px Arial', fill : 0xFF0000, align : 'center'});
+    @text = new Pixi.Text("Super Pod Racer", {
+      font : 'bold 50px Arial'
+      fill : 0xFFFFFF
+    });
+    @sprite.x = 20
+    @sprite.y = 100
     @sprite.addChild(@text)
-    @sprite.x = x - 200
-    @sprite.y = y - 300
 
     @cameraController = new MenuCameraController()
     @game.addEntity(@cameraController)
     @lastMoveTime = Date.now()
-    
-    @setOptions(x, y)
-    
+
+    @setOptions()
+
     @game.addEntity(option) for option in @options
     @currentOption = 0
     @selectOption(0)
 
-  setOptions: (x, y) =>
+  setOptions: () =>
     @options = []
 
   onTick: () ->
@@ -65,7 +65,6 @@ class ListMenu extends Entity
       when IO.UP_ARROW then @selectOption(@currentOption - 1)
       when IO.DOWN_ARROW then @selectOption(@currentOption + 1)
       when IO.ENTER then @activateOption()
-      else
 
   # activate the currently selected option
   activateOption: () =>

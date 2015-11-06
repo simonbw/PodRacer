@@ -2,33 +2,39 @@ Entity = require 'core/Entity'
 Pixi = require 'pixi.js'
 
 class MenuOption extends Entity
+  @WIDTH = WIDTH = 300
+  @HEIGHT = HEIGHT = 80
+
+  UNSELECTED_COLOR = 0x555566
+  UNSELECTED_ALPHA = 0.5
+  SELECTED_COLOR = 0x3333FF
+  SELECTED_ALPHA = 0.9
+
   constructor: (@name, @x, @y, @callback) ->
-    @text = new Pixi.Text(@name,{font : '24px Arial', fill : 0xFFFFFF, align : 'center'});
+    @text = new Pixi.Text(@name, {
+      font: '24px Arial'
+      fill: 0xFFFFFF
+      lineHeight: HEIGHT
+    });
     @layer = "menu"
     @sprite = new Pixi.Graphics()
     @sprite.x = @x
     @sprite.y = @y
+    @text.x = 10
+    @text.y = 10
     @sprite.addChild(@text)
-    @sprite.beginFill(0x0000AA)
-    @sprite.drawRect(0, 0, 200, 30)
-    @sprite.endFill()
-
-  onRender: () ->
-    #console.log "onrender called for menu option"
-
-  onAdd: () ->
-    #console.log "menu option added to game"
+    @redrawSprite(UNSELECTED_COLOR, UNSELECTED_ALPHA)
 
   select: () ->
-    @redrawSprite(0xAA0000)
+    @redrawSprite(SELECTED_COLOR, SELECTED_ALPHA)
 
   unSelect: () ->
-    @redrawSprite(0x0000AA)
+    @redrawSprite(UNSELECTED_COLOR, UNSELECTED_ALPHA)
 
-  redrawSprite: (color) =>
+  redrawSprite: (color, alpha) =>
     @sprite.clear()
-    @sprite.beginFill(color)
-    @sprite.drawRect(0, 0, 200, 30)
+    @sprite.beginFill(color, alpha)
+    @sprite.drawRect(0, 0, WIDTH, HEIGHT)
     @sprite.endFill()
 
   activate: () =>

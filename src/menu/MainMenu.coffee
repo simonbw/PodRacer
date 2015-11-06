@@ -11,23 +11,21 @@ CameraController = require 'camera/CameraController'
 IO = require 'core/IO'
 
 class MainMenu extends ListMenu
-  setOptions: (x,y) =>
+  setOptions: () =>
     @options = [
-      new MenuOption("New Game", x, y, => 
-                                        @cameraController.destroy()
-                                        racer = new Racer([0, 0], RacerDefs.test)
-                                        racer2 = new Racer([0, -15])
-                                        racerController = new PlayerRacerController(racer)
-                                        cameraController = new CameraController(racer, @game.camera)
+      new MenuOption("New Game", 20, 180, =>
+        @cameraController.destroy()
+        racer = new Racer([0, 0], RacerDefs.test)
+        racer2 = new Racer([0, -15])
+        racerController = new PlayerRacerController(racer)
+        cameraController = new CameraController(racer, @game.camera)
 
-                                        #game.addEntity(new FPSCounter())
-
-                                        game.addEntity(racer)
-                                        game.addEntity(racer2)
-                                        game.addEntity(racerController)
-                                        game.addEntity(cameraController)
-                                        @destroy())
-      new MenuOption("Settings", x, y + 120, -> console.log "hello")
-      ]
+        @game.addEntity(racer)
+        @game.addEntity(racer2)
+        @game.addEntity(racerController)
+        @game.addEntity(cameraController)
+        @destroy())
+      new MenuOption("Settings", 20, 280, -> console.log "hello")
+    ]
 
 module.exports = MainMenu
