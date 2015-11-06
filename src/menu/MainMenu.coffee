@@ -15,38 +15,35 @@ class MainMenu extends Entity
     @sprite = new Pixi.Graphics()
 
   onAdd: () =>
-    x = @game.camera.getViewportSize()[0]/2
-    y = @game.camera.getViewportSize()[1]/2
-
-    @text = new Pixi.Text("Super Pod Racer",{font : '50px Arial', fill : 0xFF0000, align : 'center'});
+    @text = new Pixi.Text("Super Pod Racer", {
+      font: 'bold 50px Arial'
+      fill: 0xFFFFFF,
+    });
     @sprite.addChild(@text)
-    @sprite.x = x - 200
-    @sprite.y = y - 300
+    @sprite.x = 20
+    @sprite.y = 100
 
     @cameraController = new MenuCameraController()
     @game.addEntity(@cameraController)
     @lastMoveTime = Date.now()
-    
-    
+
+    optionX = 20
     @options = [
-      new MenuOption("New Game", x, y, => 
-                                          @cameraController.destroy()
-                                          racer = new Racer([0, 0], RacerDefs.test)
-                                          racer2 = new Racer([0, -15])
-                                          racerController = new PlayerRacerController(racer)
-                                          cameraController = new CameraController(racer, @game.camera)
-
-                                          #game.addEntity(new FPSCounter())
-
-                                          game.addEntity(racer)
-                                          game.addEntity(racer2)
-                                          game.addEntity(racerController)
-                                          game.addEntity(cameraController)
-                                          @destroy())
-      new MenuOption("Settings", x, y + 120, -> console.log("why would you do this?"))
+      new MenuOption("New Game", optionX, 180, () =>
+        @cameraController.destroy()
+        racer = new Racer([0, 0], RacerDefs.test)
+        racer2 = new Racer([0, -15])
+        racerController = new PlayerRacerController(racer)
+        cameraController = new CameraController(racer, @game.camera)
+        @game.addEntity(racer)
+        @game.addEntity(racer2)
+        @game.addEntity(racerController)
+        @game.addEntity(cameraController)
+        @destroy()),
+      new MenuOption("Settings", optionX, 280, -> console.log("why would you do this?"))
     ]
     @game.addEntity(option) for option in @options
-    console.log "making menu state with options size" + @options.length
+    console.log "making menu state with options size " + @options.length
 
     @currentOption = 0
     @selectOption(0)
@@ -77,8 +74,6 @@ class MainMenu extends Entity
 
   onDestroy: () =>
     option.destroy() for option in @options
-
-
 
 
 module.exports = MainMenu

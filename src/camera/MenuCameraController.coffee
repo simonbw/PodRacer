@@ -2,7 +2,7 @@ Entity = require 'core/Entity'
 Util = require 'util/Util'
 
 
-# Controlls the camera
+# Controls the camera
 class MenuCameraController extends Entity
   onAdd: () ->
     @zoom = 0.1
@@ -10,14 +10,8 @@ class MenuCameraController extends Entity
     @position = [0,0]
 
   onRender: () ->
-    # @position[0] += 2 * @game.io.getAxis(2)
-    # @position[1] += 2 * @game.io.getAxis(3)
-    # @camera.center(@position)
-    # @zoom -= @game.io.getAxis(1)
-    # if @zoom <= 0.5
-    #   @zoom = 0.5
-    # @camera.smoothZoom(@zoom)
-
+    @camera.x += 0.05
+    @camera.y += 0.02
 
 
 module.exports = MenuCameraController
