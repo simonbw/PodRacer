@@ -36,6 +36,10 @@ class IO
   @BUTTON_DOWN = BUTTON_DOWN = 'buttondown'
   @BUTTON_UP = BUTTON_UP = 'buttonup'
 
+  @UP_ARROW = 38
+  @DOWN_ARROW = 40
+  @ENTER = 13
+  
   @DEADZONE = 0
 
   constructor: (@view) ->

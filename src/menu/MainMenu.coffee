@@ -7,6 +7,7 @@ Racer = require 'racer/Racer'
 PlayerRacerController = require 'racer/PlayerRacerController'
 MenuCameraController = require 'camera/MenuCameraController'
 CameraController = require 'camera/CameraController'
+IO = require 'core/IO'
 DOWN_THRESHOLD = 250
 
 class MainMenu extends Entity
@@ -71,6 +72,13 @@ class MainMenu extends Entity
   onButtonDown: (button) =>
     if button == 0 # A has been pressed
       @activateOption()
+
+  onKeyDown: (key) =>
+    switch key
+      when IO.UP_ARROW then @selectOption(@currentOption - 1)
+      when IO.DOWN_ARROW then @selectOption(@currentOption + 1)
+      when IO.ENTER then @activateOption()
+      else
 
   activateOption: () =>
     @options[@currentOption].activate()
