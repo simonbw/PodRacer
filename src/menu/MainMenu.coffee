@@ -12,12 +12,12 @@ NewGameMenu = require 'menu/NewGameMenu'
 IO = require 'core/IO'
 
 class MainMenu extends ListMenu
-  setOptions: (x,y) =>
+  setOptions: () =>
     @options = [
-      new MenuOption("New Game", x, y, => 
+      new MenuOption("New Game", 20, 180, => 
         @game.addEntity(new NewGameMenu())
         @destroy())
-      new MenuOption("Settings", x, y + 120, => 
+      new MenuOption("Settings", 20, 280, => 
         console.log "this should open a settings menu")
       ]
 

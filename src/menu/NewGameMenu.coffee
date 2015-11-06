@@ -12,10 +12,9 @@ MainMenu = require 'menu/MainMenu'
 IO = require 'core/IO'
 
 class NewGameMenu extends ListMenu
-  setOptions: (x,y) =>
+  setOptions: () =>
     @options = [
-      new MenuOption("Free Play", x, y, => 
-        @cameraController.destroy()
+      new MenuOption("Free Play", 20, 180, => 
         racer = new Racer([0, 0], RacerDefs.test)
         racer2 = new Racer([0, -15])
         racerController = new PlayerRacerController(racer)
@@ -28,9 +27,9 @@ class NewGameMenu extends ListMenu
         @game.addEntity(racerController)
         @game.addEntity(cameraController)
         @destroy())
-      new MenuOption("Race", x, y + 120, => 
+      new MenuOption("Race", 20, 280, => 
         console.log "this should start a race"),
-      new MenuOption("Back", x, y + 240, => 
+      new MenuOption("Back", 20, 380, => 
         console.log MainMenu
         @game.addEntity(new MainMenu())
         @destroy())
