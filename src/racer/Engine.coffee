@@ -1,7 +1,7 @@
 Entity = require 'core/Entity'
 p2 = require 'p2'
 Pixi = require 'pixi.js'
-Util = require 'util/Util'
+Util = require 'util/Util.coffee'
 Aero = require 'physics/Aerodynamics'
 ControlFlap = require 'racer/ControlFlap'
 
