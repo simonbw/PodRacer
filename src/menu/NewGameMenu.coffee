@@ -8,7 +8,6 @@ Racer = require 'racer/Racer'
 PlayerRacerController = require 'racer/PlayerRacerController'
 MenuCameraController = require 'camera/MenuCameraController'
 CameraController = require 'camera/CameraController'
-MainMenu = require 'menu/MainMenu'
 IO = require 'core/IO'
 
 class NewGameMenu extends ListMenu
@@ -30,7 +29,7 @@ class NewGameMenu extends ListMenu
       new MenuOption("Race", 20, 280, => 
         console.log "this should start a race"),
       new MenuOption("Back", 20, 380, => 
-        console.log MainMenu
+        MainMenu = require 'menu/MainMenu'
         @game.addEntity(new MainMenu())
         @destroy())
       ]
