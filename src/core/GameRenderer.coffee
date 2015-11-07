@@ -3,11 +3,15 @@ Camera = require 'core/Camera'
 
 # The base renderer. Handles layers and camera movement.
 class GameRenderer
-  
+
   # Create a new GameRenderer
   constructor: ->
+    Pixi.RESOLUTION = window.devicePixelRatio || 1
     [w, h] = [window.innerWidth, window.innerHeight]
-    @pixiRenderer = Pixi.autoDetectRenderer(w, h, {antialias: true})
+    @pixiRenderer = Pixi.autoDetectRenderer(w, h, {
+      antialias: true
+      resolution: Pixi.RESOLUTION
+    })
     document.body.appendChild(@pixiRenderer.view)
     @stage = new Pixi.Container()
     @camera = new Camera(this)
@@ -33,7 +37,7 @@ class GameRenderer
   render: (engine) =>
     for name, info of @layerInfos
       @camera.updateLayer(info)
-    
+
     @pixiRenderer.render(@stage)
 
   # Add a child to a specific layer.
