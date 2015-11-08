@@ -8,8 +8,6 @@ ControlFlap = require 'racer/ControlFlap'
 
 class Engine extends Entity
   constructor: ([x, y], @side, @engineDef) ->
-    console.log "new engine at #{[x, y]}"
-    
     [w, h] = @engineDef.size
     @size = @engineDef.size
 
@@ -47,6 +45,23 @@ class Engine extends Entity
         def['position'] = [@engineDef.size[0] / 2, flapDef.y]
       @flaps.push(new ControlFlap(@body, def))
 
+  onAdd: (game) =>
+#    @engineLight = game.lights.newPointLight()
+    @engineLight = game.lights.newDirectionalLight()
+    @engineLight.spread = 0
+    @engineLight.spreadFuzz = Math.PI
+    @engineLight.color = 0xAAFFFF
+
+    @headLight = game.lights.newDirectionalLight()
+    @headLight.spread = 0.3
+    @headLight.spreadFuzz = Math.PI / 8
+    @headLight.color = 0xFFFFAA
+    @headLight.intensity = 0.35
+    @headLight.radius = 100.0
+
+    for flap in @flaps
+      game.addEntity(flap)
+
   setThrottle: (value) =>
     @throttle = Util.clamp(value, 0, 1)
 
@@ -60,11 +75,6 @@ class Engine extends Entity
       if flap.direction == ControlFlap.RIGHT
         flap.setControl(right)
 
-  onAdd: (game) =>
-    console.log "engine added"
-    for flap in @flaps
-      game.addEntity(flap)
-
   onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
@@ -76,17 +86,21 @@ class Engine extends Entity
 
     rand = Math.random()
 
-    endPoint = @localToWorld([(left[0] + right[0]) / 2, (2.5 + rand) * @throttle + 0.5 * @size[1]])
-    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x0000FF, 0.2)
+    @headLight.position.set(@localToWorld([0, -0.4 * @size[1]])...)
+    @headLight.angle = @body.angle - Math.PI / 2
 
-    endPoint = @localToWorld([(left[0] + right[0]) / 2, (1.6 + rand) * @throttle + 0.5 * @size[1]])
-    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00AAFF, 0.4)
+    throttleWithIdle = 0.2 + 0.8 * @throttle
+    @engineLight.position.set(@localToWorld([0, 0.5 * @size[1]])...)
+    @engineLight.angle = @body.angle + Math.PI / 2
+    @engineLight.radius = (12.0 + 2.0 * rand)
+    @engineLight.intensity = (0.6 + 0.2 * rand) * (0.2 + 0.8 * throttleWithIdle)
 
-    endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.5 + rand) * @throttle + 0.5 * @size[1]])
-    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00FFFF, 0.6)
 
-    endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.15 + rand) * @throttle + 0.5 * @size[1]])
-    @game.draw.triangle(leftWorld, endPoint, rightWorld, 0xFFFFFF, 0.8)
+    # Engine effect, bottom to top
+    triangleData = [[2.5, 0x0000FF, 0.2], [1.6, 0x00AAFF, 0.4], [0.5, 0x00FFFF, 0.6], [0.15, 0xFFFFFF, 0.8]]
+    for [length, color, alpha] in triangleData
+      endPoint = @localToWorld([(left[0] + right[0]) / 2, (length + rand) * throttleWithIdle + 0.5 * @size[1]])
+      @game.draw.triangle(leftWorld, endPoint, rightWorld, color, alpha)
 
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)

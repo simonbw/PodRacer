@@ -3,6 +3,7 @@ IO = require 'core/IO'
 p2 = require 'p2'
 Profiler = require 'util/Profiler'
 Drawing = require 'util/Drawing'
+Lights = require 'lighting/Lights'
 
 # Top Level control structure
 class Game
@@ -25,6 +26,7 @@ class Game
     @world.on('impact', @endContact)
     @io = new IO(@renderer.pixiRenderer.view)
     @draw = new Drawing()
+    @lights = new Lights()
 
     @framerate = 60
 
@@ -47,6 +49,7 @@ class Game
   start: =>
     @addEntity(@camera)
     @addEntity(@draw)
+    @addEntity(@lights)
     console.log "Game Started"
     window.requestAnimationFrame(@loop)
   
@@ -169,7 +172,7 @@ class Game
   render: =>
     @cleanupEntities()
     for entity in @entities.onRender
-      entity.onRender()
+      entity.onRender(@camera)
     @renderer.render()
 
   # Handle collision begin between things.

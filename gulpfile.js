@@ -2,6 +2,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
+var fs = require('fs')
 
 /**
  * Returns a browserify object.
@@ -16,7 +17,7 @@ function getBundler() {
     entries: ['./src/main.coffee'],
     extensions: ['.coffee'],
     paths: ['./src', './node_modules']
-  }).transform('coffeeify');
+  }).transform('coffeeify').transform('brfs');
 }
 
 /**

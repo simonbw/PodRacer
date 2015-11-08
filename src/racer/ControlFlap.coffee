@@ -10,7 +10,6 @@ class ControlFlap extends Entity
 
   # body to attach to, position vector [x,y], length, default angle, direction to open (0 left, 1 right)
   constructor: (@attachedBody, @flapDef) ->
-    console.log "new flippy flappy at #{@flapDef.position}"
     @direction = @flapDef.direction
     @position = @flapDef.position
     @control = 0

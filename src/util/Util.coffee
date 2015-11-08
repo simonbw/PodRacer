@@ -24,4 +24,14 @@ Util = {
     return Math.sqrt(x * x + y * y)
 }
 
+Util.Color = {
+  # Returns an array [r, g, b] with float values between 0.0 and 1.0
+  intToRgb: (color) ->
+    r = ((color >> 16) & 0xFF) / 255
+    g = ((color >> 8) & 0xFF) / 255
+    b = (color & 0xFF) / 255
+    return [r, g, b]
+}
+
+
 module.exports = Util
