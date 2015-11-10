@@ -22,7 +22,7 @@ class Game
     })
     @world.on('beginContact', @beginContact)
     @world.on('endContact', @endContact)
-    @world.on('impact', @endContact)
+    @world.on('impact', @impact)
     @io = new IO(@renderer.pixiRenderer.view)
     @draw = new Drawing()
 
@@ -103,7 +103,9 @@ class Game
     if entity.onButtonUp? then @io.on(IO.BUTTON_UP, entity.onButtonUp)
 
     if entity.sprite? then @renderer.add(entity.sprite, entity.layer)
-    if entity.body? then @world.addBody(entity.body)
+    if entity.body?
+      @world.addBody(entity.body)
+      entity.body.owner = entity # set body owner
 
     return entity
 
@@ -175,10 +177,10 @@ class Game
   # Handle collision begin between things.
   # Fired during narrowphase of collision detection.
   beginContact: (e) =>
-    if e.bodyA.beginContact?
-      e.bodyA.beginContact(e.bodyB)
-    if e.bodyB.beginContact?
-      e.bodyB.beginContact(e.bodyA)
+    if e.bodyA.owner.beginContact?
+      e.bodyA.owner.beginContact(e.bodyB.owner)
+    if e.bodyB.owner.beginContact?
+      e.bodyB.owner.beginContact(e.bodyA.owner)
 
     if e.shapeA.beginContact?
       e.shapeA.beginContact(e.shapeB)
@@ -188,10 +190,10 @@ class Game
   # Handle collision end between things.
   # Fired after narrowphase of collision detection.
   endContact: (e) =>
-    if e.bodyA.endContact?
-      e.bodyA.endContact(e.bodyB)
-    if e.bodyB.endContact?
-      e.bodyB.endContact(e.bodyA)
+    if e.bodyA.owner.endContact?
+      e.bodyA.owner.endContact(e.bodyB.owner)
+    if e.bodyB.owner.endContact?
+      e.bodyB.owner.endContact(e.bodyA.owner)
 
     if e.shapeA.endContact?
       e.shapeA.endContact(e.shapeB)
@@ -200,9 +202,15 @@ class Game
 
   # Handle impact (called after physics is done)
   impact: (e) =>
-    if e.bodyA.impact?
-      e.bodyA.impact(e.bodyB)
-    if e.bodyB.impact?
-      e.bodyB.impact(e.bodyA)
+    if e.bodyA.owner.impact?
+      e.bodyA.owner.impact(e.bodyB.owner)
+    if e.bodyB.owner.impact?
+      e.bodyB.owner.impact(e.bodyA.owner)
+
+  # warning: doesn't work. Use with caution
+  # some entities destroy other entities, so destroy is called twice
+  # with disastrous consequences
+  # clearAll: () =>
+  #   entity.destroy() for entity in @entities.all
 
 module.exports = Game

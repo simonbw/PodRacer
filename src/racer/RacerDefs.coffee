@@ -23,6 +23,8 @@ class RacerDef
         'side': 'inside'
         'y': -1.0
       }]
+      'health': 100
+      'fragility': 50
     @leftEnginePosition = [-1, 0]
     @rightEnginePosition = [1, 0]
     @podPosition = [0, 8]
@@ -39,6 +41,8 @@ class RacerDef
         'maxAngle': Math.PI / 3
         'y': 0
       }]
+      'health': 100
+      'fragility': 50
     @rope =
       'size': 0.03
       'color': 0x444444
@@ -47,7 +51,6 @@ class RacerDef
     @coupling = 
       'stiffness': 30
       'damping': 0.5
-    @health = 100
 
 RacerDefs = {}
 

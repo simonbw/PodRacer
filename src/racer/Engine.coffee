@@ -16,6 +16,9 @@ class Engine extends Entity
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
 
+    @health = @engineDef.health
+    @fragility = @engineDef.fragility
+
     @body = new p2.Body {
       position: [x, y]
       mass: @engineDef.mass
@@ -103,6 +106,12 @@ class Engine extends Entity
 
   onDestroy: (game) =>
     for flap in @flaps
-      flap.destoy()
+      flap.destroy()
+
+  impact: (other) =>
+    if @health > 0
+      @health -= @fragility
+    else
+      @destroy()
 
 module.exports = Engine

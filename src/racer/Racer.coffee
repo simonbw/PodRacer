@@ -19,8 +19,6 @@ class Racer extends Entity
     @rightEngine = new Engine(rightEnginePosition, 'right', @racerDef.engine)
     @coupling = new Coupling(@leftEngine, @rightEngine, 0, 0, 0xFF22AA, 1)
 
-    @health = @racerDef.health
-
     # Springs
     @springs = []
     # ropes
@@ -52,34 +50,54 @@ class Racer extends Entity
       game.world.addSpring(spring)
 
   onRender: () =>
+    if not @pod?
+      return
+
     width = @racerDef.rope.size # width in meters of the rope
     color = @racerDef.rope.color
-    podLeftPoint = @pod.localToWorld(@pod.leftRopePoint)
-    podRightPoint = @pod.localToWorld(@pod.rightRopePoint)
-    leftEnginePoint = @leftEngine.localToWorld(@leftEngine.ropePoint)
-    rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
-    @game.draw.line(podLeftPoint, leftEnginePoint, width, color)
-    @game.draw.line(podRightPoint, rightEnginePoint, width, color)
+
+    if @leftEngine?
+      podLeftPoint = @pod.localToWorld(@pod.leftRopePoint)
+      leftEnginePoint = @leftEngine.localToWorld(@leftEngine.ropePoint)
+      @game.draw.line(podLeftPoint, leftEnginePoint, width, color)
+
+    if @rightEngine?
+      podRightPoint = @pod.localToWorld(@pod.rightRopePoint)
+      rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
+      @game.draw.line(podRightPoint, rightEnginePoint, width, color)
   
   # Set the control value on all the racer's flaps
   # @param left {number} - between 0 and 1
   # @param right {number} - between 0 and 1
   setFlaps: (left, right) =>
-    @pod.setFlaps(left, right)
-    @leftEngine.setFlaps(left, right)
-    @rightEngine.setFlaps(left, right)
+    if @pod? then @pod.setFlaps(left, right)
+    if @leftEngine? then @leftEngine.setFlaps(left, right)
+    if @rightEngine? then @rightEngine.setFlaps(left, right)
 
   # Get the velocity of the racer's pod
   getPodVelocity: () =>
-    return @pod.body.velocity
+    if @pod? then return Array.from(@pod.body.velocity) else return [0,0]
 
   getWorldCenter: () =>
-    x = (@leftEngine.body.position[0] + @rightEngine.body.position[0] + @pod.body.position[0]) / 3.0
-    y = (@leftEngine.body.position[1] + @rightEngine.body.position[1] + @pod.body.position[1]) / 3.0
+    existingParts = [@leftEngine, @rightEngine, @pod].filter((x) -> x?)
+    x = existingParts.reduce(((prev, curr) -> return prev + curr.body.position[0]), 0) / existingParts.length or 0
+    y = existingParts.reduce(((prev, curr) -> return prev + curr.body.position[1]), 0) / existingParts.length or 0
     return [x, y]
 
   onDestroy: (game) =>
     for spring in @springs
       game.world.removeSpring(spring)
+
+  afterTick: () =>
+    for spring in @springs
+      if not spring.bodyA.owner.game? or not spring.bodyB.owner.game?
+        game.world.removeSpring(spring)
+    if @leftEngine? and not @leftEngine.game?
+      @leftEngine = null
+    if @rightEngine? and not @rightEngine.game?
+      @rightEngine = null
+    if @pod? and not @pod.game?
+      @pod = null
+
 
 module.exports = Racer

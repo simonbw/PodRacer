@@ -22,4 +22,8 @@ class Coupling extends Entity
 
     @game.draw.line(left, right, width, @color, alpha)
 
+  afterTick: () =>
+    if not @leftEngine.game? or not @rightEngine.game?
+      @destroy()
+
 module.exports = Coupling

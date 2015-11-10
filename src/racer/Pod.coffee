@@ -18,6 +18,9 @@ class Pod extends Entity
 
     @size = [w, h]
 
+    @health = @podDef.health
+    @fragility = @podDef.fragility
+
     @body = new p2.Body {
       position: [x, y]
       mass: @podDef.mass
@@ -67,7 +70,13 @@ class Pod extends Entity
 
   onDestroy: (game) =>
     for flap in @flaps
-      flap.destoy()
+      flap.destroy()
+
+  impact: (other) =>
+    if @health > 0
+      @health -= @fragility
+    else
+      @destroy()
 
 
 module.exports = Pod
