@@ -29,6 +29,10 @@ Util = {
     diff = b - a
     return Util.mod(diff + Math.PI, Math.PI * 2) - Math.PI;
 
+  # Return the length of a vector.
+  length: ([x, y]) ->
+    return Math.sqrt(x * x + y * y)
+
 }
 
 module.exports = Util

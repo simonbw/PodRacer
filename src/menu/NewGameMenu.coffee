@@ -29,7 +29,7 @@ class NewGameMenu extends ListMenu
     racer2 = new Racer([-5, 0])
     racerController = new PlayerRacerController(racer)
     racerController2 = new AIRacerController(racer2, race)
-    cameraController = new CameraController(racer2, game.camera)
+    cameraController = new CameraController(racer, game.camera)
   
     game.addEntity(racer)
     game.addEntity(racer2)
@@ -47,6 +47,7 @@ class NewGameMenu extends ListMenu
     race.addWaypoint([-400, 0], 50)
     race.addWaypoint([-250, 250], 40)
     game.addEntity(race)
+    @destroy()
 
   startFreePlay: () =>
     racer = new Racer([0, 0], RacerDefs.test)
