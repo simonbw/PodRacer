@@ -47,6 +47,7 @@ class RacerDef
     @coupling = 
       'stiffness': 30
       'damping': 0.5
+    @health = 100
 
 RacerDefs = {}
 

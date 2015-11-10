@@ -19,6 +19,8 @@ class Racer extends Entity
     @rightEngine = new Engine(rightEnginePosition, 'right', @racerDef.engine)
     @coupling = new Coupling(@leftEngine, @rightEngine, 0, 0, 0xFF22AA, 1)
 
+    @health = @racerDef.health
+
     # Springs
     @springs = []
     # ropes
