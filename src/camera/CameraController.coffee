@@ -1,5 +1,6 @@
 Entity = require 'core/Entity'
 Util = require 'util/Util.coffee'
+p2 = require 'p2'
 
 
 # Controlls the camera

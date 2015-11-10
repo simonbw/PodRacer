@@ -8,8 +8,6 @@ ControlFlap = require 'racer/ControlFlap'
 
 class Pod extends Entity
   constructor: ([x, y], @podDef) ->
-    console.log "new pod at #{[x, y]}"
-
     [w, h] = @podDef.size
     @size = @podDef.size
 
@@ -23,7 +21,7 @@ class Pod extends Entity
     @body = new p2.Body {
       position: [x, y]
       mass: @podDef.mass
-      angularDamping: 0.01
+      angularDamping: 0.15
       damping: 0.0
     }
     
@@ -57,7 +55,6 @@ class Pod extends Entity
         flap.setControl(right)
 
   onAdd: (game) =>
-    console.log "pod added"
     for flap in @flaps
       game.addEntity(flap)
 

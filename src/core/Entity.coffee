@@ -44,6 +44,7 @@ Pixi = require 'pixi.js'
 #   IO Event Handler
 # 
 class Entity
+  @hashCount = 0
   # Remove this entity from the game it is in
   destroy: () =>
     @game.removeEntity(this)
@@ -59,6 +60,13 @@ class Entity
       result = @sprite.toGlobal(new Pixi.Point(point[0], point[1]))
       return [result.x, result.y]
     return [0, 0]
+  
+  # Give an id to every entity that is hashed
+  hash: () =>
+    if !@_hashcode?
+      @_hashcode = Entity.hashCount
+      Entity.hashCount++
+    return @_hashcode
 
   # Pixi.DisplayObject] sprite
   #   added to renderer when added to game.

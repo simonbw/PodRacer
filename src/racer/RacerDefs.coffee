@@ -4,7 +4,7 @@ class RacerDef
   constructor: () ->
     @engine =
       'color': 0x0000FF
-      'drag': 0.8
+      'drag': 1.0
       'mass': 1.0
       'maxForce': 80.0
       'size': [0.5, 2.0]
@@ -28,7 +28,7 @@ class RacerDef
     @podPosition = [0, 8]
     @pod =
       'color': 0x0000FF
-      'drag': 1.2
+      'drag': 1.4
       'mass': 1.0
       'size': [1, 1.5]
       'position': [0, 10]
@@ -43,7 +43,7 @@ class RacerDef
       'size': 0.03
       'color': 0x444444
       'stiffness': 20
-      'damping': 1
+      'damping': 1.5
     @coupling = 
       'stiffness': 30
       'damping': 0.5
@@ -53,8 +53,9 @@ RacerDefs = {}
 RacerDefs.default = new RacerDef()
 
 RacerDefs.test = new RacerDef()
-RacerDefs.test.pod.color = 0x000000
-RacerDefs.test.rope.color = 0x000000
-RacerDefs.test.engine.color = 0x000000
+RacerDefs.test.pod.color = 0x2222BB
+RacerDefs.test.rope.color = 0x444444
+RacerDefs.test.engine.color = 0x2222BB
+RacerDefs.test.pod.flaps[0].color = 0x1111AA
 
 module.exports = RacerDefs

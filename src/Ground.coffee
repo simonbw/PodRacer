@@ -12,8 +12,10 @@ class Ground extends Entity
 
     @sprite.scale.x = 0.04
     @sprite.scale.y = 0.04
-    # @sprite.beginFill(0xFFFFBB)
-    # @sprite.drawRect(-1000, -1000, 2000, 2000)
+
+    # @sprite = new Pixi.Graphics()
+    # @sprite.beginFill(0xFFEEBB)
+    # @sprite.drawRect(-100000, -100000, 200000, 200000)
     # @sprite.endFill()
 
 module.exports = Ground
