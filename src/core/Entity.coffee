@@ -45,6 +45,10 @@ Pixi = require 'pixi.js'
 # 
 class Entity
   @hashCount = 0
+
+  # if true, this entity stops doing stuff when the game is paused
+  pausable: true
+
   # Remove this entity from the game it is in
   destroy: () =>
     if @game? then @game.removeEntity(this)

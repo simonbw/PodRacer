@@ -15,6 +15,7 @@ class Game
       afterTick: []
       toRemove: new Set()
     }
+    @paused = false
     @renderer = new GameRenderer()
     @camera = @renderer.camera
     @world = new p2.World({
@@ -64,7 +65,7 @@ class Game
     @profiler.end('tick')
 
     @profiler.start('physics')
-    @world.step(@timestep)
+    @world.step(@timestep) if not @paused
     @profiler.end('physics')
 
     @profiler.start('afterTick')
@@ -162,16 +163,16 @@ class Game
   tick: =>
     @cleanupEntities()
     for entity in @entities.beforeTick
-      entity.beforeTick()
+      entity.beforeTick() if not (@paused and entity.pausable)
     @cleanupEntities()
     for entity in @entities.onTick
-      entity.onTick()
+      entity.onTick() if not (@paused and entity.pausable)
 
   # Called after physics
   afterTick: =>
     @cleanupEntities()
     for entity in @entities.afterTick
-      entity.afterTick()
+      entity.afterTick() if not (@paused and entity.pausable)
 
   # Called before rendering
   render: =>
@@ -220,5 +221,8 @@ class Game
     for entity in @entities.all
       if entity isnt @camera and entity isnt @draw
         entity.destroy()
+
+  togglePause: () =>
+    @paused = not @paused
 
 module.exports = Game

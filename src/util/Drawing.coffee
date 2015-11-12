@@ -4,6 +4,9 @@ Pixi = require 'pixi.js'
 
 # Class used to make drawing primitives easy
 class Drawing extends Entity
+
+  pausable: false
+
   constructor: () ->
     @sprites = {}
 

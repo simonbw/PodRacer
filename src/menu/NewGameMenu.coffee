@@ -11,6 +11,7 @@ CameraController = require 'camera/CameraController'
 IO = require 'core/IO'
 Race = require 'race/Race'
 AIRacerController = require 'racer/AIRacerController'
+PauseController = require 'core/PauseController'
 
 class NewGameMenu extends ListMenu
   setOptions: () =>
@@ -24,6 +25,7 @@ class NewGameMenu extends ListMenu
       ]
 
   startRace: () =>
+    @game.addEntity(new PauseController())
     race = new Race()
     racer = new Racer([5, 0], RacerDefs.test)
     racer2 = new Racer([-5, 0])
@@ -50,6 +52,7 @@ class NewGameMenu extends ListMenu
     @destroy()
 
   startFreePlay: () =>
+    @game.addEntity(new PauseController())
     racer = new Racer([0, 0], RacerDefs.test)
     racer2 = new Racer([0, -15])
     racerController = new PlayerRacerController(racer)

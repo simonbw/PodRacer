@@ -11,7 +11,7 @@ class CameraController extends Entity
   onRender: () ->
     if @racer.pod?
       vel = @racer.getPodVelocity()
-      center = @racer.getWorldCenter().iadd(vel.imul(0.18))
+      center = @racer.getWorldCenter().iadd(vel.imul(0.3))
       @camera.smoothCenter(center, vel)
       speed = p2.vec2.length(vel)
       @camera.smoothZoom(20 / (1 + 0.1 * Math.log(speed + 1)))

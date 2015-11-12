@@ -11,6 +11,10 @@ IO = require 'core/IO'
 DOWN_THRESHOLD = 250
 
 class ListMenu extends Entity
+
+  # menu will still react when the game is paused
+  pausable: false
+
   constructor: () ->
     @layer = "menu"
     @sprite = new Pixi.Graphics()
