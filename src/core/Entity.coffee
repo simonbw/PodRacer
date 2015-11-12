@@ -47,7 +47,7 @@ class Entity
   @hashCount = 0
   # Remove this entity from the game it is in
   destroy: () =>
-    @game.removeEntity(this)
+    if @game? then @game.removeEntity(this)
 
   # Convert local coordinates to world coordinates
   # Requires either a body or a sprite

@@ -13,7 +13,7 @@ class Game
       onTick: []
       beforeTick: []
       afterTick: []
-      toRemove: []
+      toRemove: new Set()
     }
     @renderer = new GameRenderer()
     @camera = @renderer.camera
@@ -113,7 +113,8 @@ class Game
   # Actually removing an entity at the wrong time can cause some problems, 
   # so we do it when it is next convenient.
   removeEntity: (entity) =>
-    @entities.toRemove.push(entity)
+    #@entities.toRemove.push(entity)
+    @entities.toRemove.add(entity)
     return entity
   
   # Actually removes references to the entities slated for removal
@@ -121,9 +122,12 @@ class Game
     # TODO: Do we really need a separate removal pass?
     # TODO: I think this can be more efficient.
     @profiler.start('cleanup')
-    while @entities.toRemove.length
-      entity = @entities.toRemove.pop()
+    #while @entities.toRemove.length
+      #entity = @entities.toRemove.pop()
+    @entities.toRemove.forEach((entity) =>
       @entities.all.splice(@entities.all.indexOf(entity), 1)
+      if entity.beforeTick?
+        @entities.beforeTick.splice(@entities.beforeTick.indexOf(entity), 1)
       if entity.onRender?
         @entities.onRender.splice(@entities.onRender.indexOf(entity), 1)
       if entity.onTick?
@@ -150,6 +154,8 @@ class Game
       if entity.onDestroy?
         entity.onDestroy(this)
       entity.game = null
+    )
+    @entities.toRemove.clear()
     @profiler.end('cleanup')
 
   # Called before physics
@@ -210,7 +216,9 @@ class Game
   # warning: doesn't work. Use with caution
   # some entities destroy other entities, so destroy is called twice
   # with disastrous consequences
-  # clearAll: () =>
-  #   entity.destroy() for entity in @entities.all
+  clearAll: () =>
+    for entity in @entities.all
+      if entity isnt @camera and entity isnt @draw
+        entity.destroy()
 
 module.exports = Game

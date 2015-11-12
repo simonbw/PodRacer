@@ -23,14 +23,14 @@ class PlayerRacerController extends Entity
     rightFlap = Util.clamp(@game.io.getButton(7).value + @game.io.keys[RIGHT_FLAP], 0, 1)
     @racer.setFlaps(leftFlap, rightFlap)
 
-  # no don't do this pls
-  # causes literally an infinite number of bugs
-  # afterTick: () =>
-  #   if not @racer.pod?
-  #     game.clearAll()
-  #     game.addEntity(new Ground())
-  #     MainMenu = require 'menu/MainMenu'
-  #     game.addEntity(new MainMenu())
+  # this might cause bugs
+  # TODO: remove, restructure
+  afterTick: () =>
+    if not @racer.pod?
+      @game.clearAll()
+      @game.addEntity(new Ground())
+      MainMenu = require 'menu/MainMenu'
+      @game.addEntity(new MainMenu())
 
 
  module.exports = PlayerRacerController
