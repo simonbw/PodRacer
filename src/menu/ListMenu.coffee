@@ -69,6 +69,7 @@ class ListMenu extends Entity
       when IO.UP_ARROW then @selectOption(@currentOption - 1)
       when IO.DOWN_ARROW then @selectOption(@currentOption + 1)
       when IO.ENTER then @activateOption()
+      when IO.SPACEBAR then @activateOption()
 
   # activate the currently selected option
   activateOption: () =>

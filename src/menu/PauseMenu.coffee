@@ -8,17 +8,29 @@ Racer = require 'racer/Racer'
 PlayerRacerController = require 'racer/PlayerRacerController'
 MenuCameraController = require 'camera/MenuCameraController'
 CameraController = require 'camera/CameraController'
-NewGameMenu = require 'menu/NewGameMenu'
 IO = require 'core/IO'
+Ground = require 'Ground'
 
-class MainMenu extends ListMenu
+class PauseMenu extends ListMenu
+
+  pausable: false
+
   setOptions: () =>
     @options = [
-      new MenuOption("New Game", 20, 180, => 
-        @game.addEntity(new NewGameMenu())
-        @destroy())
-      new MenuOption("Settings", 20, 280, => 
-        console.log "this should open a settings menu")
+      new MenuOption("Continue", 20, 180, @unPause)
+      new MenuOption("Quit", 20, 280, @toMainMenu)
       ]
 
-module.exports = MainMenu
+  unPause: () =>
+    @game.togglePause()
+    @destroy()
+
+  toMainMenu: () =>
+    @game.togglePause()
+    @game.clearAll()
+    @game.addEntity(new Ground())
+    MainMenu = require 'menu/MainMenu'
+    @game.addEntity(new MainMenu())
+    @destroy()
+
+module.exports = PauseMenu

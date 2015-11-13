@@ -8,6 +8,8 @@ class MenuCameraController extends Entity
     @zoom = 0.1
     @camera = @game.camera
     @position = [0,0]
+    @camera.vx = 0
+    @camera.vy = 0
 
   onRender: () ->
     @camera.x += 0.05
