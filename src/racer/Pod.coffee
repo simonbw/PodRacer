@@ -4,6 +4,8 @@ Pixi = require 'pixi.js'
 Aero = require 'physics/Aerodynamics'
 RacerDefs = require 'racer/RacerDefs'
 ControlFlap = require 'racer/ControlFlap'
+Materials = require 'physics/Materials'
+
 
 
 class Pod extends Entity
@@ -26,6 +28,7 @@ class Pod extends Entity
       mass: @podDef.mass
       angularDamping: 0.15
       damping: 0.0
+      material: Materials.RACER
     }
     
     shape = new p2.Rectangle(w, h)

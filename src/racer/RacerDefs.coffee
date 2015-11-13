@@ -24,7 +24,7 @@ class RacerDef
         'y': -1.0
       }]
       'health': 100
-      'fragility': 10
+      'fragility': 2
     @leftEnginePosition = [-1, 0]
     @rightEnginePosition = [1, 0]
     @podPosition = [0, 8]
@@ -42,7 +42,7 @@ class RacerDef
         'y': 0
       }]
       'health': 100
-      'fragility': 10
+      'fragility': 0.5
     @rope =
       'size': 0.03
       'color': 0x444444

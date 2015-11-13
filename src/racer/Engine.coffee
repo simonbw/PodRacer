@@ -4,6 +4,8 @@ Pixi = require 'pixi.js'
 Util = require 'util/Util.coffee'
 Aero = require 'physics/Aerodynamics'
 ControlFlap = require 'racer/ControlFlap'
+Materials = require 'physics/Materials'
+
 
 
 class Engine extends Entity
@@ -24,10 +26,15 @@ class Engine extends Entity
       mass: @engineDef.mass
       angularDamping: 0.3
       damping: 0.0
+      material: Materials.RACER
     }
 
-    shape = new p2.Rectangle(w, h)
-    @body.addShape(shape, [0, 0], 0)
+    shape1 = new p2.Rectangle(w, h)
+    @body.addShape(shape1, [0, 0], 0)
+
+    shape2Vertices = [[0.5*w, -0.5*h],[-0.5*w, -0.5*h],[0, -0.7*h]]
+    shape2 = new p2.Convex(shape2Vertices)
+    @body.addShape(shape2, [0, 0], 0)
 
     @throttle = 0.0
     if @side == 'right'

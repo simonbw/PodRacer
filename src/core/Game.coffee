@@ -3,6 +3,7 @@ IO = require 'core/IO'
 p2 = require 'p2'
 Profiler = require 'util/Profiler'
 Drawing = require 'util/Drawing'
+Materials = require 'physics/Materials'
 
 # Top Level control structure
 class Game
@@ -24,6 +25,9 @@ class Game
     @world.on('beginContact', @beginContact)
     @world.on('endContact', @endContact)
     @world.on('impact', @impact)
+    for contact in Materials.contacts
+      @world.addContactMaterial(contact) 
+      
     @io = new IO(@renderer.pixiRenderer.view)
     @draw = new Drawing()
 
