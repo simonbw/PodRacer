@@ -29,6 +29,7 @@ class Engine extends Entity
     shape = new p2.Rectangle(w, h)
     @body.addShape(shape, [0, 0], 0)
 
+    @boosting = false
     @throttle = 0.0
     if @side == 'right'
       @ropePoint = [-0.4 * w, 0.45 * h] # point the rope connects in local coordinates
@@ -102,7 +103,8 @@ class Engine extends Entity
     return @body.angle - Math.PI / 2
 
   getMaxForce: () =>
-    return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce
+    force = if @boosting then @engineDef.boostMaxForce else @engineDef.maxForce
+    return force + p2.vec2.length(@body.velocity) * 0.004 * force
 
   onDestroy: (game) =>
     for flap in @flaps
@@ -113,5 +115,11 @@ class Engine extends Entity
       @health -= @fragility
     else
       @destroy()
+
+  boostOn: () =>
+    @boosting = true
+
+  boostOff: () =>
+    @boosting = false
 
 module.exports = Engine

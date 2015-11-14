@@ -7,6 +7,7 @@ class RacerDef
       'drag': 1.0
       'mass': 1.0
       'maxForce': 80.0
+      'boostMaxForce': 200.0
       'size': [0.5, 2.0]
       'flaps': [{
         'color': 0xEEEE00

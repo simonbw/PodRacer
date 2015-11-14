@@ -23,6 +23,16 @@ class PlayerRacerController extends Entity
     rightFlap = Util.clamp(@game.io.getButton(7).value + @game.io.keys[RIGHT_FLAP], 0, 1)
     @racer.setFlaps(leftFlap, rightFlap)
 
+  onButtonDown: (button) =>
+    switch button
+      when 10 then @racer.leftEngine.boostOn()
+      when 11 then @racer.rightEngine.boostOn()
+
+  onButtonUp: (button) =>
+    switch button
+      when 10 then @racer.leftEngine.boostOff()
+      when 11 then @racer.rightEngine.boostOff()
+
   # this might cause bugs
   # TODO: remove, restructure
   afterTick: () =>
