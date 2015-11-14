@@ -17,6 +17,12 @@ class Engine extends Entity
     @sprite.beginFill(@engineDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
+    @sprite.lineStyle(@engineDef.healthMeterBackWidth, @engineDef.healthMeterBackColor)
+    @sprite.moveTo(0, 0.4 * @size[1])
+    @sprite.lineTo(0, -0.4 * @size[1])
+
+    @sprite.healthMeter = new Pixi.Graphics()
+    @sprite.addChild(@sprite.healthMeter)
 
     @health = @engineDef.health
     @fragility = @engineDef.fragility
@@ -76,6 +82,11 @@ class Engine extends Entity
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
 
+    @sprite.healthMeter.clear()
+    @sprite.healthMeter.lineStyle(@engineDef.healthMeterWidth, @engineDef.healthMeterColor)
+    @sprite.healthMeter.moveTo(0, 0.4 * @size[1])
+    @sprite.healthMeter.lineTo(0, -0.4 * @size[1] * @health / @engineDef.health)
+
     left = [-0.5 * @size[0], 0.5 * @size[1]]
     right = [0.5 * @size[0], 0.5 * @size[1]]
     leftWorld = @localToWorld(left)
@@ -97,14 +108,17 @@ class Engine extends Entity
 
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
-    
+
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@getDirection()) * @throttle * maxForce
     fy = Math.sin(@getDirection()) * @throttle * maxForce
     @body.applyForce([fx,fy], @localToWorld([0, 0.5 * @size[1]]))
 
-  # Return the angle the engine is pointing in
+    if @colliding
+      @doCollisionDamage()
+
+# Return the angle the engine is pointing in
   getDirection: () =>
     return @body.angle - Math.PI / 2
 
@@ -115,10 +129,24 @@ class Engine extends Entity
     for flap in @flaps
       flap.destroy()
 
-  impact: (other) =>
-    if @health > 0
-      @health -= @fragility
-    else
-      @destroy()
+  beginContact: (other, contactEquations) =>
+    @lastMomentum = @getMomentum()
+    @colliding = true
+
+  endContact: (other) =>
+    @colliding = false
+    @doCollisionDamage()
+
+  doCollisionDamage: () =>
+    momentum = @getMomentum()
+    linearDifference = Math.abs(momentum[0] - @lastMomentum[0])
+    angularDifference = Math.abs(momentum[1] - @lastMomentum[1])
+    damage = 0.01 * (linearDifference + angularDifference) ** 2
+    @health -= damage
+
+  getMomentum: () =>
+    linearMomentum = p2.vec2.length(@body.velocity) * @body.mass
+    angularMomentum = @body.angularVelocity * @body.inertia
+    return [linearMomentum, angularMomentum]
 
 module.exports = Engine

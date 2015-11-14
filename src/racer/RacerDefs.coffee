@@ -25,6 +25,10 @@ class RacerDef
       }]
       'health': 100
       'fragility': 2
+      'healthMeterColor': 0x00FFFF
+      'healthMeterBackColor': 0x003355
+      'healthMeterWidth': 0.07
+      'healthMeterBackWidth': 0.07
     @leftEnginePosition = [-1, 0]
     @rightEnginePosition = [1, 0]
     @podPosition = [0, 8]
@@ -48,7 +52,7 @@ class RacerDef
       'color': 0x444444
       'stiffness': 20
       'damping': 1.5
-    @coupling = 
+    @coupling =
       'stiffness': 30
       'damping': 0.5
 

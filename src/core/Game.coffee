@@ -54,7 +54,7 @@ class Game
     @addEntity(@draw)
     console.log "Game Started"
     window.requestAnimationFrame(@loop)
-  
+
   # The main loop. Calls handlers, applies physics, and renders.
   loop: () =>
     @profiler.end('system')
@@ -88,13 +88,13 @@ class Game
     entity.game = this
     if entity.onAdd? then entity.onAdd(this)
     @entities.all.push(entity)
-    
+
     # Game events
     if entity.onRender? then @entities.onRender.push(entity)
     if entity.beforeTick? then @entities.beforeTick.push(entity)
     if entity.onTick? then @entities.onTick.push(entity)
     if entity.afterTick? then @entities.afterTick.push(entity)
-    
+
     # IO events
     if entity.onClick? then @io.on(IO.CLICK, entity.onClick)
     if entity.onMouseDown? then @io.on(IO.MOUSE_DOWN, entity.onMouseDown)
@@ -115,13 +115,13 @@ class Game
     return entity
 
   # Slates an entity for removal.
-  # Actually removing an entity at the wrong time can cause some problems, 
+  # Actually removing an entity at the wrong time can cause some problems,
   # so we do it when it is next convenient.
   removeEntity: (entity) =>
     #@entities.toRemove.push(entity)
     @entities.toRemove.add(entity)
     return entity
-  
+
   # Actually removes references to the entities slated for removal
   cleanupEntities: =>
     # TODO: Do we really need a separate removal pass?
@@ -139,7 +139,7 @@ class Game
         @entities.onTick.splice(@entities.onTick.indexOf(entity), 1)
       if entity.afterTick?
         @entities.afterTick.splice(@entities.afterTick.indexOf(entity), 1)
-      
+
       if entity.sprite?
         @renderer.remove(entity.sprite, entity.layer)
       if entity.body?
@@ -155,7 +155,7 @@ class Game
       if entity.onKeyUp? then @io.off(IO.KEY_UP, entity.onKeyUp)
       if entity.onButtonDown? then @io.off(IO.BUTTON_DOWN, entity.onButtonDown)
       if entity.onButtonUp? then @io.off(IO.BUTTON_UP, entity.onButtonUp)
-      
+
       if entity.onDestroy?
         entity.onDestroy(this)
       entity.game = null
@@ -189,14 +189,9 @@ class Game
   # Fired during narrowphase of collision detection.
   beginContact: (e) =>
     if e.bodyA.owner.beginContact?
-      e.bodyA.owner.beginContact(e.bodyB.owner)
+      e.bodyA.owner.beginContact(e.bodyB.owner, e.contactEquations)
     if e.bodyB.owner.beginContact?
-      e.bodyB.owner.beginContact(e.bodyA.owner)
-
-    if e.shapeA.beginContact?
-      e.shapeA.beginContact(e.shapeB)
-    if e.shapeB.beginContact?
-      e.shapeB.beginContact(e.shapeA)
+      e.bodyB.owner.beginContact(e.bodyA.owner, e.contactEquations)
 
   # Handle collision end between things.
   # Fired after narrowphase of collision detection.
@@ -205,11 +200,6 @@ class Game
       e.bodyA.owner.endContact(e.bodyB.owner)
     if e.bodyB.owner.endContact?
       e.bodyB.owner.endContact(e.bodyA.owner)
-
-    if e.shapeA.endContact?
-      e.shapeA.endContact(e.shapeB)
-    if e.shapeB.endContact?
-      e.shapeB.endContact(e.shapeA)
 
   # Handle impact (called after physics is done)
   impact: (e) =>
