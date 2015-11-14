@@ -12,9 +12,17 @@ class Wall extends Entity
 
 
     @sprite = new Pixi.Graphics()
+    @path = []
+    @corners = [new Pixi.Point(0.5*@w, 0.5*@h), 
+    new Pixi.Point(0.5*@w, -0.5*@h), 
+    new Pixi.Point(-0.5*@w, -0.5*@h), 
+    new Pixi.Point(-0.5*@w, 0.5*@h)]
     @sprite.beginFill(0x000000)
-    @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w, @h)
+    @sprite.drawPolygon(@corners)
     @sprite.endFill()
+    # @sprite.beginFill(0x000000)
+    # @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w, @h)
+    # @sprite.endFill()
 
     @body = new p2.Body {
       position: [x, y]

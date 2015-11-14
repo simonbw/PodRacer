@@ -36,10 +36,12 @@ class Engine extends Entity
     }
 
     shape1 = new p2.Rectangle(w, h)
+    shape1.aerodynamics = true
     @body.addShape(shape1, [0, 0], 0)
 
     shape2Vertices = [[0.5*w, -0.5*h],[-0.5*w, -0.5*h],[0, -0.7*h]]
     shape2 = new p2.Convex(shape2Vertices)
+    shape2.aerodynamics = false
     @body.addShape(shape2, [0, 0], 0)
 
     @throttle = 0.0
