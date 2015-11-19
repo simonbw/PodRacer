@@ -89,6 +89,12 @@ class Engine extends Entity
     endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.15 + rand) * @throttle + 0.5 * @size[1]])
     @game.draw.triangle(leftWorld, endPoint, rightWorld, 0xFFFFFF, 0.8)
 
+    # change engine color WIP
+    @sprite = new Pixi.Graphics()
+    @sprite.beginFill(@engineDef.color)
+    @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
+    @sprite.endFill()
+
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
     
