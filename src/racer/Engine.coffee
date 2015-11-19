@@ -4,7 +4,7 @@ Pixi = require 'pixi.js'
 Util = require 'util/Util.coffee'
 Aero = require 'physics/Aerodynamics'
 ControlFlap = require 'racer/ControlFlap'
-
+RacerSoundController = require 'sound/RacerSoundController'
 
 class Engine extends Entity
   constructor: ([x, y], @side, @engineDef) ->
@@ -15,6 +15,8 @@ class Engine extends Entity
     @sprite.beginFill(@engineDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
+
+    @soundController = new RacerSoundController(this)
 
     @health = @engineDef.health
     @fragility = @engineDef.fragility
@@ -61,9 +63,10 @@ class Engine extends Entity
       if flap.direction == ControlFlap.RIGHT
         flap.setControl(right)
 
-  onAdd: (game) =>
+  onAdd: () =>
+    @game.addEntity(@soundController)
     for flap in @flaps
-      game.addEntity(flap)
+      @game.addEntity(flap)
 
   onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
@@ -90,7 +93,7 @@ class Engine extends Entity
 
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
-    
+
     @throttle = Util.clamp(@throttle, 0, 1)
     maxForce = @getMaxForce()
     fx = Math.cos(@getDirection()) * @throttle * maxForce
