@@ -12,7 +12,7 @@ MAGIC_NUMBER = 1 # For some reason this makes pods stop spinning
 class Aerodynamics
   @applyAerodynamics: (body, dragAmount, liftAmount) =>
     for shape in body.shapes
-      if shape.type == p2.Shape.RECTANGLE or shape.type == p2.Shape.CONVEX
+      if shape.aerodynamics and (shape.type == p2.Shape.RECTANGLE or shape.type == p2.Shape.CONVEX)
         for i in [0...shape.vertices.length]
           v1 = shape.vertices[i]
           v2 = shape.vertices[(i + 1) % shape.vertices.length]
@@ -23,7 +23,7 @@ class Aerodynamics
     if not liftAmount?
       liftAmount = dragAmount
 
-    # calculate some numbers relating to the edge 
+    # calculate some numbers relating to the edge
     v1World = []
     body.toWorldFrame(v1World, v1)
     v2World = []
@@ -69,11 +69,11 @@ class Aerodynamics
       start = [v1World[0] + vel[0] / 60, v1World[1] + vel[1] / 60]
       end = [v2World[0] + vel[0] / 60, v2World[1] + vel[1] / 60]
       game.draw.line(start, end, 0.2, 0xFF0000, dragMagnitude / (3 * edgeLength), 'world_overlay')
-      
+
       start = [midpoint[0] + vel[0] / 60, midpoint[1] + vel[1] / 60]
       end = [start[0] + drag[0] * 0.2, start[1] + drag[1] * 0.2]
       game.draw.line(start, end, 0.1, 0xFF0000, dragMagnitude / edgeLength, 'world_overlay')
-      
+
       end = [start[0] + lift[0] * 0.2, start[1] + lift[1] * 0.2]
       game.draw.line(start, end, 0.1, 0x0000FF, Math.abs(liftMagnitude) / edgeLength, 'world_overlay')
 

@@ -30,8 +30,9 @@ class Pod extends Entity
       damping: 0.0
       material: Materials.RACER
     }
-    
+
     shape = new p2.Rectangle(w, h)
+    shape.aerodynamics = true
     @body.addShape(shape, [0, 0], 0)
 
     @leftRopePoint = [-0.4 * w, -0.45 * h] # point the left rope connects in local coordinates
