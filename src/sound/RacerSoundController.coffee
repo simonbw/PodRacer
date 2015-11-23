@@ -72,5 +72,10 @@ class RacerSoundController extends Entity
 
     @positionFilter.position.set(@engine.body.position)
 
+  onDestroy: () =>
+    @noise.stop()
+    @triangleOscillator.stop()
+    @sawtoothOscillator.stop()
+    @positionFilter.destroy()
 
 module.exports = RacerSoundController

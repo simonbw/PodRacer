@@ -110,6 +110,7 @@ class Engine extends Entity
   onDestroy: (game) =>
     for flap in @flaps
       flap.destroy()
+    @soundController.destroy()
 
   impact: (other) =>
     if @health > 0

@@ -27,4 +27,5 @@ class PositionSoundFilter extends Entity
 
   onDestroy: () =>
 
+
 module.exports = PositionSoundFilter
