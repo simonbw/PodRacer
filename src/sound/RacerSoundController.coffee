@@ -1,14 +1,16 @@
 Entity = require 'core/Entity'
-
+PositionSoundFilter = require 'sound/PositionSoundFilter'
 
 
 class RacerSoundController extends Entity
 
   constructor: (@engine) ->
+    @positionFilter = new PositionSoundFilter()
     # Do something?
 
   onAdd: () =>
-    @out = @game.audio.destination
+    @game.addEntity(@positionFilter)
+    @out = @positionFilter.in
 
     @noise = @game.audio.createBufferSource()
     @noiseFilter = @game.audio.createBiquadFilter()
@@ -24,8 +26,8 @@ class RacerSoundController extends Entity
     @noise.loop = true
 
     @noiseFilter.type = 'lowpass'
-    @noiseFilter.frequency = 100
-    @noiseFilter.Q = 0.5
+    @noiseFilter.frequency.value = 100
+    @noiseFilter.Q.value = 0.5
 
     noiseData = @noise.buffer.getChannelData(0)
     for i in [0..noiseData.length]
@@ -36,8 +38,8 @@ class RacerSoundController extends Entity
     @sawtoothGain.gain.value = 0
 
     @oscillatorFilter.type = 'lowpass'
-    @oscillatorFilter.frequency = 100
-    @oscillatorFilter.Q = 0.1
+    @oscillatorFilter.frequency.value = 100
+    @oscillatorFilter.Q.value = 0.1
 
     @triangleOscillator.type = 'triangle'
     @triangleOscillator.start()
@@ -60,13 +62,15 @@ class RacerSoundController extends Entity
   onTick: () =>
     speed = Array.from(@engine.body.velocity).magnitude
     @noiseGain.gain.value = 0 #@engine.throttle
-    @triangleGain.gain.value = 0.1 + @engine.throttle / 3
-    @sawtoothGain.gain.value = 0.1 + @engine.throttle / 9
+    @triangleGain.gain.value = 0.05 + @engine.throttle / 3
+    @sawtoothGain.gain.value = 0.05 + @engine.throttle / 9
 
     @triangleOscillator.frequency.value = 25 + @engine.throttle * (30 + speed * 3) + Math.random() * 10
     @sawtoothOscillator.frequency.value = 25 + @engine.throttle * (30 + speed * 3) + Math.random() * 10
     @noiseFilter.frequency.value = 100 + 0.5 * speed
-    @oscillatorFilter.frequency.value = 600 + @engine.throttle * (30 + speed * 6) + 1000 * Math.random()
+    @oscillatorFilter.frequency.value = 2000 + @engine.throttle * (30 + speed * 6) + 1000 * Math.random()
+
+    @positionFilter.position.set(@engine.body.position)
 
 
 module.exports = RacerSoundController

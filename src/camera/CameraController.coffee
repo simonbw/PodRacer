@@ -16,6 +16,8 @@ class CameraController extends Entity
       speed = p2.vec2.length(vel)
       @camera.smoothZoom(20 / (1 + 0.1 * Math.log(speed + 1)))
 
+      @game.audio
+
 
 
 module.exports = CameraController

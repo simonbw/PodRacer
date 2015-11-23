@@ -22,7 +22,7 @@ class GameRenderer
     @layerInfos['world_overlay'] = { scroll: 1 }
     @layerInfos['world_front'] = { scroll: 1 }
     @layerInfos['world'] = { scroll: 1 }
-    @layerInfos['world_back'] = { scroll: 1 }
+    @layerInfos['world_back'] = { scroll: 3 }
 
     order = ['world_back', 'world', 'world_front', 'world_overlay', 'hud', 'menu']
     for name, i in order

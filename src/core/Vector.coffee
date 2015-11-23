@@ -88,8 +88,12 @@ Array.prototype.dot = (other) ->
 
 # Set the components of this vector
 Array.prototype.set = (x, y) ->
-  this[0] = x
-  this[1] = y
+  if typeof x == "number"
+    this[0] = x
+    this[1] = y
+  else
+    this[0] = x[0]
+    this[1] = x[1]
   return this
 
 

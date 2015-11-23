@@ -18,7 +18,7 @@ class NewGameMenu extends ListMenu
     @options = [
       new MenuOption("Free Play", 20, 180, @startFreePlay),
       new MenuOption("Race", 20, 280, @startRace),
-      new MenuOption("Back", 20, 380, => 
+      new MenuOption("Back", 20, 380, =>
         MainMenu = require 'menu/MainMenu'
         @game.addEntity(new MainMenu())
         @destroy())
@@ -32,7 +32,7 @@ class NewGameMenu extends ListMenu
     racerController = new PlayerRacerController(racer)
     racerController2 = new AIRacerController(racer2, race)
     cameraController = new CameraController(racer, game.camera)
-  
+
     game.addEntity(racer)
     game.addEntity(racer2)
     game.addEntity(racerController)
