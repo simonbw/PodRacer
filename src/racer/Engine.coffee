@@ -141,14 +141,18 @@ class Engine extends Entity
 
   doCollisionDamage: () =>
     momentum = @getMomentum()
-    linearDifference = Math.abs(momentum[0] - @lastMomentum[0])
-    angularDifference = Math.abs(momentum[1] - @lastMomentum[1])
-    damage = 0.01 * (linearDifference + angularDifference) ** 2
+    xDifference = Math.abs(momentum[0] - @lastMomentum[0])
+    yDifference = Math.abs(momentum[1] - @lastMomentum[2])
+    angularDifference = Math.abs(momentum[2] - @lastMomentum[2])
+    damage = 0.01 * (xDifference + yDifference + angularDifference) ** 2
     @health -= damage
+    console.log damage.toFixed(2)
+    @lastMomentum = momentum
 
   getMomentum: () =>
-    linearMomentum = p2.vec2.length(@body.velocity) * @body.mass
+    xMomentum = @body.velocity[0] * @body.mass
+    yMomentum = @body.velocity[1] * @body.mass
     angularMomentum = @body.angularVelocity * @body.inertia
-    return [linearMomentum, angularMomentum]
+    return [xMomentum, yMomentum, angularMomentum]
 
 module.exports = Engine

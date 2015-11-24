@@ -7,15 +7,15 @@ Materials = require 'physics/Materials'
 class Wall extends Entity
   constructor: (x, y) ->
 
-    @w = 100
+    @w = 400
     @h = 1
 
 
     @sprite = new Pixi.Graphics()
     @path = []
-    @corners = [new Pixi.Point(0.5*@w, 0.5*@h), 
-    new Pixi.Point(0.5*@w, -0.5*@h), 
-    new Pixi.Point(-0.5*@w, -0.5*@h), 
+    @corners = [new Pixi.Point(0.5*@w, 0.5*@h),
+    new Pixi.Point(0.5*@w, -0.5*@h),
+    new Pixi.Point(-0.5*@w, -0.5*@h),
     new Pixi.Point(-0.5*@w, 0.5*@h)]
     @sprite.beginFill(0x000000)
     @sprite.drawPolygon(@corners)
