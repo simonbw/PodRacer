@@ -54,14 +54,14 @@ class NewGameMenu extends ListMenu
   startFreePlay: () =>
     @game.addEntity(new PauseController())
     racer = new Racer([0, 0], RacerDefs.test)
-    racer2 = new Racer([0, -15])
+#    racer2 = new Racer([0, -15])
     racerController = new PlayerRacerController(racer)
     cameraController = new CameraController(racer, @game.camera)
 
     #game.addEntity(new FPSCounter())
 
     @game.addEntity(racer)
-    @game.addEntity(racer2)
+#    @game.addEntity(racer2)
     @game.addEntity(racerController)
     @game.addEntity(cameraController)
     @destroy()

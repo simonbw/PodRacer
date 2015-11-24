@@ -6,7 +6,7 @@ class RacerDef
       'color': 0x0000FF
       'drag': 1.0
       'mass': 1.0
-      'maxForce': 80.0
+      'maxForce': 85.0
       'size': [0.5, 2.0]
       'flaps': [{
         'color': 0xEEEE00
@@ -48,7 +48,7 @@ class RacerDef
       'color': 0x444444
       'stiffness': 20
       'damping': 1.5
-    @coupling = 
+    @coupling =
       'stiffness': 30
       'damping': 0.5
 

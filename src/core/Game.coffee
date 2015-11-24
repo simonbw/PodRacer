@@ -28,6 +28,8 @@ class Game
     @draw = new Drawing()
 
     @audio = new (window.AudioContext || window.webkitAudioContext)
+    @masterGain = @audio.createGain()
+    @masterGain.connect(@audio.destination)
 
     @framerate = 60
 
