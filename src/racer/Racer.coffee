@@ -8,7 +8,7 @@ RopeSpring = require 'physics/RopeSpring'
 RacerDefs = require 'racer/RacerDefs'
 Coupling = require 'racer/Coupling'
 
-# 
+#
 class Racer extends Entity
   constructor: ([x, y], @racerDef=RacerDefs.default) ->
     podPosition = p2.vec2.add([0, 0], [x, y], @racerDef.podPosition)
@@ -65,7 +65,7 @@ class Racer extends Entity
       podRightPoint = @pod.localToWorld(@pod.rightRopePoint)
       rightEnginePoint = @rightEngine.localToWorld(@rightEngine.ropePoint)
       @game.draw.line(podRightPoint, rightEnginePoint, width, color)
-  
+
   # Set the control value on all the racer's flaps
   # @param left {number} - between 0 and 1
   # @param right {number} - between 0 and 1

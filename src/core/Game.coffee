@@ -3,6 +3,7 @@ IO = require 'core/IO'
 p2 = require 'p2'
 Profiler = require 'util/Profiler'
 Drawing = require 'util/Drawing'
+Materials = require 'physics/Materials'
 
 # Top Level control structure
 class Game
@@ -24,6 +25,9 @@ class Game
     @world.on('beginContact', @beginContact)
     @world.on('endContact', @endContact)
     @world.on('impact', @impact)
+    for contact in Materials.contacts
+      @world.addContactMaterial(contact)
+
     @io = new IO(@renderer.pixiRenderer.view)
     @draw = new Drawing()
 
@@ -32,6 +36,7 @@ class Game
     @masterGain.connect(@audio.destination)
 
     @framerate = 60
+    @frameNumber = 0
 
     @profiler = new Profiler()
     @profiler.addPhase('frame')
@@ -57,6 +62,8 @@ class Game
 
   # The main loop. Calls handlers, applies physics, and renders.
   loop: () =>
+    @frameNumber += 1
+
     @profiler.end('system')
     @profiler.end('frame')
     @profiler.start('frame')
@@ -189,14 +196,9 @@ class Game
   # Fired during narrowphase of collision detection.
   beginContact: (e) =>
     if e.bodyA.owner.beginContact?
-      e.bodyA.owner.beginContact(e.bodyB.owner)
+      e.bodyA.owner.beginContact(e.bodyB.owner, e.contactEquations)
     if e.bodyB.owner.beginContact?
-      e.bodyB.owner.beginContact(e.bodyA.owner)
-
-    if e.shapeA.beginContact?
-      e.shapeA.beginContact(e.shapeB)
-    if e.shapeB.beginContact?
-      e.shapeB.beginContact(e.shapeA)
+      e.bodyB.owner.beginContact(e.bodyA.owner, e.contactEquations)
 
   # Handle collision end between things.
   # Fired after narrowphase of collision detection.
@@ -205,11 +207,6 @@ class Game
       e.bodyA.owner.endContact(e.bodyB.owner)
     if e.bodyB.owner.endContact?
       e.bodyB.owner.endContact(e.bodyA.owner)
-
-    if e.shapeA.endContact?
-      e.shapeA.endContact(e.shapeB)
-    if e.shapeB.endContact?
-      e.shapeB.endContact(e.shapeA)
 
   # Handle impact (called after physics is done)
   impact: (e) =>

@@ -4,7 +4,7 @@ r = Math.random
 Random = {
 
   # Return a random number from a uniform distribution between `min` and `max`.
-  uniform: (min=0, max=1) ->
+  uniform: (min, max) ->
     if not min?
       return r()
     if not max?
@@ -13,7 +13,7 @@ Random = {
     return (max - min) * r() + min
 
   # Return a random integer x in the range `min <= x < max`.
-  integer: (min=0, max=2) ->
+  integer: (min, max) ->
     return Math.floor(Random.uniform(min, max))
 
   # Return an approximately normally distributed random number.
@@ -39,7 +39,14 @@ Random = {
       a[j] = a[i]
       a[i] = temp
     return a
+
+  bool: (chance=0.5) ->
+    return Math.random() < chance
+
 }
 
 
 module.exports = Random
+
+
+window.Random = Random

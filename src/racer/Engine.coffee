@@ -5,6 +5,17 @@ Util = require 'util/Util.coffee'
 Aero = require 'physics/Aerodynamics'
 ControlFlap = require 'racer/ControlFlap'
 RacerSoundController = require 'sound/RacerSoundController'
+Materials = require 'physics/Materials'
+Random = require 'util/Random'
+
+
+CONDITIONS = [
+  'throttle_stuck',
+  'no_thrust',
+  'left_flap_stuck',
+  'right_flap_stuck',
+  'stutter',
+]
 
 class Engine extends Entity
   constructor: ([x, y], @side, @engineDef) ->
@@ -15,21 +26,37 @@ class Engine extends Entity
     @sprite.beginFill(@engineDef.color)
     @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
     @sprite.endFill()
+    @sprite.lineStyle(@engineDef.healthMeterBackWidth, @engineDef.healthMeterBackColor)
+    @sprite.moveTo(0, 0.4 * @size[1])
+    @sprite.lineTo(0, -0.4 * @size[1])
+
+    @sprite.healthMeter = new Pixi.Graphics()
+    @sprite.addChild(@sprite.healthMeter)
 
     @soundController = new RacerSoundController(this)
 
     @health = @engineDef.health
     @fragility = @engineDef.fragility
 
+    @conditions = new Set()
+    @conditionTimes = {}
+
     @body = new p2.Body {
       position: [x, y]
       mass: @engineDef.mass
       angularDamping: 0.3
       damping: 0.0
+      material: Materials.RACER
     }
 
-    shape = new p2.Rectangle(w, h)
-    @body.addShape(shape, [0, 0], 0)
+    shape1 = new p2.Rectangle(w, h)
+    shape1.aerodynamics = true
+    @body.addShape(shape1, [0, 0], 0)
+
+    shape2Vertices = [[0.5*w, -0.5*h],[-0.5*w, -0.5*h],[0, -0.7*h]]
+    shape2 = new p2.Convex(shape2Vertices)
+    shape2.aerodynamics = false
+    @body.addShape(shape2, [0, 0], 0)
 
     @throttle = 0.0
     if @side == 'right'
@@ -51,16 +78,19 @@ class Engine extends Entity
       @flaps.push(new ControlFlap(@body, def))
 
   setThrottle: (value) =>
-    @throttle = Util.clamp(value, 0, 1)
+    if @conditions.has('stutter')
+      value *= Math.random()
+    if not @conditions.has('throttle_stuck') and not @conditions.has('no_thrust')
+      @throttle = Util.clamp(value, 0, 1)
 
   # Set the control value on all the engine's flaps
   # @param left {number} - between 0 and 1
   # @param right {number} - between 0 and 1
   setFlaps: (left, right) =>
     for flap in @flaps
-      if flap.direction == ControlFlap.LEFT
+      if flap.direction == ControlFlap.LEFT and not @conditions.has('left_flap_stuck')
         flap.setControl(left)
-      if flap.direction == ControlFlap.RIGHT
+      if flap.direction == ControlFlap.RIGHT and not @conditions.has('right_flap_stuck')
         flap.setControl(right)
 
   onAdd: () =>
@@ -71,6 +101,11 @@ class Engine extends Entity
   onRender: () =>
     [@sprite.x, @sprite.y] = @body.position
     @sprite.rotation = @body.angle
+
+    @sprite.healthMeter.clear()
+    @sprite.healthMeter.lineStyle(@engineDef.healthMeterWidth, @engineDef.healthMeterColor)
+    @sprite.healthMeter.moveTo(0, 0.4 * @size[1])
+    @sprite.healthMeter.lineTo(0, -0.4 * @size[1] * @health / @engineDef.health)
 
     left = [-0.5 * @size[0], 0.5 * @size[1]]
     right = [0.5 * @size[0], 0.5 * @size[1]]
@@ -95,27 +130,71 @@ class Engine extends Entity
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
 
     @throttle = Util.clamp(@throttle, 0, 1)
-    maxForce = @getMaxForce()
-    fx = Math.cos(@getDirection()) * @throttle * maxForce
-    fy = Math.sin(@getDirection()) * @throttle * maxForce
+    force = @getCurrentForce()
+    fx = Math.cos(@getDirection()) * force
+    fy = Math.sin(@getDirection()) * force
     @body.applyForce([fx,fy], @localToWorld([0, 0.5 * @size[1]]))
 
-  # Return the angle the engine is pointing in
+    @conditions.forEach (condition) =>
+      @conditionTimes[condition] -= @game.timestep
+      if @conditionTimes[condition] <= 0
+        @conditions.delete(condition)
+        console.log "ending: #{condition}"
+
+    # Grinding
+    if @colliding
+      @doCollisionDamage()
+
+    if @conditions.has('no_thrust')
+      @throttle = 0
+
+# Return the angle the engine is pointing in
   getDirection: () =>
     return @body.angle - Math.PI / 2
 
   getMaxForce: () =>
     return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce
 
+  getCurrentForce: () =>
+    return @getMaxForce() * @throttle
+
   onDestroy: (game) =>
     for flap in @flaps
       flap.destroy()
     @soundController.destroy()
 
-  impact: (other) =>
-    if @health > 0
-      @health -= @fragility
-    else
-      @destroy()
+  beginContact: (other, contactEquations) =>
+    @collisionLength = 0
+    @lastMomentum = @getMomentum()
+    @colliding = true
+
+  endContact: (other) =>
+    @doCollisionDamage()
+    @colliding = false
+
+  doCollisionDamage: () =>
+    @collisionLength += 1
+    momentum = @getMomentum()
+    xDifference = Math.abs(momentum[0] - @lastMomentum[0])
+    yDifference = Math.abs(momentum[1] - @lastMomentum[1])
+    angularDifference = Math.abs(momentum[2] - @lastMomentum[2])
+    damage = Math.random() * (xDifference + yDifference + angularDifference) ** 1.4
+    @lastMomentum = momentum
+
+    if damage > 50
+      condition = Random.choose(CONDITIONS)
+      @conditions.add(condition)
+      time = 5
+      @conditionTimes[condition] = @conditionTimes[condition] + time || time
+      console.log "#{damage} damage: #{condition} for #{time.toFixed(1)} seconds"
+
+  repair: () =>
+    @conditions.clear()
+
+  getMomentum: () =>
+    xMomentum = @body.velocity[0] * @body.mass
+    yMomentum = @body.velocity[1] * @body.mass
+    angularMomentum = @body.angularVelocity * @body.inertia
+    return [xMomentum, yMomentum, angularMomentum]
 
 module.exports = Engine
