@@ -7,22 +7,39 @@ Materials = require 'physics/Materials'
 class Wall extends Entity
   constructor: (x, y) ->
 
-    @w = 100
-    @h = 1
+    @w = 15
+    @h = 15
 
 
     @sprite = new Pixi.Graphics()
-    @path = []
-    @corners = [new Pixi.Point(0.5*@w, 0.5*@h), 
+    corners = [new Pixi.Point(0.5*@w, 0.5*@h), 
     new Pixi.Point(0.5*@w, -0.5*@h), 
     new Pixi.Point(-0.5*@w, -0.5*@h), 
     new Pixi.Point(-0.5*@w, 0.5*@h)]
-    @sprite.beginFill(0x000000)
-    @sprite.drawPolygon(@corners)
+    @sprite.beginFill(0xbda27e)
+    @sprite.drawPolygon(corners)
     @sprite.endFill()
-    # @sprite.beginFill(0x000000)
-    # @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w, @h)
-    # @sprite.endFill()
+
+    innerW = 12
+    innerH = 12
+    corners = [new Pixi.Point(0.5*innerW, 0.5*innerH), 
+    new Pixi.Point(0.5*innerW, -0.5*innerH), 
+    new Pixi.Point(-0.5*innerW, -0.5*innerH), 
+    new Pixi.Point(-0.5*innerW, 0.5*innerH)]
+    @sprite.beginFill(0xa89070)
+    @sprite.drawPolygon(corners)
+    @sprite.endFill()
+
+    innerW = 5
+    innerH = 5
+    corners = [new Pixi.Point(0.5*innerW, 0.5*innerH), 
+    new Pixi.Point(0.5*innerW, -0.5*innerH), 
+    new Pixi.Point(-0.5*innerW, -0.5*innerH), 
+    new Pixi.Point(-0.5*innerW, 0.5*innerH)]
+    @sprite.beginFill(0x937d62)
+    @sprite.drawPolygon(corners)
+    @sprite.endFill()
+
 
     @body = new p2.Body {
       position: [x, y]
