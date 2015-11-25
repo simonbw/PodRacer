@@ -5,8 +5,16 @@ Util = require 'util/Util.coffee'
 Aero = require 'physics/Aerodynamics'
 ControlFlap = require 'racer/ControlFlap'
 Materials = require 'physics/Materials'
+Random = require 'util/Random'
 
 
+CONDITIONS = [
+  'throttle_stuck',
+  'no_thrust',
+  'left_flap_stuck',
+  'right_flap_stuck',
+  'stutter',
+]
 
 class Engine extends Entity
   constructor: ([x, y], @side, @engineDef) ->
@@ -26,6 +34,9 @@ class Engine extends Entity
 
     @health = @engineDef.health
     @fragility = @engineDef.fragility
+
+    @conditions = new Set()
+    @conditionTimes = {}
 
     @body = new p2.Body {
       position: [x, y]
@@ -64,16 +75,19 @@ class Engine extends Entity
       @flaps.push(new ControlFlap(@body, def))
 
   setThrottle: (value) =>
-    @throttle = Util.clamp(value, 0, 1)
+    if @conditions.has('stutter')
+      value *= Math.random()
+    if not @conditions.has('throttle_stuck') and not @conditions.has('no_thrust')
+      @throttle = Util.clamp(value, 0, 1)
 
   # Set the control value on all the engine's flaps
   # @param left {number} - between 0 and 1
   # @param right {number} - between 0 and 1
   setFlaps: (left, right) =>
     for flap in @flaps
-      if flap.direction == ControlFlap.LEFT
+      if flap.direction == ControlFlap.LEFT and not @conditions.has('left_flap_stuck')
         flap.setControl(left)
-      if flap.direction == ControlFlap.RIGHT
+      if flap.direction == ControlFlap.RIGHT and not @conditions.has('right_flap_stuck')
         flap.setControl(right)
 
   onAdd: (game) =>
@@ -112,13 +126,23 @@ class Engine extends Entity
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
 
     @throttle = Util.clamp(@throttle, 0, 1)
-    maxForce = @getMaxForce()
-    fx = Math.cos(@getDirection()) * @throttle * maxForce
-    fy = Math.sin(@getDirection()) * @throttle * maxForce
+    force = @getCurrentForce()
+    fx = Math.cos(@getDirection()) * force
+    fy = Math.sin(@getDirection()) * force
     @body.applyForce([fx,fy], @localToWorld([0, 0.5 * @size[1]]))
 
+    @conditions.forEach (condition) =>
+      @conditionTimes[condition] -= @game.timestep
+      if @conditionTimes[condition] <= 0
+        @conditions.delete(condition)
+        console.log "ending: #{condition}"
+
+    # Grinding
     if @colliding
       @doCollisionDamage()
+
+    if @conditions.has('no_thrust')
+      @throttle = 0
 
 # Return the angle the engine is pointing in
   getDirection: () =>
@@ -127,27 +151,40 @@ class Engine extends Entity
   getMaxForce: () =>
     return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce
 
+  getCurrentForce: () =>
+    return @getMaxForce() * @throttle
+
   onDestroy: (game) =>
     for flap in @flaps
       flap.destroy()
 
   beginContact: (other, contactEquations) =>
+    @collisionLength = 0
     @lastMomentum = @getMomentum()
     @colliding = true
 
   endContact: (other) =>
-    @colliding = false
     @doCollisionDamage()
+    @colliding = false
 
   doCollisionDamage: () =>
+    @collisionLength += 1
     momentum = @getMomentum()
     xDifference = Math.abs(momentum[0] - @lastMomentum[0])
-    yDifference = Math.abs(momentum[1] - @lastMomentum[2])
+    yDifference = Math.abs(momentum[1] - @lastMomentum[1])
     angularDifference = Math.abs(momentum[2] - @lastMomentum[2])
-    damage = 0.01 * (xDifference + yDifference + angularDifference) ** 2
-    @health -= damage
-    console.log damage.toFixed(2)
+    damage = Math.random() * (xDifference + yDifference + angularDifference) ** 1.4
     @lastMomentum = momentum
+
+    if damage > 50
+      condition = Random.choose(CONDITIONS)
+      @conditions.add(condition)
+      time = 5
+      @conditionTimes[condition] = @conditionTimes[condition] + time || time
+      console.log "#{damage} damage: #{condition} for #{time.toFixed(1)} seconds"
+
+  repair: () =>
+    @conditions.clear()
 
   getMomentum: () =>
     xMomentum = @body.velocity[0] * @body.mass

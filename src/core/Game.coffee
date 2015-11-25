@@ -26,12 +26,13 @@ class Game
     @world.on('endContact', @endContact)
     @world.on('impact', @impact)
     for contact in Materials.contacts
-      @world.addContactMaterial(contact) 
-      
+      @world.addContactMaterial(contact)
+
     @io = new IO(@renderer.pixiRenderer.view)
     @draw = new Drawing()
 
     @framerate = 60
+    @frameNumber = 0
 
     @profiler = new Profiler()
     @profiler.addPhase('frame')
@@ -57,6 +58,8 @@ class Game
 
   # The main loop. Calls handlers, applies physics, and renders.
   loop: () =>
+    @frameNumber += 1
+
     @profiler.end('system')
     @profiler.end('frame')
     @profiler.start('frame')
