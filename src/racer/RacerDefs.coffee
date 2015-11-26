@@ -7,6 +7,7 @@ class RacerDef
       'drag': 1.0
       'mass': 1.0
       'maxForce': 85.0
+      'boostMaxForce': 120.0
       'size': [0.5, 2.0]
       'flaps': [{
         'color': 0xEEEE00
@@ -46,7 +47,7 @@ class RacerDef
         'y': 0
       }]
       'health': 100
-      'fragility': 0.5
+      'fragility': 0
     @rope =
       'size': 0.03
       'color': 0x444444

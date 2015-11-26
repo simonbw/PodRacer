@@ -58,6 +58,7 @@ class Engine extends Entity
     shape2.aerodynamics = false
     @body.addShape(shape2, [0, 0], 0)
 
+    @boosting = false
     @throttle = 0.0
     if @side == 'right'
       @ropePoint = [-0.4 * w, 0.45 * h] # point the rope connects in local coordinates
@@ -126,6 +127,12 @@ class Engine extends Entity
     endPoint = @localToWorld([(left[0] + right[0]) / 2, (0.15 + rand) * @throttle + 0.5 * @size[1]])
     @game.draw.triangle(leftWorld, endPoint, rightWorld, 0xFFFFFF, 0.8)
 
+    # change engine color WIP
+#    @sprite = new Pixi.Graphics()
+#    @sprite.beginFill(@engineDef.color)
+#    @sprite.drawRect(-0.5 * w, -0.5 * h, w, h)
+#    @sprite.endFill()
+
   onTick: () =>
     Aero.applyAerodynamics(@body, @engineDef.drag, @engineDef.drag)
 
@@ -153,7 +160,8 @@ class Engine extends Entity
     return @body.angle - Math.PI / 2
 
   getMaxForce: () =>
-    return @engineDef.maxForce + p2.vec2.length(@body.velocity) * 0.004 * @engineDef.maxForce
+    force = if @boosting then @engineDef.boostMaxForce else @engineDef.maxForce
+    return force + p2.vec2.length(@body.velocity) * 0.004 * force
 
   getCurrentForce: () =>
     return @getMaxForce() * @throttle
@@ -196,5 +204,11 @@ class Engine extends Entity
     yMomentum = @body.velocity[1] * @body.mass
     angularMomentum = @body.angularVelocity * @body.inertia
     return [xMomentum, yMomentum, angularMomentum]
+
+  boostOn: () =>
+    @boosting = true
+
+  boostOff: () =>
+    @boosting = false
 
 module.exports = Engine
