@@ -13,6 +13,7 @@ class GameRenderer
       resolution: Pixi.RESOLUTION
     })
     document.body.appendChild(@pixiRenderer.view)
+    window.onresize = @resize
     @stage = new Pixi.Container()
     @camera = new Camera(this)
 
@@ -32,6 +33,10 @@ class GameRenderer
       layerInfo.index = i
       layerInfo.layer = layer
       @stage.addChildAt(layer, i)
+
+  resize: () =>
+    [w, h] = [window.innerWidth, window.innerHeight]
+    @pixiRenderer.resize(w, h)
 
   # Render the current frame.
   render: (engine) =>
