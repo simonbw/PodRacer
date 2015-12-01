@@ -15,6 +15,8 @@ CONDITIONS = [
   'left_flap_stuck',
   'right_flap_stuck',
   'stutter',
+  'boost_stuck',
+  'boost_failure',
 ]
 
 class Engine extends Entity
@@ -152,8 +154,12 @@ class Engine extends Entity
     if @colliding
       @doCollisionDamage()
 
+    # Conditions
     if @conditions.has('no_thrust')
       @throttle = 0
+
+    if @conditions.has('boost_failure')
+      @boosting = false
 
 # Return the angle the engine is pointing in
   getDirection: () =>
@@ -206,9 +212,11 @@ class Engine extends Entity
     return [xMomentum, yMomentum, angularMomentum]
 
   boostOn: () =>
-    @boosting = true
+    if not @conditions.has('boost_stuck') and not @conditions.has('boost_failure')
+      @boosting = true
 
   boostOff: () =>
-    @boosting = false
+    if not @conditions.has('boost_stuck')
+      @boosting = false
 
 module.exports = Engine
