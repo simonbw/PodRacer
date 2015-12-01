@@ -43,11 +43,13 @@ class ListMenu extends Entity
 
   onTick: () ->
     axis = @game.io.getAxis(1)
-    if Math.abs(axis) > 0.9
+    if Math.abs(axis) > 0.3
       currentTime = Date.now()
       if currentTime - @lastMoveTime >= DOWN_THRESHOLD
         @lastMoveTime = currentTime
         @selectOption(@currentOption + Math.sign(axis))
+    else if Math.abs(axis) < 0.2
+      @lastMoveTime = 0
 
   # select the option at index in the options list
   selectOption: (index) =>
@@ -60,8 +62,10 @@ class ListMenu extends Entity
     @currentOption = index
 
   onButtonDown: (button) =>
-    if button == 0 # A has been pressed
-      @activateOption()
+    switch button
+      when IO.GAMEPAD_A then @activateOption()
+      when IO.GAMEPAD_D_UP then @selectOption(@currentOption - 1)
+      when IO.GAMEPAD_D_DOWN then @selectOption(@currentOption + 1)
 
   # main menu keyboard support
   onKeyDown: (key) =>

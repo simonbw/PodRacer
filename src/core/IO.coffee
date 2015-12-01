@@ -1,28 +1,12 @@
 
-# Manages 
+# Manages
 class IO
+  # Mouse Constants
   @LMB = LMB = 0
   @RMB = RMB = 2
   @MMB = MMB = 1
 
-  @ESCAPE = ESCAPE = 27
-  @SPACE = SPACE = 32
-  @ENTER = ENTER = 13
-  @TAB = TAB = 9
-
-  @LEFT_X = 0
-  @LEFT_Y = 1
-  @RIGHT_X = 2
-  @RIGHT_Y = 3
-
-  @B_A = 0
-  @B_B = 1
-  @B_X = 2
-  @B_Y = 3
-
-  @B_RIGHT_TRIG = 7
-  @B_LEFT_TRIG = 6
-
+  # Events
   @MOUSE_MOVE = MOUSE_MOVE = 'mousemove'
   @CLICK = CLICK = 'click'
   @RIGHT_CLICK = RIGHT_CLICK = 'rightclick'
@@ -36,11 +20,43 @@ class IO
   @BUTTON_DOWN = BUTTON_DOWN = 'buttondown'
   @BUTTON_UP = BUTTON_UP = 'buttonup'
 
-  @UP_ARROW = 38
-  @DOWN_ARROW = 40
+  # Keyboard key constants
+  @TAB = 9
   @ENTER = 13
-  @SPACEBAR = 32
-  
+  @ESCAPE = 27
+  @SPACE = 32
+  @UP_ARROW = 38
+  @RIGHT_ARROW = 39
+  @DOWN_ARROW = 40
+  @LEFT_ARROW = 41
+  @ENTER = ENTER = 13
+
+  # Gamepad Button constants
+  @GAMEPAD_A = 0
+  @GAMEPAD_B = 1
+  @GAMEPAD_X = 2
+  @GAMEPAD_Y = 3
+  @GAMEPAD_LB = 4
+  @GAMEPAD_RB = 5
+  @GAMEPAD_LT = 6
+  @GAMEPAD_RT = 7
+  @GAMEPAD_BACK = 8
+  @GAMEPAD_START = 9
+  @GAMEPAD_L3 = 10
+  @GAMEPAD_R3 = 11
+  @GAMEPAD_D_UP = 12
+  @GAMEPAD_D_DOWN = 13
+  @GAMEPAD_D_LEFT = 14
+  @GAMEPAD_D_RIGHT = 15
+  @GAMEPAD_SPECIAL = 16
+
+  # Gamepad Axes
+  @GAMEPAD_LX = 0
+  @GAMEPAD_LY = 1
+  @GAMEPAD_RX = 2
+  @GAMEPAD_RY = 3
+
+  # Other Constants
   @DEADZONE = 0
 
   constructor: (@view) ->
@@ -102,7 +118,7 @@ class IO
         else if !button and @lastButtons[i]
           for callback in @callbacks[BUTTON_UP]
             callback(i)
-      
+
       @lastButtons = buttons
     else
       @lastButtons = []
@@ -157,9 +173,9 @@ class IO
       when RMB
         for callback in @callbacks[RIGHT_DOWN]
           callback(@mousePosition)
-  
+
   shouldPreventDefault: (key) =>
-    if key is TAB
+    if key is IO.TAB
       return true
     if key is 83 # s for save
       return true
