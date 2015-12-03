@@ -7,14 +7,20 @@ Materials = require 'physics/Materials'
 class Wall extends Entity
   constructor: (x, y) ->
 
-    @w = 100
-    @h = 1
+    @w = 10
+    @h = 10
+
+    graphicWidth = @w
+    graphicHeight = @h
 
 
     @sprite = new Pixi.Graphics()
-    @sprite.beginFill(0x000000)
-    @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w, @h)
-    @sprite.endFill()
+
+    for i in (-1..2)
+      @sprite.beginFill(0x000000 + 100*i)
+      @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w + i, @h + i)
+      @sprite.endFill()
+
 
     @body = new p2.Body {
       position: [x, y]
