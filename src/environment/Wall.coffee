@@ -8,17 +8,25 @@ class Wall extends Entity
   constructor: (x, y) ->
 
     @w = 10
-    @h = 10
+    @h = 1000
 
     graphicWidth = @w
     graphicHeight = @h
 
 
     @sprite = new Pixi.Graphics()
+    @sprite.lineStyle(0.07, 0x000000, 1)
 
-    for i in (-1..2)
-      @sprite.beginFill(0x000000 + 100*i)
-      @sprite.drawRect(-0.5 * @w, -0.5 * @h, @w + i, @h + i)
+    startColor = 0xe8d9c5
+    endColor = 0xD2B48C
+
+    num_layers = 7
+
+    colorRange = Util.colorRange(startColor, endColor, num_layers - 1)
+
+    for i in [Math.trunc(-1*num_layers/2)..Math.ceil(num_layers/2-1)]
+      @sprite.beginFill(colorRange[i + Math.trunc(num_layers/2)])
+      @sprite.drawRect(-0.5 * (@w - i), -0.5 * (@h - i), @w - i, @h - i)
       @sprite.endFill()
 
 

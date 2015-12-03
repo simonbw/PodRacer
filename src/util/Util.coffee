@@ -33,6 +33,43 @@ Util = {
   length: ([x, y]) ->
     return Math.sqrt(x * x + y * y)
 
+  rgbToHex: (red, green, blue) =>
+    return Util.clamp(blue, 0, 255) + (Util.clamp(green, 0, 255) << 8) + (Util.clamp(red, 0, 255) << 16)
+
+  rgbObjToHex: (rgbObj) =>
+    return Util.rgbToHex(rgbObj.r, rgbObj.g, rgbObj.b)
+
+  hexToRGB: (hex) =>
+    return {
+      "r": (hex >> 16),
+      "g": ((hex >> 8) & 0x0000FF),
+      "b": (hex & 0x0000FF)
+    }
+
+  # given colors "from" and "to", return a hex array [from, x, y, z, to]
+  # where there are exactly (steps + 1) elements in the array
+  # and each element is a color that fades between the two endpoint colors
+  colorRange: (from, to, steps) =>
+    perStepFade = 1.0 / steps
+    out = []
+    for i in [0..steps]
+      out.push(Util.colorFade(from, to, perStepFade*i))
+    return out
+
+  colorFade: (from, to, percentFrom) =>
+    rgbFrom = Util.hexToRGB(from)
+    rgbTo = Util.hexToRGB(to)
+
+    rgbFrom.r = Math.floor(rgbFrom.r * percentFrom)
+    rgbFrom.g = Math.floor(rgbFrom.g * percentFrom)
+    rgbFrom.b = Math.floor(rgbFrom.b * percentFrom)
+
+    rgbTo.r = Math.floor(rgbTo.r * (1-percentFrom))
+    rgbTo.g = Math.floor(rgbTo.g * (1-percentFrom))
+    rgbTo.b = Math.floor(rgbTo.b * (1-percentFrom))
+
+    return Util.rgbObjToHex(rgbFrom) + Util.rgbObjToHex(rgbTo)
+
 }
 
 module.exports = Util
