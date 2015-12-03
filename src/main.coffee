@@ -19,8 +19,8 @@ window.onload = ->
 start = ->
   console.log "ready to go"
   # here we need to open up a new menu
-  window.game = game = new Game()
+  window.DEBUG = {}
+  window.DEBUG.game = game = new Game()
   game.addEntity(new MainMenu())
   game.addEntity(new Ground())
-  window.game.start()
-  
+  game.start()

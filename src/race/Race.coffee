@@ -10,9 +10,9 @@ class Race extends Entity
     @racerWaypointIndexes = new Map() # stores the index of the waypoint a racer is currently on
     @racerLaps = new Map() # stores the index of the waypoint a racer is currently on
 
-  onAdd: (game) =>
+  onAdd: () =>
     for waypoint in @waypoints
-      game.addEntity(waypoint)
+      @game.addEntity(waypoint)
 
   addWaypoint: (center, radius=20) =>
     @waypoints.push(new Waypoint(center, radius))
@@ -21,7 +21,7 @@ class Race extends Entity
     @racers.push(racer)
     @racerWaypointIndexes.set(racer, 0)
     @racerLaps.set(racer, 0)
-  
+
   onTick: () =>
     for racer in @racers
       waypoint = @getRacerWaypoint(racer)
@@ -29,10 +29,10 @@ class Race extends Entity
       if distance <= waypoint.radius + 1
         current = @racerWaypointIndexes.get(racer)
         @racerWaypointIndexes.set(racer, (current + 1) % @waypoints.length)
-        console.log "waypoint reached", current
+        #console.log "waypoint reached", current
         if current == 0
           @racerLaps.set(racer, @racerLaps.get(racer) + 1)
-          console.log "new lap"
+          #console.log "new lap"
           if @racerLaps.get(racer) > @laps
             console.log "RACE OVER"
             @destroy()
@@ -41,9 +41,9 @@ class Race extends Entity
   onRender: () =>
     for waypoint, i in @waypoints
       nextWaypoint = @waypoints[(i + 1) % @waypoints.length]
-      @game.draw.line(waypoint.center, nextWaypoint.center, 0.1, 0x0044FF, 0.5, 'world_back')
+      @game.draw.line(waypoint.center, nextWaypoint.center, 0.1, 0x0044FF, 0.5, 'world')
 
-  # Returns the current waypoint a racer is headed to 
+  # Returns the current waypoint a racer is headed to
   getRacerWaypoint: (racer, next=0) =>
     return @waypoints[Util.mod(@racerWaypointIndexes.get(racer) + next, @waypoints.length)]
 

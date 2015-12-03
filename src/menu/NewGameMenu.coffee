@@ -14,6 +14,7 @@ AIRacerController = require 'racer/AIRacerController'
 PauseController = require 'core/PauseController'
 Wall = require 'environment/Wall'
 
+
 class NewGameMenu extends ListMenu
   setOptions: () =>
     @options = [
@@ -32,13 +33,13 @@ class NewGameMenu extends ListMenu
     racer2 = new Racer([-5, 0])
     racerController = new PlayerRacerController(racer)
     racerController2 = new AIRacerController(racer2, race)
-    cameraController = new CameraController(racer, game.camera)
+    cameraController = new CameraController(racer, @game.camera)
 
-    game.addEntity(racer)
-    game.addEntity(racer2)
-    game.addEntity(racerController)
-    game.addEntity(racerController2)
-    game.addEntity(cameraController)
+    @game.addEntity(racer)
+    @game.addEntity(racer2)
+    @game.addEntity(racerController)
+    @game.addEntity(racerController2)
+    @game.addEntity(cameraController)
 
     race.addRacer(racer)
     race.addRacer(racer2)
@@ -49,7 +50,7 @@ class NewGameMenu extends ListMenu
     race.addWaypoint([-250, -250], 40)
     race.addWaypoint([-400, 0], 50)
     race.addWaypoint([-250, 250], 40)
-    game.addEntity(race)
+    @game.addEntity(race)
     @destroy()
 
   startFreePlay: () =>

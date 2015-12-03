@@ -9,12 +9,12 @@ class PauseController extends Entity
   onButtonDown: (button) =>
     if button == 9 and not @game.paused
       @game.togglePause()
-      @game.addEntity(new PauseMenu()) 
+      @game.addEntity(new PauseMenu())
 
   onKeyDown: (key) =>
-    if key == IO.SPACEBAR and not @game.paused
+    if key == IO.SPACE and not @game.paused
       @game.togglePause()
       @game.addEntity(new PauseMenu())
-      
+
 
 module.exports = PauseController
