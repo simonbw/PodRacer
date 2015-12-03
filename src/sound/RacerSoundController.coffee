@@ -20,7 +20,7 @@ class RacerSoundController extends Entity
     @oscillatorFilter = @game.audio.createBiquadFilter()
     @triangleOscillator = @game.audio.createOscillator()
     @sawtoothOscillator = @game.audio.createOscillator()
-    @modulator = @game.audio.createOscillator()
+    @modulatorOscillator = @game.audio.createOscillator()
     @modulatorFilter = @game.audio.createBiquadFilter()
     @modulatorGain = @game.audio.createGain()
     @modulatorThrough = @game.audio.createGain()
@@ -53,9 +53,9 @@ class RacerSoundController extends Entity
     @sawtoothOscillator.frequency.value = 1
     @sawtoothOscillator.start()
 
-    @modulator.type = 'sawtooth'
-    @modulator.frequency.value = 5
-    @modulator.start()
+    @modulatorOscillator.type = 'sawtooth'
+    @modulatorOscillator.frequency.value = 5
+    @modulatorOscillator.start()
     @modulatorFilter.type = 'lowpass'
     @modulatorFilter.frequency.value = 400
     @modulatorFilter.Q.value = 0.5
@@ -67,7 +67,7 @@ class RacerSoundController extends Entity
 
     @noise.connect(@noiseFilter)
     @noiseFilter.connect(@noiseGain)
-    @noiseGain.connect(@compressor)
+    @noiseGain.connect(@out)
     @triangleOscillator.connect(@triangleGain)
     @triangleGain.connect(@oscillatorFilter)
     @sawtoothOscillator.connect(@sawtoothGain)
@@ -75,7 +75,7 @@ class RacerSoundController extends Entity
     @oscillatorFilter.connect(@compressor)
     @compressor.connect(@modulatorThrough)
     @modulatorThrough.connect(@out)
-    @modulator.connect(@modulatorFilter)
+    @modulatorOscillator.connect(@modulatorFilter)
     @modulatorFilter.connect(@modulatorGain)
     @modulatorGain.connect(@modulatorThrough.gain)
     @noise.start()
@@ -84,18 +84,18 @@ class RacerSoundController extends Entity
     speed = Array.from(@engine.body.velocity).magnitude
     throttle = @engine.throttle
 
-    @modulator.frequency.value = 6 + throttle + speed / 15
+    @modulatorOscillator.frequency.value = 6 + throttle + speed / 15
     modulatorGain = -0.9 * (1 - Math.min(throttle * speed * 0.01, 1))
     @modulatorGain.gain.value = modulatorGain
 
-    @noiseGain.gain.value = 0 #@engine.throttle
+    @noiseGain.gain.value = if @engine.boosting then 5 else 0
     @triangleGain.gain.value = 0.15 + throttle / 3
     @sawtoothGain.gain.value = 0.3 * (throttle) * (0.05 + Math.min(speed / 100, 0.9))
 
     f = 80 + (0.4 * throttle + 0.6) * (30 + speed * 3) + Math.random() * 12
     @triangleOscillator.frequency.value = f
     @sawtoothOscillator.frequency.value = f
-    @noiseFilter.frequency.value = 100 + 0.5 * speed
+    @noiseFilter.frequency.value = 100 + 1.5 * speed
     @oscillatorFilter.frequency.value = 2500 + throttle * (30 + speed * 8) + 500 * Math.random()
 
     @positionFilter.position.set(@engine.body.position)
