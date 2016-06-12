@@ -13,7 +13,8 @@
     "p2": "^0.7.1",
     "pixi.js": "^3.0.11",
     "transform-loader": "^0.2.3",
-    "webpack": "^1.13.1"
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
   },
   "description": "",
   "license": "MIT",
@@ -23,7 +24,7 @@
     "url": "https://github.com/simonbw/pod-racer.git"
   },
   "scripts": {
-    "dev": "webpack-dev-server --progress --colors"
+    "start": "webpack-dev-server --progress --colors"
   },
   "version": "0.0.0"
 }

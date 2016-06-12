@@ -1,6 +1,7 @@
 node_modules/
 .idea
 bin/main.js
+npm-debug.log
 
 # General crap
 *.sublime-workspace
