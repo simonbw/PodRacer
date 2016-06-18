@@ -11,7 +11,7 @@ export default class PauseController extends Entity {
   }
 
   onButtonDown(button) {
-    if (button = GamepadButtons.START) {// TODO constant
+    if (button == GamepadButtons.START) {// TODO constant
       this.togglePause();
     }
   }

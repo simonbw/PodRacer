@@ -2,6 +2,7 @@ import * as GamepadAxes from './constants/GamepadAxes';
 import * as GamepadButtons from './constants/GamepadButtons';
 import * as Keys from './constants/Keys';
 import * as MouseButtons from './constants/MouseButtons';
+import * as Util from '../util/Util';
 
 
 export const IOEvents = {
@@ -17,6 +18,10 @@ export const IOEvents = {
   RIGHT_DOWN: 'rightdown',
   RIGHT_UP: 'rightup'
 };
+
+
+const GAMEPAD_MINIMUM = 0.2; // TODO: allow user configuration
+const GAMEPAD_MAXIMUM = 0.95; // TODO: allow user configuration
 
 /**
  * Manages IO
@@ -40,7 +45,9 @@ export class IOManager {
     this.view.onmousedown = (e) => this.onMouseDown(e);
     this.view.onmouseup = (e) => this.onMouseUp(e);
     this.view.onmousemove = (e) => this.onMouseMove(e);
-    document.onkeydown = (e) => {this.onKeyDown(e)};
+    document.onkeydown = (e) => {
+      this.onKeyDown(e)
+    };
     document.onkeyup = (e) => this.onKeyUp(e);
     this.view.oncontextmenu = (e) => {
       e.preventDefault();
@@ -247,16 +254,37 @@ export class IOManager {
    * @param threshold {number}
    * @returns {number}
    */
-  getAxis(axis, threshold = 0.1) {
+  getAxis(axis) {
+    switch (axis) {
+      case GamepadAxes.LEFT_X:
+        return this.getStick(GamepadAxes.LEFT).x;
+      case GamepadAxes.LEFT_Y:
+        return this.getStick(GamepadAxes.LEFT).y;
+      case GamepadAxes.RIGHT_X:
+        return this.getStick(GamepadAxes.RIGHT).x;
+      case GamepadAxes.RIGHT_Y:
+        return this.getStick(GamepadAxes.RIGHT).y;
+    }
+  }
+
+
+  getStick(stick) {
+    const axes = [0, 0];
     const gamepad = navigator.getGamepads()[0];
     if (gamepad) {
-      axis = gamepad.axes[axis];
-      if (Math.abs(axis) > threshold) {
-        this.usingGamepad = true;
+      if (stick == GamepadAxes.LEFT) {
+        axes.x = gamepad.axes[GamepadAxes.LEFT_X];
+        axes.y = gamepad.axes[GamepadAxes.LEFT_Y];
+      } else {
+        axes.x = gamepad.axes[GamepadAxes.RIGHT_X];
+        axes.y = gamepad.axes[GamepadAxes.RIGHT_Y];
       }
-      return axis;
+      const gamepadRange = (GAMEPAD_MAXIMUM - GAMEPAD_MINIMUM);
+      axes.magnitude = Math.max((axes.magnitude - GAMEPAD_MINIMUM) / gamepadRange, 0);
+      axes.x = Math.min(1, axes.x);
+      axes.y = Math.min(1, axes.y);
     }
-    return 0;
+    return axes;
   }
 
   /**

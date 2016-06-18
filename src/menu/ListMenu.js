@@ -46,7 +46,7 @@ export default class ListMenu extends Entity {
   }
 
   onTick() {
-    const axis = this.game.io.getAxis(1);
+    const axis = this.game.io.getAxis(GamepadAxes.LEFT_Y);
     let currentTime;
     if (Math.abs(axis) > 0.3) { // TODO: why 0.3?
       currentTime = Date.now();

@@ -22,8 +22,10 @@ export default class PlayerRacerController extends Entity {
   }
 
   beforeTick() {
-    const leftStick = Math.sqrt(Util.clamp(-this.game.io.getAxis(GamepadAxes.LEFT_Y), 0, 1));
-    const rightStick = Math.sqrt(Util.clamp(-this.game.io.getAxis(GamepadAxes.RIGHT_Y), 0, 1));
+    const stickTransform = (value) => Util.clamp(value, 0, 1) ** 1.2;
+    const leftStick = stickTransform(-this.game.io.getAxis(GamepadAxes.LEFT_Y));
+    const rightStick = stickTransform(-this.game.io.getAxis(GamepadAxes.RIGHT_Y));
+
     if (this.racer.leftEngine) {
       this.racer.leftEngine.setThrottle(leftStick + this.game.io.keys[LEFT_THROTTLE]);
     }
