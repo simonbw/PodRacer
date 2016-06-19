@@ -2,8 +2,6 @@ import * as Pixi from 'pixi.js';
 import Entity from '../core/Entity';
 
 
-const getTime = Performance.now || Date.now;
-
 export default class FPSMeter extends Entity {
   constructor() {
     super();
@@ -14,12 +12,12 @@ export default class FPSMeter extends Entity {
     });
     this.sprite.x = 10;
     this.sprite.y = 10;
-    this.lastUpdate = getTime();
+    this.lastUpdate = performance.now();
     this.averageDuration = 60;
   }
 
   onRender() {
-    const now = getTime();
+    const now = performance.now();
     this.averageDuration = 0.9 * this.averageDuration + 0.1 * (now - this.lastUpdate);
     this.lastUpdate = now;
     this.sprite.text = Math.round(1000 / this.averageDuration);

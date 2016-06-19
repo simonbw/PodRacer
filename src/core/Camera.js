@@ -52,8 +52,8 @@ export default class Camera extends Entity {
    * Called before rendering.
    */
   onRender() {
-    this.x += this.vx * this.game.timestep;
-    this.y += this.vy * this.game.timestep;
+    this.x += this.vx * this.game.renderTimestep;
+    this.y += this.vy * this.game.renderTimestep;
   }
 
   /**

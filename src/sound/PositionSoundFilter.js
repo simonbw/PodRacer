@@ -36,6 +36,6 @@ export default class PositionSoundFilter extends Entity {
 
     // Doppler effect. Needs work
     //delayTime = Math.min(distance / 800, MAX_DELAY);
-    //this.delay.delayTime.linearRampToValueAtTime(delayTime, this.game.audio.currentTime + this.game.timestep);
+    //this.delay.delayTime.linearRampToValueAtTime(delayTime, this.game.audio.currentTime + this.game.tickTimestep);
   }
 }

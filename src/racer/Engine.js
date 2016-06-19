@@ -159,7 +159,7 @@ export default class Engine extends Entity {
     this.body.applyForceLocal([0, -force], forcePoint);
 
     this.conditions.forEach((condition) => {
-      this.conditionTimes[condition] -= this.game.timestep;
+      this.conditionTimes[condition] -= this.game.tickTimestep;
       if (this.conditionTimes[condition] <= 0) {
         this.conditions.delete(condition);
         console.log(`ending: ${condition}`);

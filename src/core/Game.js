@@ -72,13 +72,27 @@ export default class Game {
     this.paused = false;
     this.framerate = 60;
     this.framenumber = 0;
+    this.slowFrameCount = 0;
+    this.lastFrameTime = window.performance.now();
+    this.tickIterations = 5;
   }
 
   /**
-   * @returns {number} - Number of seconds per frame.
+   * @returns {number} - Number of seconds between renders.
    */
-  get timestep() {
+  get renderTimestep() {
     return 1 / this.framerate;
+  }
+
+  /**
+   * @returns {number} - Number of seconds between ticks.
+   */
+  get tickTimestep() {
+    return this.renderTimestep / this.tickIterations;
+  }
+
+  getSlowFrameRatio() {
+    return this.slowFrameCount / this.framenumber || 0;
   }
 
   /**
@@ -93,14 +107,24 @@ export default class Game {
   /**
    * The main event loop. Run one frame of the game.
    */
-  loop() {
+  loop(time) {
+    window.requestAnimationFrame((t) => this.loop(t));
     this.framenumber += 1;
-    window.requestAnimationFrame(() => this.loop());
-    this.tick();
-    if (!this.paused) {
-      this.world.step(this.timestep);
+    const duration = time - this.lastFrameTime;
+    if (duration > this.renderTimestep * 1005) {
+      console.warn('slow frame');
+      this.slowFrameCount += 1;
+    }
+    this.lastFrameTime = time;
+
+    for (let i = 0; i < this.tickIterations; i++) {
+      this.tick();
+      if (!this.paused) {
+        this.world.step(this.tickTimestep);
+      }
     }
     this.afterTick();
+
     this.render();
   }
 
