@@ -23,7 +23,9 @@ const GAME_EVENTS = [
   'onRender',
   'beforeTick',
   'onTick',
-  'afterTick'
+  'afterTick',
+  'onPause',
+  'onUnpause'
 ];
 
 // Top Level control structure
@@ -44,6 +46,8 @@ export default class Game {
       beforeTick: [],
       onRender: [],
       onTick: [],
+      onPause: [],
+      onUnpause: [],
       toRemove: new Set()
     };
     this.renderer = new GameRenderer();
@@ -132,7 +136,25 @@ export default class Game {
    * Pause/unpause the game.
    */
   togglePause() {
-    this.paused = !this.paused;
+    if (this.paused) {
+      this.unpause();
+    } else {
+      this.pause();
+    }
+  }
+
+  pause() {
+    this.paused = true;
+    this.entities.onPause.forEach((entity) => {
+      entity.onPause();
+    });
+  }
+
+  unpause() {
+    this.paused = false;
+    this.entities.onUnpause.forEach((entity) => {
+      entity.onUnpause();
+    });
   }
 
   /**

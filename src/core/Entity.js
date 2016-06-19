@@ -157,6 +157,16 @@ Entity.prototype.onRender = null;
  */
 Entity.prototype.onTick = null;
 /**
+ * Called when game is paused.
+ * @type {function}
+ */
+Entity.prototype.onPause = null;
+/**
+ * Called when game is unpaused.
+ * @type {function}
+ */
+Entity.prototype.onUnpause = null;
+/**
  * Called after being destroyed.
  * @type {function}
  */
