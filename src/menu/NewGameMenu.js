@@ -15,6 +15,7 @@ import RaceCameraController from '../RaceCameraController';;
 import Racer from '../racer/Racer';
 import Wall from '../environment/Wall';
 
+
 export default class NewGameMenu extends ListMenu {
   setOptions() {
     this.options = [
@@ -30,8 +31,8 @@ export default class NewGameMenu extends ListMenu {
   startRace() {
     this.game.addEntity(new PauseController());
     const race = new Race();
-    const racer = new Racer([5, 0], RacerDefs.test);
-    const racer2 = new Racer([-5, 0]);
+    const racer = new Racer([5, 5]);
+    const racer2 = new Racer([0, 5]);
     const racerController = new PlayerRacerController(racer);
     const racerController2 = new AIRacerController(racer2, race);
     const cameraController = new RaceCameraController(racer, this.game.camera);
@@ -52,18 +53,17 @@ export default class NewGameMenu extends ListMenu {
     race.addWaypoint([-400, 0], 50);
     race.addWaypoint([-250, 250], 40);
     this.game.addEntity(race);
+
     this.destroy();
   }
 
   startFreePlay() {
     this.game.addEntity(new PauseController());
-    const racer = new Racer([5, 0], RacerDefs.test);
-    const racerController = new PlayerRacerController(racer);
-    const cameraController = new RaceCameraController(racer, this.game.camera);
+    const racer = new Racer([0, -4], RacerDefs.ANAKIN);
 
     this.game.addEntity(racer);
-    this.game.addEntity(racerController);
-    this.game.addEntity(cameraController);
+    this.game.addEntity(new PlayerRacerController(racer));
+    this.game.addEntity(new RaceCameraController(racer, this.game.camera));
 
     this.destroy();
   }

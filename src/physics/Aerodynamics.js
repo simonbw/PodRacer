@@ -53,20 +53,11 @@ export function applyAerodynamicsToEdge(body, v1, v2, dragAmount, liftAmount) {
 
   const dragMagnitude = airDotEdgeNormal * edgeLength * airSpeed * dragAmount * DRAG;
   const drag = airVelocity.mul(-dragMagnitude);
-
-  if (!drag.every(isFinite)) {
-    console.log(v1, v2);
-  } else {
-    body.applyForce(drag, midpoint.sub(body.position));
-  }
+  body.applyForce(drag, midpoint.sub(body.position));
 
   const liftMagnitude = airDotEdge * airDotEdgeNormal * edgeLength * airSpeed * liftAmount * LIFT;
   const lift = airVelocity.rotate90cw().imul(-liftMagnitude);
-  if (!lift.every(isFinite)) {
-    console.log('lift:', lift);
-  } else {
-    body.applyForce(lift, midpoint.sub(body.position));
-  }
+  body.applyForce(lift, midpoint.sub(body.position));
 
 
   if (DEBUG_DRAW) {

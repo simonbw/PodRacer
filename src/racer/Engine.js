@@ -81,11 +81,9 @@ export default class Engine extends Entity {
         maxAngle: flapDef.maxAngle
       };
       if ((this.side == 'left' && flapDef.side == 'outside') || (this.side == 'right' && flapDef.side == 'inside')) {
-        console.log('left flap');
         def['direction'] = ControlFlap.LEFT;
         def['position'] = [-this.engineDef.size[0] / 2, flapDef.y];
       } else {
-        console.log('right flap');
         def['direction'] = ControlFlap.RIGHT;
         def['position'] = [this.engineDef.size[0] / 2, flapDef.y];
       }

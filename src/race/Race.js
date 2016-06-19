@@ -7,6 +7,7 @@ import * as Util from '../util/Util';
 export default class Race extends Entity {
   constructor(laps = 3, onEnd = null) {
     super();
+    this.laps = laps; // total number of laps in the race
     this.waypoints = [];
     this.racers = [];
     this.racerWaypointIndexes = new Map(); // stores the index of the waypoint a racer is currently on

@@ -63,11 +63,4 @@ class RacerDef {
   }
 }
 
-
 export const ANAKIN = new RacerDef();
-
-export const TEST = new RacerDef();
-TEST.pod.color = 0x2222BB;
-TEST.rope.color = 0x444444;
-TEST.engine.color = 0x2222BB;
-TEST.pod.flaps[0].color = 0x1111AA;
