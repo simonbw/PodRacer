@@ -11,7 +11,8 @@ export default class RacerSoundController extends Entity {
 
   onAdd() {
     this.game.addEntity(this.positionFilter);
-    this.out = this.positionFilter.in;
+    this.out = this.game.audio.createGain();
+    this.out.connect(this.positionFilter.in);
 
     this.noise = this.game.audio.createBufferSource();
     this.noiseFilter = this.game.audio.createBiquadFilter();
@@ -97,6 +98,18 @@ export default class RacerSoundController extends Entity {
     this.sawtoothOscillator.frequency.value = f;
     this.noiseFilter.frequency.value = 100 + 1.5 * speed;
     this.oscillatorFilter.frequency.value = 2500 + throttle * (30 + speed * 8) + 500 * Math.random();
+  }
+
+  onPause() {
+    this.out.gain.cancelScheduledValues(0);
+    this.out.gain.setValueAtTime(this.out.gain.value, this.game.audio.currentTime);
+    this.out.gain.exponentialRampToValueAtTime(0.001, this.game.audio.currentTime + 0.7);
+  }
+
+  onUnpause() {
+    this.out.gain.cancelScheduledValues(0);
+    this.out.gain.setValueAtTime(this.out.gain.value, this.game.audio.currentTime);
+    this.out.gain.exponentialRampToValueAtTime(1.0, this.game.audio.currentTime + 0.05);
   }
 
   onDestroy() {
