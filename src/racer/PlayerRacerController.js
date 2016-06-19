@@ -1,18 +1,25 @@
-import Entity from '../core/Entity'
-import * as Util from '../util/Util'
+import * as GamepadAxes from '../core/constants/GamepadAxes';
+import * as GamepadButtons from '../core/constants/GamepadButtons';
+import * as Keys from '../core/constants/Keys';
+import * as Util from '../util/Util';
+import Entity from '../core/Entity';
 import Ground from '../environment/Ground'
 import MainMenu from '../menu/MainMenu';
 
-import * as GamepadButtons from '../core/constants/GamepadButtons'
-import * as GamepadAxes from '../core/constants/GamepadAxes'
 
-
-const LEFT_THROTTLE = 88; // X
-const LEFT_FLAP = 90; // Z
-const RIGHT_THROTTLE = 190; // .
-const RIGHT_FLAP = 191; // /
-const LEFT_BOOST = 67; // C
-const RIGHT_BOOST = 188; // ,
+// TODO: Put these in a config file or something
+// Keys
+const K_LEFT_THROTTLE = Keys.X;
+const K_RIGHT_THROTTLE = Keys.PERIOD;
+const K_LEFT_FLAP = Keys.Z;
+const K_RIGHT_FLAP = Keys.SLASH;
+const K_LEFT_BOOST = Keys.C;
+const K_RIGHT_BOOST = Keys.COMMA;
+// Buttons
+const B_LEFT_BOOST = GamepadButtons.LB;
+const B_RIGHT_BOOST = GamepadButtons.RB;
+const B_LEFT_FLAP = GamepadButtons.LT;
+const B_RIGHT_FLAP = GamepadButtons.RT;
 
 
 export default class PlayerRacerController extends Entity {
@@ -27,23 +34,23 @@ export default class PlayerRacerController extends Entity {
     const rightStick = stickTransform(-this.game.io.getAxis(GamepadAxes.RIGHT_Y));
 
     if (this.racer.leftEngine) {
-      this.racer.leftEngine.setThrottle(leftStick + this.game.io.keys[LEFT_THROTTLE]);
+      this.racer.leftEngine.setThrottle(leftStick + this.game.io.keys[K_LEFT_THROTTLE]);
     }
     if (this.racer.rightEngine) {
-      this.racer.rightEngine.setThrottle(rightStick + this.game.io.keys[RIGHT_THROTTLE]);
+      this.racer.rightEngine.setThrottle(rightStick + this.game.io.keys[K_RIGHT_THROTTLE]);
     }
 
-    const leftFlap = Util.clamp(this.game.io.getButton(GamepadButtons.LT) + this.game.io.keys[LEFT_FLAP], 0, 1);
-    const rightFlap = Util.clamp(this.game.io.getButton(GamepadButtons.RT) + this.game.io.keys[RIGHT_FLAP], 0, 1);
-    this.racer.setFlaps(leftFlap, rightFlap)
+    const leftFlap = Util.clamp(this.game.io.getButton(B_LEFT_FLAP) + this.game.io.keys[K_LEFT_FLAP], 0, 1);
+    const rightFlap = Util.clamp(this.game.io.getButton(B_RIGHT_FLAP) + this.game.io.keys[K_RIGHT_FLAP], 0, 1);
+    this.racer.setFlaps(leftFlap, rightFlap);
   }
 
   onButtonDown(button) {
     switch (button) {
-      case GamepadButtons.L3:
+      case B_LEFT_BOOST:
         this.racer.leftEngine.boostOn();
         break;
-      case GamepadButtons.R3:
+      case B_RIGHT_BOOST:
         this.racer.rightEngine.boostOn();
         break;
     }
@@ -51,10 +58,10 @@ export default class PlayerRacerController extends Entity {
 
   onButtonUp(button) {
     switch (button) {
-      case GamepadButtons.L3:
+      case B_LEFT_BOOST:
         this.racer.leftEngine.boostOff();
         break;
-      case GamepadButtons.R3:
+      case B_RIGHT_BOOST:
         this.racer.rightEngine.boostOff();
         break;
     }
@@ -62,10 +69,10 @@ export default class PlayerRacerController extends Entity {
 
   onKeyDown(key) {
     switch (key) {
-      case LEFT_BOOST:
+      case K_LEFT_BOOST:
         this.racer.leftEngine.boostOn();
         break;
-      case RIGHT_BOOST:
+      case K_RIGHT_BOOST:
         this.racer.rightEngine.boostOn();
         break;
     }
@@ -73,10 +80,10 @@ export default class PlayerRacerController extends Entity {
 
   onKeyUp(key) {
     switch (key) {
-      case LEFT_BOOST:
+      case K_LEFT_BOOST:
         this.racer.leftEngine.boostOff();
         break;
-      case RIGHT_BOOST:
+      case K_RIGHT_BOOST:
         this.racer.rightEngine.boostOff();
         break;
     }
