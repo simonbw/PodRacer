@@ -15,7 +15,7 @@ export default class CameraController extends Entity {
       lookAhead.magnitude = Math.min(vel.magnitude * 0.3, Math.sqrt(vel.magnitude));
       const center = this.racer.getWorldCenter().iadd(lookAhead);
       this.camera.smoothCenter(center, vel);
-      this.camera.smoothZoom(20 / (1 + 0.14 * Math.log(vel.magnitude + 1)), 0.92);
+      this.camera.smoothZoom(20 / (1 + 0.19 * Math.log(vel.magnitude + 1)), 0.92);
     }
   }
 }
