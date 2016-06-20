@@ -11,7 +11,7 @@ import MenuOption from './MenuOption';
 import PauseController from '../core/PauseController';
 import PlayerRacerController from '../racer/PlayerRacerController';
 import Race from '../race/Race';
-import RaceCameraController from '../RaceCameraController';;
+import RaceCameraController from '../RaceCameraController';
 import Racer from '../racer/Racer';
 import Wall from '../environment/Wall';
 
@@ -33,18 +33,19 @@ export default class NewGameMenu extends ListMenu {
     const race = new Race();
     const racer = new Racer([5, 5]);
     const racer2 = new Racer([0, 5]);
-    const racerController = new PlayerRacerController(racer);
-    const racerController2 = new AIRacerController(racer2, race);
-    const cameraController = new RaceCameraController(racer, this.game.camera);
+    const racer3 = new Racer([-5, 5]);
 
     this.game.addEntity(racer);
     this.game.addEntity(racer2);
-    this.game.addEntity(racerController);
-    this.game.addEntity(racerController2);
-    this.game.addEntity(cameraController);
+    this.game.addEntity(racer3);
+    this.game.addEntity(new PlayerRacerController(racer));
+    this.game.addEntity(new AIRacerController(racer2, race));
+    this.game.addEntity(new AIRacerController(racer3, race));
+    this.game.addEntity(new RaceCameraController(racer, this.game.camera));
 
     race.addRacer(racer);
     race.addRacer(racer2);
+    race.addRacer(racer3);
     race.addWaypoint([0, 0], 5);
     race.addWaypoint([250, -250], 40);
     race.addWaypoint([400, 0], 50);
