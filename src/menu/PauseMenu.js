@@ -19,6 +19,10 @@ export default class PauseMenu extends ListMenu {
     ];
   }
 
+  cancel() {
+    this.unPause();
+  }
+
   unPause() {
     this.game.unpause();
     this.destroy();

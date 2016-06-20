@@ -13,7 +13,9 @@ import RaceCameraController from '../RaceCameraController';
 import RacerDefs from '../racer/RacerDefs';
 import * as Util from '../util/Util';
 
+
 const DOWN_THRESHOLD = 250;
+
 
 export default class ListMenu extends Entity {
   constructor() {
@@ -66,6 +68,10 @@ export default class ListMenu extends Entity {
     this.currentOption = index;
   }
 
+  cancel() {
+    // Override me
+  }
+
   onButtonDown(button) {
     switch (button) {
       case GamepadButtons.A:
@@ -76,6 +82,9 @@ export default class ListMenu extends Entity {
         break;
       case GamepadButtons.D_DOWN:
         this.selectOption(this.currentOption + 1);
+        break;
+      case GamepadButtons.B:
+        this.cancel();
         break;
     }
   }
@@ -91,6 +100,9 @@ export default class ListMenu extends Entity {
         break;
       case Keys.DOWN:
         this.selectOption(this.currentOption + 1);
+        break;
+      case Keys.ESCAPE:
+        this.cancel();
         break;
     }
   }

@@ -21,10 +21,7 @@ export default class NewGameMenu extends ListMenu {
     this.options = [
       new MenuOption('Free Play', 20, 180, () => this.startFreePlay()),
       new MenuOption('Race', 20, 280, () => this.startRace()),
-      new MenuOption('Back', 20, 380, () => {
-        this.game.addEntity(new MainMenu());
-        this.destroy();
-      })
+      new MenuOption('Back', 20, 380, () => this.cancel())
     ];
   }
 
@@ -66,6 +63,11 @@ export default class NewGameMenu extends ListMenu {
     this.game.addEntity(new PlayerRacerController(racer));
     this.game.addEntity(new RaceCameraController(racer, this.game.camera));
 
+    this.destroy();
+  }
+
+  cancel() {
+    this.game.addEntity(new MainMenu());
     this.destroy();
   }
 }
