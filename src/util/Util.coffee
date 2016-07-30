@@ -33,6 +33,16 @@ Util = {
   length: ([x, y]) ->
     return Math.sqrt(x * x + y * y)
 
+  rgbToHex: (red, green, blue) =>
+    return Util.clamp(blue, 0, 255) + Util.clamp(green, 0, 255) << 8 + Util.clamp(blue, 0, 255) << 16
+
+  hexToRGB: (hex) =>
+    return {
+      "r": (hex << 16),
+      "g": ((hex << 8) & 0x0000FF),
+      "b": (hex & 0x0000FF)
+    }
+
 }
 
 module.exports = Util
