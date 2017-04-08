@@ -2,9 +2,8 @@ import Drawing from '../util/Drawing';
 import Entity from './Entity';
 import GameRenderer from '../core/GameRenderer';
 import p2 from 'p2';
-import {IOManager, IOEvents} from './IO';
-import * as Materials from '../physics/Materials'
-
+import { IOEvents, IOManager } from './IO';
+import * as Materials from '../physics/Materials';
 
 const METHODS_TO_EVENTS = {
   onButtonDown: IOEvents.BUTTON_DOWN,
@@ -54,7 +53,7 @@ export default class Game {
     this.camera = this.renderer.camera;
     this.draw = new Drawing();
     this.io = new IOManager(this.renderer.pixiRenderer.view);
-
+    
     // Physics
     this.world = new p2.World({
       gravity: [0, 0]
@@ -65,14 +64,14 @@ export default class Game {
     this.world.on('beginContact', this.beginContact.bind(this));
     this.world.on('endContact', this.endContact.bind(this));
     this.world.on('impact', this.impact.bind(this));
-
+    
     /**
      * @type {AudioContext}
      */
     this.audio = new (window.AudioContext || window.webkitAudioContext);
     this.masterGain = this.audio.createGain();
     this.masterGain.connect(this.audio.destination);
-
+    
     this.paused = false;
     this.framerate = 60;
     this.framenumber = 0;
@@ -80,25 +79,25 @@ export default class Game {
     this.lastFrameTime = window.performance.now();
     this.tickIterations = 5;
   }
-
+  
   /**
    * @returns {number} - Number of seconds between renders.
    */
   get renderTimestep() {
     return 1 / this.framerate;
   }
-
+  
   /**
    * @returns {number} - Number of seconds between ticks.
    */
   get tickTimestep() {
     return this.renderTimestep / this.tickIterations;
   }
-
+  
   getSlowFrameRatio() {
     return this.slowFrameCount / this.framenumber || 0;
   }
-
+  
   /**
    * Start the event loop for the game.
    */
@@ -107,7 +106,7 @@ export default class Game {
     this.addEntity(this.draw);
     window.requestAnimationFrame(() => this.loop());
   }
-
+  
   /**
    * The main event loop. Run one frame of the game.
    */
@@ -120,7 +119,7 @@ export default class Game {
       this.slowFrameCount += 1;
     }
     this.lastFrameTime = time;
-
+    
     for (let i = 0; i < this.tickIterations; i++) {
       this.tick();
       if (!this.paused) {
@@ -128,10 +127,10 @@ export default class Game {
       }
     }
     this.afterTick();
-
+    
     this.render();
   }
-
+  
   /**
    * Pause/unpause the game.
    */
@@ -142,21 +141,21 @@ export default class Game {
       this.pause();
     }
   }
-
+  
   pause() {
     this.paused = true;
     this.entities.onPause.forEach((entity) => {
       entity.onPause();
     });
   }
-
+  
   unpause() {
     this.paused = false;
     this.entities.onUnpause.forEach((entity) => {
       entity.onUnpause();
     });
   }
-
+  
   /**
    * Add an entity to the game.
    * @param entity {Entity} - The entity to add.
@@ -176,27 +175,27 @@ export default class Game {
       this.world.addBody(entity.body);
       entity.body.owner = entity;
     }
-
+    
     // Attach game event handlers
     GAME_EVENTS.forEach((gameEvent) => {
       if (entity[gameEvent]) {
         this.entities[gameEvent].push(entity);
       }
     });
-
+    
     // Attach IO handlers
     Object.entries(METHODS_TO_EVENTS).forEach(([method, event]) => {
       if (entity[method]) {
         this.io.on(event, entity[method]);
       }
     });
-
+    
     if (entity.afterAdded) {
       entity.afterAdded(this);
     }
     return entity;
   }
-
+  
   /**
    * Remove an entity from the game.
    * The entity will actually be removed during the next removal pass.
@@ -210,7 +209,7 @@ export default class Game {
     this.entities.toRemove.add(entity);
     return entity;
   }
-
+  
   /**
    * Remove all entities. Very sketchy.
    */
@@ -224,21 +223,21 @@ export default class Game {
       }
     })
   }
-
+  
   /**
    * Actually remove all the entities slated for removal from the game.
    */
   cleanupEntities() {
     this.entities.toRemove.forEach((entity) => {
       this.entities.all.splice(this.entities.all.indexOf(entity), 1);
-
+      
       if (entity.sprite) {
         this.renderer.remove(entity.sprite, entity.layer);
       }
       if (entity.body) {
         this.world.removeBody(entity.body);
       }
-
+      
       // Detach game event handlers
       GAME_EVENTS.forEach((gameEvent) => {
         if (entity[gameEvent]) {
@@ -246,14 +245,14 @@ export default class Game {
           list.splice(list.indexOf(entity), 1); // TODO: This could be slow
         }
       });
-
+      
       // Detach IO handlers
       Object.entries(METHODS_TO_EVENTS).forEach(([method, event]) => {
         if (entity[method]) {
           this.io.off(event, entity[method]);
         }
       });
-
+      
       if (entity.onDestroy) {
         entity.onDestroy(this);
       }
@@ -261,7 +260,7 @@ export default class Game {
     });
     this.entities.toRemove.clear();
   }
-
+  
   /**
    * Called before physics.
    */
@@ -279,7 +278,7 @@ export default class Game {
       }
     });
   }
-
+  
   /**
    * Called after physics.
    */
@@ -291,7 +290,7 @@ export default class Game {
       }
     });
   }
-
+  
   /**
    * Called before actually rendering.
    */
@@ -300,7 +299,7 @@ export default class Game {
     this.entities.onRender.forEach((entity) => entity.onRender());
     this.renderer.render();
   }
-
+  
   /**
    * Handle beginning of collision between things.
    * Fired during narrowphase.
@@ -322,7 +321,7 @@ export default class Game {
       ownerB.onBeginContact(ownerA);
     }
   }
-
+  
   /**
    * Handle end of collision between things.
    * Fired during narrowphase.
@@ -344,7 +343,7 @@ export default class Game {
       ownerB.onEndContact(ownerA);
     }
   }
-
+  
   /**
    * Handle collision between things.
    * Fired after physics step.

@@ -5,7 +5,6 @@ import Game from './core/Game.js';
 import Ground from './environment/Ground';
 import MainMenu from './menu/MainMenu';
 
-
 window.onload = () => {
   console.log('loading...');
   Pixi.loader
@@ -16,7 +15,7 @@ window.onload = () => {
       game.addEntity(new MainMenu());
       game.addEntity(new Ground());
       game.start();
-
+      
       window.DEBUG = {
         game: game
       };

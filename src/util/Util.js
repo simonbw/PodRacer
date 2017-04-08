@@ -28,7 +28,7 @@ export function rgbToHex(red, green, blue) {
   return clamp(blue, 0, 255) + (clamp(green, 0, 255) << 8) + (clamp(red, 0, 255) << 16);
 }
 
-export function rgbObjToHex({r, g, b}) {
+export function rgbObjToHex({ r, g, b }) {
   return rgbToHex(r, g, b);
 }
 
@@ -55,14 +55,14 @@ export function colorRange(from, to, steps) {
 export function colorFade(from, to, percentFrom) {
   const rgbFrom = hexToRGB(from);
   const rgbTo = hexToRGB(to);
-
+  
   rgbFrom.r = Math.floor(rgbFrom.r * percentFrom);
   rgbFrom.g = Math.floor(rgbFrom.g * percentFrom);
   rgbFrom.b = Math.floor(rgbFrom.b * percentFrom);
-
+  
   rgbTo.r = Math.floor(rgbTo.r * (1 - percentFrom));
   rgbTo.g = Math.floor(rgbTo.g * (1 - percentFrom));
   rgbTo.b = Math.floor(rgbTo.b * (1 - percentFrom));
-
+  
   return rgbObjToHex(rgbFrom) + rgbObjToHex(rgbTo);
 }

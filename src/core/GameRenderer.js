@@ -7,30 +7,30 @@ const DEFAULT_LAYER = 'world';
  * The base renderer. Handles layers and camera movement.
  */
 export default class GameRenderer {
-
+  
   /**
    * Create a new GameRenderer
    */
   constructor() {
-    Pixi.RESOLUTION = window.devicePixelRatio || 1;
+    Pixi.settings.RESOLUTION = window.devicePixelRatio || 1;
     const [w, h] = [window.innerWidth, window.innerHeight];
     this.pixiRenderer = Pixi.autoDetectRenderer(w, h, {
       antialias: false,
-      resolution: Pixi.RESOLUTION
+      resolution: Pixi.settings.RESOLUTION
     });
     document.body.appendChild(this.pixiRenderer.view);
     this.stage = new Pixi.Container();
     this.camera = new Camera(this);
-
+    
     this.layerInfos = {
-      menu: {scroll: 0},
-      hud: {scroll: 0},
-      world_overlay: {scroll: 1},
-      world_front: {scroll: 1},
-      world: {scroll: 1},
-      world_back: {scroll: 1}
+      menu: { scroll: 0 },
+      hud: { scroll: 0 },
+      world_overlay: { scroll: 1 },
+      world_front: { scroll: 1 },
+      world: { scroll: 1 },
+      world_back: { scroll: 1 }
     };
-
+    
     const order = ['world_back', 'world', 'world_front', 'world_overlay', 'hud', 'menu'];
     order.forEach(function (name, i) {
       const layerInfo = this.layerInfos[name];
@@ -41,7 +41,7 @@ export default class GameRenderer {
       this.stage.addChildAt(layer, i);
     }.bind(this));
   }
-
+  
   /**
    * Render the current frame.
    */
@@ -51,7 +51,7 @@ export default class GameRenderer {
     });
     this.pixiRenderer.render(this.stage);
   }
-
+  
   /**
    * Add a child to a specific layer.
    * @param sprite {Pixi.DisplayObject}
@@ -65,7 +65,7 @@ export default class GameRenderer {
     }
     this.layerInfos[layer.toLowerCase()].layer.addChild(sprite);
   }
-
+  
   /**
    * Remove a child from a specific layer.
    * @param sprite {Pixi.DisplayObject}

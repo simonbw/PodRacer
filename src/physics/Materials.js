@@ -1,6 +1,5 @@
 import p2 from 'p2';
 
-
 export const RACER = new p2.Material(1);
 export const WALL = new p2.Material(2);
 

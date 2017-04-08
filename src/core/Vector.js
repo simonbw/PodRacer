@@ -5,7 +5,7 @@ export default function (Array) {
   Array.prototype.add = function (other) {
     return [this[0] + other[0], this[1] + other[1]];
   };
-
+  
   /**
    * In place addition.
    * @param other
@@ -16,7 +16,7 @@ export default function (Array) {
     this[1] += other[1];
     return this;
   };
-
+  
   /**
    * Return the result of subtracting a vector from this one.
    * @param other
@@ -25,7 +25,7 @@ export default function (Array) {
   Array.prototype.sub = function (other) {
     return [this[0] - other[0], this[1] - other[1]];
   };
-
+  
   /**
    * In place subtraction.
    * @param other
@@ -36,7 +36,7 @@ export default function (Array) {
     this[1] -= other[1];
     return this;
   };
-
+  
   /**
    * Return a the result of multiplying this vector and a scalar.
    * @param scalar
@@ -45,7 +45,7 @@ export default function (Array) {
   Array.prototype.mul = function (scalar) {
     return [this[0] * scalar, this[1] * scalar];
   };
-
+  
   /**
    * In place scalar multiplication.
    * @param scalar
@@ -56,7 +56,7 @@ export default function (Array) {
     this[1] *= scalar;
     return this;
   };
-
+  
   /**
    * Return this vector rotated 90 degrees clockwise.
    * @returns {*[]}
@@ -64,7 +64,7 @@ export default function (Array) {
   Array.prototype.rotate90cw = function () {
     return [this[1], -this[0]];
   };
-
+  
   /**
    * Rotate this vector 90 degrees clockwise in place.
    * @returns {Array}
@@ -73,7 +73,7 @@ export default function (Array) {
     [this[0], this[1]] = [this[1], -this[0]];
     return this;
   };
-
+  
   /**
    * Return this vector rotated 90 degrees counterclockwise.
    * @returns {*[]}
@@ -81,7 +81,7 @@ export default function (Array) {
   Array.prototype.rotate90ccw = function () {
     return [-this[1], this[0]];
   };
-
+  
   /**
    * Rotate this vector 90 degrees counterclockwise in place.
    * @returns {Array}
@@ -90,7 +90,7 @@ export default function (Array) {
     [this[0], this[1]] = [-this[1], this[0]];
     return this;
   };
-
+  
   /**
    * Return the result of rotating this angle by `angle` radians ccw.
    * @param angle
@@ -103,7 +103,7 @@ export default function (Array) {
     const y = this[1];
     return [cos * x - sin * y, sin * x + cos * y];
   };
-
+  
   /**
    * Rotate this angle in place.
    * @param angle
@@ -118,7 +118,7 @@ export default function (Array) {
     this[1] = sin * x + cos * y;
     return this;
   };
-
+  
   /**
    * Return the dot product of this vector and another vector.
    * @param other
@@ -127,7 +127,7 @@ export default function (Array) {
   Array.prototype.dot = function (other) {
     return this[0] * other[0] + this[1] * other[1];
   };
-
+  
   /**
    * Set the components of this vector.
    * @param x
@@ -144,34 +144,34 @@ export default function (Array) {
     }
     return this;
   };
-
+  
   Array.prototype.inormalize = function () {
-    if (this[0] == 0 && this[1] == 0) {
+    if (this[0] === 0 && this[1] === 0) {
       return [0, 0];
     } else {
       this.magnitude = 1;
       return this;
     }
   };
-
+  
   /**
    * Return a normalized version of this vector.
    */
   Array.prototype.normalize = function () {
-    if (this[0] == 0 && this[1] == 0) {
+    if (this[0] === 0 && this[1] === 0) {
       return [0, 0];
     }
     const magnitude = this.magnitude;
     return this.mul(1 / magnitude);
   };
-
+  
   /**
    * Return a normalized version of this vector.
    */
   Array.prototype.clone = function () {
     return [this[0], this[1]];
   };
-
+  
   /**
    * Alias for [0].
    */
@@ -183,7 +183,7 @@ export default function (Array) {
       return this[0] = value;
     }
   });
-
+  
   /**
    * Alias for [1]
    */
@@ -195,7 +195,7 @@ export default function (Array) {
       return this[1] = value;
     }
   });
-
+  
   /**
    * The magnitude (length) of this vector.
    * Changing it does not change the angle.
@@ -205,12 +205,12 @@ export default function (Array) {
       return Math.sqrt(this[0] * this[0] + this[1] * this[1]) || 0;
     },
     set: function (value) {
-      if (this[0] != 0 || this[1] != 0) {
+      if (this[0] !== 0 || this[1] !== 0) {
         this.imul(value / this.magnitude);
       }
     }
   });
-
+  
   /**
    * The angle in radians ccw from east of this vector.
    * Changing it does not change the magnitude.

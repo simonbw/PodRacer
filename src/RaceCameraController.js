@@ -1,5 +1,4 @@
 import Entity from './core/Entity';
-import p2 from 'p2';
 
 export default class CameraController extends Entity {
   constructor(racer, camera) {
@@ -7,7 +6,7 @@ export default class CameraController extends Entity {
     this.racer = racer;
     this.camera = camera;
   }
-
+  
   afterTick() {
     if (this.racer.pod) {
       const vel = this.racer.getVelocity();

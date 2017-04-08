@@ -1,9 +1,7 @@
 import * as Pixi from 'pixi.js';
 import Entity from '../core/Entity';
-import Materials from '../physics/Materials';
+import * as Materials from '../physics/Materials';
 import p2 from 'p2';
-import * as Util from '../util/Util';
-
 
 export default class Wall extends Entity {
   constructor(x, y) {
@@ -28,7 +26,7 @@ export default class Wall extends Entity {
       material: Materials.WALL,
       position: [x, y]
     });
-    const shape = new p2.Box({width: this.w, height: this.h});
+    const shape = new p2.Box({ width: this.w, height: this.h });
     this.body.addShape(shape, [0, 0], 0);
     this.shape.x = this.body.position.x;
     this.shape.y = this.body.position.y;

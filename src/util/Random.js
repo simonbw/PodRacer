@@ -1,10 +1,8 @@
 import { mod } from './Util';
 
-
 /**
  * Utility for doing things based on random numbers.
  */
-const Random = module.exports;
 
 // just for shorthand
 const r = Math.random;

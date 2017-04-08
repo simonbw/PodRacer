@@ -3,19 +3,10 @@ import * as GamepadButtons from '../core/constants/GamepadButtons';
 import * as Keys from '../core/constants/Keys';
 import * as Pixi from 'pixi.js';
 import Entity from '../core/Entity';
-import Game from '../core/Game';
-import IO from '../core/IO';
 import MenuCameraController from '../MenuCameraController';
-import MenuOption from './MenuOption';
-import PlayerRacerController from '../racer/PlayerRacerController';
-import Race from '../race/Race';
-import RaceCameraController from '../RaceCameraController';
-import RacerDefs from '../racer/RacerDefs';
 import * as Util from '../util/Util';
 
-
 const DOWN_THRESHOLD = 250;
-
 
 export default class ListMenu extends Entity {
   constructor() {
@@ -24,16 +15,18 @@ export default class ListMenu extends Entity {
     this.layer = 'menu';
     this.sprite = new Pixi.Graphics();
   }
-
+  
   onAdd() {
     this.text = new Pixi.Text('Super Pod Racer', {
-      font: 'bold 50px Arial',
+      fontFamily: 'Arial',
+      fontSize: '50px',
+      fontWeight: 'bold',
       fill: 0xFFFFFF
     });
     this.sprite.x = 20;
     this.sprite.y = 100;
     this.sprite.addChild(this.text);
-
+    
     this.cameraController = new MenuCameraController();
     this.game.addEntity(this.cameraController);
     this.lastMoveTime = Date.now();
@@ -42,11 +35,11 @@ export default class ListMenu extends Entity {
     this.currentOption = 0;
     this.selectOption(0);
   }
-
+  
   setOptions() {
     this.options = [];
   }
-
+  
   onTick() {
     const axis = this.game.io.getAxis(GamepadAxes.LEFT_Y);
     let currentTime;
@@ -60,18 +53,18 @@ export default class ListMenu extends Entity {
       this.lastMoveTime = 0;
     }
   }
-
+  
   selectOption(index) {
     index = Util.clamp(index, 0, this.options.length - 1);
     this.options[this.currentOption].unSelect();
     this.options[index].select();
     this.currentOption = index;
   }
-
+  
   cancel() {
     // Override me
   }
-
+  
   onButtonDown(button) {
     switch (button) {
       case GamepadButtons.A:
@@ -88,7 +81,7 @@ export default class ListMenu extends Entity {
         break;
     }
   }
-
+  
   onKeyDown(key) {
     switch (key) {
       case Keys.SPACE:
@@ -106,11 +99,11 @@ export default class ListMenu extends Entity {
         break;
     }
   }
-
+  
   activateOption() {
     this.options[this.currentOption].activate();
   }
-
+  
   onDestroy() {
     this.cameraController.destroy();
     this.options.forEach((option) => option.destroy());

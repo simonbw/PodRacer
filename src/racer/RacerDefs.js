@@ -29,11 +29,11 @@ class RacerDef {
       'maxForce': 85.0,
       'size': [0.5, 2.0]
     };
-
+    
     this.leftEnginePosition = [-1, 0];
     this.rightEnginePosition = [1, 0];
     this.podPosition = [0, 8];
-
+    
     this.pod = {
       'color': 0x0000FF,
       'drag': 1.4,

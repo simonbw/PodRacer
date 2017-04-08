@@ -16,10 +16,11 @@ export default class MenuOption extends Entity {
     this.x = x;
     this.y = y;
     this.callback = callback;
-
+    
     this.text = new Pixi.Text(this.name, {
       fill: 0xFFFFFF,
-      font: '24px Arial',
+      fontFamily: 'Arial',
+      fontSize: '24px',
       lineHeight: HEIGHT
     });
     this.layer = 'menu';
@@ -31,22 +32,22 @@ export default class MenuOption extends Entity {
     this.sprite.addChild(this.text);
     this.redrawSprite(UNSELECTED_COLOR, UNSELECTED_ALPHA);
   }
-
+  
   select() {
     this.redrawSprite(SELECTED_COLOR, SELECTED_ALPHA);
   }
-
+  
   unSelect() {
     this.redrawSprite(UNSELECTED_COLOR, UNSELECTED_ALPHA);
   }
-
+  
   redrawSprite(color, alpha) {
     this.sprite.clear();
     this.sprite.beginFill(color, alpha);
     this.sprite.drawRect(0, 0, WIDTH, HEIGHT);
     this.sprite.endFill();
   }
-
+  
   activate() {
     if (this.callback) {
       this.callback();

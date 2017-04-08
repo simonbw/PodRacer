@@ -1,29 +1,20 @@
-var path = require('path');
+const path = require('path');
 
 module.exports = {
   entry: "./src/main.js",
   output: {
-    path: __dirname,
+    path: path.join(__dirname, 'dist'),
     filename: "bundle.js"
   },
   module: {
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: 'json'
-      },
+    rules: [
       {
         test: /.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      }
-    ],
-    postLoaders: [
-      {
-        include: path.resolve(__dirname, 'node_modules/pixi.js'),
-        loader: 'transform/cacheable?brfs'
+        exclude: /node_modules/,
+        use: ['babel-loader'
+        ]
       }
     ]
   },
-  devtool:"source-map"
+  devtool: "source-map"
 };

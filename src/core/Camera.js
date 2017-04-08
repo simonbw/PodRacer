@@ -1,7 +1,6 @@
 import Entity from './Entity';
 import { Matrix, Point } from 'pixi.js';
 
-
 /**
  * Controls the viewport.
  * @extends Entity
@@ -15,39 +14,39 @@ export default class Camera extends Entity {
     this.angle = angle;
     this.velocity = [0, 0];
   }
-
+  
   get x() {
     return this.position[0];
   }
-
+  
   set x(value) {
     return this.position[0] = value;
   }
-
+  
   get y() {
     return this.position[1];
   }
-
+  
   set y(value) {
     return this.position[1] = value;
   }
-
+  
   get vx() {
     return this.velocity[0];
   }
-
+  
   set vx(value) {
     return this.velocity[0] = value;
   }
-
+  
   get vy() {
     return this.velocity[1];
   }
-
+  
   set vy(value) {
     return this.velocity[1] = value;
   }
-
+  
   /**
    * Called before rendering.
    */
@@ -55,7 +54,7 @@ export default class Camera extends Entity {
     this.x += this.vx * this.game.renderTimestep;
     this.y += this.vy * this.game.renderTimestep;
   }
-
+  
   /**
    * Center the camera on a position
    * @param x {number}
@@ -65,7 +64,7 @@ export default class Camera extends Entity {
     this.x = x;
     this.y = y;
   }
-
+  
   /**
    * Move the camera toward being centered on a position, with a target velocity
    * @param x {number}
@@ -81,7 +80,7 @@ export default class Camera extends Entity {
     this.vx = vx + (1 - smooth) * dx;
     this.vy = vy + (1 - smooth) * dy;
   }
-
+  
   /**
    * Move the camera part of the way to the desired zoom.
    * @param z {number}
@@ -90,7 +89,7 @@ export default class Camera extends Entity {
   smoothZoom(z, smooth = 0.9) {
     this.z = smooth * this.z + (1 - smooth) * z;
   }
-
+  
   /**
    * Returns [width, height] of the viewport
    * @returns {Array.<number>}
@@ -100,7 +99,7 @@ export default class Camera extends Entity {
       this.renderer.pixiRenderer.width / this.renderer.pixiRenderer.resolution,
       this.renderer.pixiRenderer.height / this.renderer.pixiRenderer.resolution];
   }
-
+  
   /**
    * Convert screen coordinates to world coordinates
    * @param x {number}
@@ -113,7 +112,7 @@ export default class Camera extends Entity {
     p = this.getMatrix(depth).applyInverse(p, p);
     return [p.x, p.y];
   }
-
+  
   /**
    * Convert world coordinates to screen coordinates
    * @returns {Array.<number>}
@@ -123,7 +122,7 @@ export default class Camera extends Entity {
     p = this.getMatrix(depth).apply(p, p);
     return [p.x, p.y];
   }
-
+  
   /**
    * Creates a transformation matrix to go from screen world space to screen space.
    * @param depth {number}
@@ -138,7 +137,7 @@ export default class Camera extends Entity {
     m.translate(w / 2, h / 2);
     return m;
   }
-
+  
   /**
    * Update the properties of a renderer layer to match this camera
    * @param layerInfo {Object}

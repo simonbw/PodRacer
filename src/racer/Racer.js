@@ -1,11 +1,10 @@
-import * as Pixi from 'pixi.js'
-import Coupling from './Coupling'
-import Engine from './Engine'
-import Entity from '../core/Entity'
-import p2 from 'p2'
-import Pod from './Pod'
-import * as RacerDefs from './RacerDefs'
-import RopeSpring from '../physics/RopeSpring'
+import Coupling from './Coupling';
+import Engine from './Engine';
+import Entity from '../core/Entity';
+import p2 from 'p2';
+import Pod from './Pod';
+import * as RacerDefs from './RacerDefs';
+import RopeSpring from '../physics/RopeSpring';
 
 const LinearSpring = p2.LinearSpring;
 
@@ -21,7 +20,7 @@ export default class Racer extends Entity {
     this.leftEngine = new Engine(leftEnginePosition, 'left', this.racerDef.engine);
     this.rightEngine = new Engine(rightEnginePosition, 'right', this.racerDef.engine);
     this.coupling = new Coupling(this.leftEngine, this.rightEngine, 0, 0, 0xFF22AA, 1);
-
+    
     // Springs
     this.springs = [];
     // ropes
@@ -34,7 +33,7 @@ export default class Racer extends Entity {
           damping: this.racerDef.rope.damping
         }));
       });
-
+    
     // engine couplings
     // TODO: Make these better
     [[-1, -1], [-1, 1], [1, -1], [1, 1]].forEach(([y1, y2]) => {
@@ -46,33 +45,33 @@ export default class Racer extends Entity {
       }));
     });
   }
-
+  
   onAdd(game) {
     game.addEntity(this.pod);
     game.addEntity(this.leftEngine);
     game.addEntity(this.rightEngine);
-
+    
     game.addEntity(this.coupling);
-
+    
     this.springs.forEach((spring) => {
       game.world.addSpring(spring);
     });
   }
-
+  
   onRender() {
     if (!this.pod) {
       return;
     }
-
+    
     const width = this.racerDef.rope.size; // width in meters of the rope
     const color = this.racerDef.rope.color;
-
+    
     if (this.leftEngine) {
       const podLeftPoint = this.pod.localToWorld(this.pod.leftRopePoint);
       const leftEnginePoint = this.leftEngine.localToWorld(this.leftEngine.ropePoint);
       this.game.draw.line(podLeftPoint, leftEnginePoint, width, color)
     }
-
+    
     if (this.rightEngine) {
       const podRightPoint = this.pod.localToWorld(this.pod.rightRopePoint);
       const rightEnginePoint = this.rightEngine.localToWorld(this.rightEngine.ropePoint);
@@ -97,27 +96,27 @@ export default class Racer extends Entity {
       this.rightEngine.setFlaps(left, right);
     }
   }
-
+  
   getVelocity() {
     const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter((x) => x);
     const x = existingParts.reduce(((prev, curr) => prev + curr.body.velocity[0]), 0) / existingParts.length || 0;
     const y = existingParts.reduce(((prev, curr) => prev + curr.body.velocity[1]), 0) / existingParts.length || 0;
     return [x, y];
   }
-
+  
   getWorldCenter() {
     const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter((x) => x);
     const x = existingParts.reduce(((prev, curr) => prev + curr.body.position[0]), 0) / existingParts.length || 0;
     const y = existingParts.reduce(((prev, curr) => prev + curr.body.position[1]), 0) / existingParts.length || 0;
     return [x, y];
   }
-
+  
   onDestroy() {
     for (let spring of this.springs) {
       this.game.world.removeSpring(spring);
     }
   }
-
+  
   afterTick() {
     this.springs.forEach((spring) => {
       if (!spring.bodyA.owner.game || !spring.bodyB.owner.game) {

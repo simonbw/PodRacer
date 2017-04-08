@@ -27,7 +27,7 @@ export default class Entity {
      * @type {boolean}
      */
     this.pausable = true;
-
+    
     // TODO: Don't bind. Binding sucks.
     // bind all event handlers
     if (this.onClick) {
@@ -101,7 +101,7 @@ export default class Entity {
       this.onButtonUp = this.onButtonUp.bind(this);
     }
   }
-
+  
   /**
    * Convert local coordinates to world coordinates.
    * Requires either a body or a sprite.
@@ -113,12 +113,12 @@ export default class Entity {
       return result;
     }
     if (this.sprite) {
-      result = this.sprite.toGlobal(new Pixi.Point(point[0], point[1]));
+      const result = this.sprite.toGlobal(new Pixi.Point(point[0], point[1]));
       return [result.x, result.y];
     }
     return [0, 0]
   }
-
+  
   destroy() {
     if (this.game) {
       this.game.removeEntity(this);

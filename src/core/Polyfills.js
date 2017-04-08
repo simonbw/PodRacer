@@ -2,7 +2,6 @@
  * Attach all sorts of hacky stuff to the global state.
  */
 
-
 import initVector from './Vector';
 
 initVector(Array);
