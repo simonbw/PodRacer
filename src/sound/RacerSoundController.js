@@ -90,7 +90,7 @@ export default class RacerSoundController extends Entity {
     
     this.noiseGain.gain.value = this.engine.boosting ? 5 : 0;
     this.triangleGain.gain.value = 0.15 + throttle / 3;
-    this.sawtoothGain.gain.value = 0.3 * (throttle) * (0.05 + Math.min(speed / 100, 0.9));
+    this.sawtoothGain.gain.value = 0.1 * (throttle) * (0.05 + Math.min(speed / 100, 0.9));
     
     const f = 80 + (0.4 * throttle + 0.6) * (30 + speed * 3) + Math.random() * 12;
     this.triangleOscillator.frequency.value = f;
