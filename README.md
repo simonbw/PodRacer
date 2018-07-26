@@ -5,6 +5,8 @@ You race pods.
 
 ### To Run
 ```
-npm install
-npm start
+yarn
+yarn start
 ```
+
+Then go to `localhost:8080/`.
