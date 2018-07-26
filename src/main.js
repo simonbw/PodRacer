@@ -1,7 +1,7 @@
 import './core/Polyfills';
 import * as Pixi from 'pixi.js';
 import FPSMeter from './util/FPSMeter';
-import Game from './core/Game.js';
+import Game from './core/Game';
 import Ground from './environment/Ground';
 import MainMenu from './menu/MainMenu';
 

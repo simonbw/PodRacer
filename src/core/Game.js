@@ -1,6 +1,6 @@
 import Drawing from '../util/Drawing';
 import Entity from './Entity';
-import GameRenderer from '../core/GameRenderer';
+import GameRenderer from './GameRenderer';
 import p2 from 'p2';
 import { IOEvents, IOManager } from './IO';
 import * as Materials from '../physics/Materials';

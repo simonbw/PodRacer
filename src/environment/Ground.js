@@ -1,5 +1,5 @@
 import * as Pixi from 'pixi.js';
-import Entity from './../core/Entity';
+import Entity from '../core/Entity';
 
 export default class Ground extends Entity {
   constructor() {
