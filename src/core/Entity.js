@@ -1,4 +1,4 @@
-import * as Pixi from 'pixi.js';
+import * as Pixi from "pixi.js";
 
 /**
  * Base class for lots of stuff in the game
@@ -27,7 +27,7 @@ export default class Entity {
      * @type {boolean}
      */
     this.pausable = true;
-    
+
     // TODO: Don't bind. Binding sucks.
     // bind all event handlers
     if (this.onClick) {
@@ -101,7 +101,7 @@ export default class Entity {
       this.onButtonUp = this.onButtonUp.bind(this);
     }
   }
-  
+
   /**
    * Convert local coordinates to world coordinates.
    * Requires either a body or a sprite.
@@ -116,9 +116,9 @@ export default class Entity {
       const result = this.sprite.toGlobal(new Pixi.Point(point[0], point[1]));
       return [result.x, result.y];
     }
-    return [0, 0]
+    return [0, 0];
   }
-  
+
   destroy() {
     if (this.game) {
       this.game.removeEntity(this);

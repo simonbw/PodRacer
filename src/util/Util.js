@@ -11,7 +11,7 @@ export function clamp(value, min = -1, max = 1) {
 // The smoothstep function between 0 and 1
 export function smoothStep(value) {
   value = clamp(value, 0, 1);
-  return value * value * (3 - 2 * value)
+  return value * value * (3 - 2 * value);
 }
 
 // Return the difference between two angles
@@ -25,7 +25,11 @@ export function length([x, y]) {
 }
 
 export function rgbToHex(red, green, blue) {
-  return clamp(blue, 0, 255) + (clamp(green, 0, 255) << 8) + (clamp(red, 0, 255) << 16);
+  return (
+    clamp(blue, 0, 255) +
+    (clamp(green, 0, 255) << 8) +
+    (clamp(red, 0, 255) << 16)
+  );
 }
 
 export function rgbObjToHex({ r, g, b }) {
@@ -34,10 +38,10 @@ export function rgbObjToHex({ r, g, b }) {
 
 export function hexToRGB(hex) {
   return {
-    r: (hex >> 16),
-    g: ((hex >> 8) & 0x0000FF),
-    b: (hex & 0x0000FF)
-  }
+    r: hex >> 16,
+    g: (hex >> 8) & 0x0000ff,
+    b: hex & 0x0000ff
+  };
 }
 
 // given colors "from" and "to", return a hex array [from, x, y, z, to]
@@ -55,14 +59,14 @@ export function colorRange(from, to, steps) {
 export function colorFade(from, to, percentFrom) {
   const rgbFrom = hexToRGB(from);
   const rgbTo = hexToRGB(to);
-  
+
   rgbFrom.r = Math.floor(rgbFrom.r * percentFrom);
   rgbFrom.g = Math.floor(rgbFrom.g * percentFrom);
   rgbFrom.b = Math.floor(rgbFrom.b * percentFrom);
-  
+
   rgbTo.r = Math.floor(rgbTo.r * (1 - percentFrom));
   rgbTo.g = Math.floor(rgbTo.g * (1 - percentFrom));
   rgbTo.b = Math.floor(rgbTo.b * (1 - percentFrom));
-  
+
   return rgbObjToHex(rgbFrom) + rgbObjToHex(rgbTo);
 }

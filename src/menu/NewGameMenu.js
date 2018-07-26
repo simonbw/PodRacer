@@ -1,23 +1,23 @@
-import * as RacerDefs from '../racer/RacerDefs';
-import AIRacerController from '../racer/AIRacerController';
-import ListMenu from './ListMenu';
-import MainMenu from './MainMenu';
-import MenuOption from './MenuOption';
-import PauseController from '../core/PauseController';
-import PlayerRacerController from '../racer/PlayerRacerController';
-import Race from '../race/Race';
-import RaceCameraController from '../RaceCameraController';
-import Racer from '../racer/Racer';
+import * as RacerDefs from "../racer/RacerDefs";
+import AIRacerController from "../racer/AIRacerController";
+import ListMenu from "./ListMenu";
+import MainMenu from "./MainMenu";
+import MenuOption from "./MenuOption";
+import PauseController from "../core/PauseController";
+import PlayerRacerController from "../racer/PlayerRacerController";
+import Race from "../race/Race";
+import RaceCameraController from "../RaceCameraController";
+import Racer from "../racer/Racer";
 
 export default class NewGameMenu extends ListMenu {
   setOptions() {
     this.options = [
-      new MenuOption('Free Play', 20, 180, () => this.startFreePlay()),
-      new MenuOption('Race', 20, 280, () => this.startRace()),
-      new MenuOption('Back', 20, 380, () => this.cancel())
+      new MenuOption("Free Play", 20, 180, () => this.startFreePlay()),
+      new MenuOption("Race", 20, 280, () => this.startRace()),
+      new MenuOption("Back", 20, 380, () => this.cancel())
     ];
   }
-  
+
   startRace() {
     this.game.addEntity(new PauseController());
     const race = new Race();
@@ -26,7 +26,7 @@ export default class NewGameMenu extends ListMenu {
     const racer3 = new Racer([-5, 5]);
     const racer4 = new Racer([5, -5]);
     //const racer3 = new Racer([-5, 5]);
-    
+
     this.game.addEntity(racer);
     this.game.addEntity(racer2);
     this.game.addEntity(racer3);
@@ -38,7 +38,7 @@ export default class NewGameMenu extends ListMenu {
     this.game.addEntity(new AIRacerController(racer4, race));
     //this.game.addEntity(new AIRacerController(racer3, race));
     this.game.addEntity(new RaceCameraController(racer, this.game.camera));
-    
+
     race.addRacer(racer);
     race.addRacer(racer2);
     race.addRacer(racer3);
@@ -52,21 +52,21 @@ export default class NewGameMenu extends ListMenu {
     race.addWaypoint([-400, 0], 50);
     race.addWaypoint([-250, 250], 40);
     this.game.addEntity(race);
-    
+
     this.destroy();
   }
-  
+
   startFreePlay() {
     this.game.addEntity(new PauseController());
     const racer = new Racer([0, -4], RacerDefs.ANAKIN);
-    
+
     this.game.addEntity(racer);
     this.game.addEntity(new PlayerRacerController(racer));
     this.game.addEntity(new RaceCameraController(racer, this.game.camera));
-    
+
     this.destroy();
   }
-  
+
   cancel() {
     this.game.addEntity(new MainMenu());
     this.destroy();

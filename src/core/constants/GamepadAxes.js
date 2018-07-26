@@ -1,5 +1,5 @@
-export const LEFT = 'left';
-export const RIGHT = 'right';
+export const LEFT = "left";
+export const RIGHT = "right";
 export const LEFT_X = 0;
 export const LEFT_Y = 1;
 export const RIGHT_X = 2;

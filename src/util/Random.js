@@ -1,4 +1,4 @@
-import { mod } from './Util';
+import { mod } from "./Util";
 
 /**
  * Utility for doing things based on random numbers.
@@ -49,7 +49,7 @@ export function normal(mean, deviation) {
   if (deviation == null) {
     deviation = 1;
   }
-  return deviation * (r() + r() + r() + r() + r() + r() - 3) / 3 + mean;
+  return (deviation * (r() + r() + r() + r() + r() + r() - 3)) / 3 + mean;
 }
 
 /**

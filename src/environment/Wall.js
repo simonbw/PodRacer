@@ -1,7 +1,7 @@
-import * as Pixi from 'pixi.js';
-import Entity from '../core/Entity';
-import * as Materials from '../physics/Materials';
-import p2 from 'p2';
+import * as Pixi from "pixi.js";
+import Entity from "../core/Entity";
+import * as Materials from "../physics/Materials";
+import p2 from "p2";
 
 export default class Wall extends Entity {
   constructor(x, y) {

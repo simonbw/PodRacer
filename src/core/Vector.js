@@ -1,115 +1,115 @@
-export default function (Array) {
+export default function(Array) {
   /**
    * Return the result of adding two vectors together.
    */
-  Array.prototype.add = function (other) {
+  Array.prototype.add = function(other) {
     return [this[0] + other[0], this[1] + other[1]];
   };
-  
+
   /**
    * In place addition.
    * @param other
    * @returns {Array}
    */
-  Array.prototype.iadd = function (other) {
+  Array.prototype.iadd = function(other) {
     this[0] += other[0];
     this[1] += other[1];
     return this;
   };
-  
+
   /**
    * Return the result of subtracting a vector from this one.
    * @param other
    * @returns {*[]}
    */
-  Array.prototype.sub = function (other) {
+  Array.prototype.sub = function(other) {
     return [this[0] - other[0], this[1] - other[1]];
   };
-  
+
   /**
    * In place subtraction.
    * @param other
    * @returns {Array}
    */
-  Array.prototype.isub = function (other) {
+  Array.prototype.isub = function(other) {
     this[0] -= other[0];
     this[1] -= other[1];
     return this;
   };
-  
+
   /**
    * Return a the result of multiplying this vector and a scalar.
    * @param scalar
    * @returns {*[]}
    */
-  Array.prototype.mul = function (scalar) {
+  Array.prototype.mul = function(scalar) {
     return [this[0] * scalar, this[1] * scalar];
   };
-  
+
   /**
    * In place scalar multiplication.
    * @param scalar
    * @returns {Array}
    */
-  Array.prototype.imul = function (scalar) {
+  Array.prototype.imul = function(scalar) {
     this[0] *= scalar;
     this[1] *= scalar;
     return this;
   };
-  
+
   /**
    * Return this vector rotated 90 degrees clockwise.
    * @returns {*[]}
    */
-  Array.prototype.rotate90cw = function () {
+  Array.prototype.rotate90cw = function() {
     return [this[1], -this[0]];
   };
-  
+
   /**
    * Rotate this vector 90 degrees clockwise in place.
    * @returns {Array}
    */
-  Array.prototype.irotate90cw = function () {
+  Array.prototype.irotate90cw = function() {
     [this[0], this[1]] = [this[1], -this[0]];
     return this;
   };
-  
+
   /**
    * Return this vector rotated 90 degrees counterclockwise.
    * @returns {*[]}
    */
-  Array.prototype.rotate90ccw = function () {
+  Array.prototype.rotate90ccw = function() {
     return [-this[1], this[0]];
   };
-  
+
   /**
    * Rotate this vector 90 degrees counterclockwise in place.
    * @returns {Array}
    */
-  Array.prototype.irotate90ccw = function () {
+  Array.prototype.irotate90ccw = function() {
     [this[0], this[1]] = [-this[1], this[0]];
     return this;
   };
-  
+
   /**
    * Return the result of rotating this angle by `angle` radians ccw.
    * @param angle
    * @returns {*[]}
    */
-  Array.prototype.rotate = function (angle) {
+  Array.prototype.rotate = function(angle) {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const x = this[0];
     const y = this[1];
     return [cos * x - sin * y, sin * x + cos * y];
   };
-  
+
   /**
    * Rotate this angle in place.
    * @param angle
    * @returns {Array}
    */
-  Array.prototype.irotate = function (angle) {
+  Array.prototype.irotate = function(angle) {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     const x = this[0];
@@ -118,23 +118,23 @@ export default function (Array) {
     this[1] = sin * x + cos * y;
     return this;
   };
-  
+
   /**
    * Return the dot product of this vector and another vector.
    * @param other
    * @returns {number}
    */
-  Array.prototype.dot = function (other) {
+  Array.prototype.dot = function(other) {
     return this[0] * other[0] + this[1] * other[1];
   };
-  
+
   /**
    * Set the components of this vector.
    * @param x
    * @param y
    * @returns {Array}
    */
-  Array.prototype.set = function (x, y) {
+  Array.prototype.set = function(x, y) {
     if (typeof x === "number") {
       this[0] = x;
       this[1] = y;
@@ -144,8 +144,8 @@ export default function (Array) {
     }
     return this;
   };
-  
-  Array.prototype.inormalize = function () {
+
+  Array.prototype.inormalize = function() {
     if (this[0] === 0 && this[1] === 0) {
       return [0, 0];
     } else {
@@ -153,73 +153,73 @@ export default function (Array) {
       return this;
     }
   };
-  
+
   /**
    * Return a normalized version of this vector.
    */
-  Array.prototype.normalize = function () {
+  Array.prototype.normalize = function() {
     if (this[0] === 0 && this[1] === 0) {
       return [0, 0];
     }
     const magnitude = this.magnitude;
     return this.mul(1 / magnitude);
   };
-  
+
   /**
    * Return a normalized version of this vector.
    */
-  Array.prototype.clone = function () {
+  Array.prototype.clone = function() {
     return [this[0], this[1]];
   };
-  
+
   /**
    * Alias for [0].
    */
-  Object.defineProperty(Array.prototype, 'x', {
-    get: function () {
+  Object.defineProperty(Array.prototype, "x", {
+    get: function() {
       return this[0];
     },
-    set: function (value) {
-      return this[0] = value;
+    set: function(value) {
+      return (this[0] = value);
     }
   });
-  
+
   /**
    * Alias for [1]
    */
-  Object.defineProperty(Array.prototype, 'y', {
-    get: function () {
+  Object.defineProperty(Array.prototype, "y", {
+    get: function() {
       return this[1];
     },
-    set: function (value) {
-      return this[1] = value;
+    set: function(value) {
+      return (this[1] = value);
     }
   });
-  
+
   /**
    * The magnitude (length) of this vector.
    * Changing it does not change the angle.
    */
-  Object.defineProperty(Array.prototype, 'magnitude', {
-    get: function () {
+  Object.defineProperty(Array.prototype, "magnitude", {
+    get: function() {
       return Math.sqrt(this[0] * this[0] + this[1] * this[1]) || 0;
     },
-    set: function (value) {
+    set: function(value) {
       if (this[0] !== 0 || this[1] !== 0) {
         this.imul(value / this.magnitude);
       }
     }
   });
-  
+
   /**
    * The angle in radians ccw from east of this vector.
    * Changing it does not change the magnitude.
    */
-  Object.defineProperty(Array.prototype, 'angle', {
-    get: function () {
+  Object.defineProperty(Array.prototype, "angle", {
+    get: function() {
       return Math.atan2(this[1], this[0]);
     },
-    set: function (value) {
+    set: function(value) {
       return this.irotate(value - this.angle);
     }
   });

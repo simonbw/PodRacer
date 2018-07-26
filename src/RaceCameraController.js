@@ -1,4 +1,4 @@
-import Entity from './core/Entity';
+import Entity from "./core/Entity";
 
 export default class CameraController extends Entity {
   constructor(racer, camera) {
@@ -6,15 +6,21 @@ export default class CameraController extends Entity {
     this.racer = racer;
     this.camera = camera;
   }
-  
+
   afterTick() {
     if (this.racer.pod) {
       const vel = this.racer.getVelocity();
       const lookAhead = vel.clone();
-      lookAhead.magnitude = Math.min(vel.magnitude * 0.3, Math.sqrt(vel.magnitude));
+      lookAhead.magnitude = Math.min(
+        vel.magnitude * 0.3,
+        Math.sqrt(vel.magnitude)
+      );
       const center = this.racer.getWorldCenter().iadd(lookAhead);
       this.camera.smoothCenter(center, vel);
-      this.camera.smoothZoom(20 / (1 + 0.19 * Math.log(vel.magnitude + 1)), 0.92);
+      this.camera.smoothZoom(
+        20 / (1 + 0.19 * Math.log(vel.magnitude + 1)),
+        0.92
+      );
     }
   }
 }

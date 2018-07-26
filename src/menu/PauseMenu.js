@@ -1,30 +1,30 @@
-import Ground from '../environment/Ground';
-import ListMenu from './ListMenu';
-import MainMenu from './MainMenu';
-import MenuOption from './MenuOption';
+import Ground from "../environment/Ground";
+import ListMenu from "./ListMenu";
+import MainMenu from "./MainMenu";
+import MenuOption from "./MenuOption";
 
 export default class PauseMenu extends ListMenu {
   constructor() {
     super();
     this.pausable = false;
   }
-  
+
   setOptions() {
     this.options = [
       new MenuOption("Continue", 20, 180, () => this.unPause()),
       new MenuOption("Quit", 20, 280, () => this.toMainMenu())
     ];
   }
-  
+
   cancel() {
     this.unPause();
   }
-  
+
   unPause() {
     this.game.unpause();
     this.destroy();
   }
-  
+
   toMainMenu() {
     this.game.togglePause();
     this.game.removeAll(); // TODO: maybe we can do better?
