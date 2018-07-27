@@ -1,0 +1,59 @@
+import * as Pixi from "pixi.js";
+import BaseEntity from "../core/BaseEntity";
+import { Vector } from "../core/Vector";
+
+// Class used to make drawing primitives easy
+export default class Drawing extends BaseEntity {
+  pausable = false;
+  sprites: Map<string, Pixi.Graphics> = new Map();
+
+  line(
+    [x1, y1]: Vector,
+    [x2, y2]: Vector,
+    width = 0.01,
+    color = 0xffffff,
+    alpha = 1.0,
+    layer = "world"
+  ) {
+    const sprite = this.getLayerSprite(layer);
+    sprite.lineStyle(width, color, alpha);
+    sprite.moveTo(x1, y1);
+    sprite.lineTo(x2, y2);
+  }
+
+  triangle(
+    one: Vector,
+    two: Vector,
+    three: Vector,
+    color = 0xff0000,
+    alpha = 1.0,
+    layer = "world"
+  ) {
+    const sprite = this.getLayerSprite(layer);
+    sprite.lineStyle();
+    sprite.beginFill(color, alpha);
+    sprite.drawPolygon([one[0], one[1], two[0], two[1], three[0], three[1]]);
+    sprite.endFill();
+  }
+
+  getLayerSprite(layerName: string): Pixi.Graphics {
+    if (!this.sprites.has(layerName)) {
+      const sprite = new Pixi.Graphics();
+      this.sprites.set(layerName, sprite);
+      this.game.renderer.add(sprite, layerName);
+    }
+    return this.sprites.get(layerName);
+  }
+
+  beforeTick() {
+    for (const sprite of this.sprites.values()) {
+      sprite.clear();
+    }
+  }
+
+  onDestroy() {
+    for (const [layerName, sprite] of this.sprites.entries()) {
+      this.game.renderer.remove(sprite, layerName);
+    }
+  }
+}

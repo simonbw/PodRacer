@@ -1,0 +1,189 @@
+import Coupling from "./Coupling";
+import Engine from "./Engine";
+import BaseEntity from "../core/BaseEntity";
+import p2, { LinearSpring } from "p2";
+import Pod from "./Pod";
+import RopeSpring from "../physics/RopeSpring";
+import { Vector } from "../core/Vector";
+import Game from "../core/Game";
+import { RacerDef, Anakin } from "./RacerDefs/index";
+import HasOwner from "../core/HasOwner";
+
+export default class Racer extends BaseEntity {
+  racerDef: RacerDef;
+  pod: Pod;
+  leftEngine: Engine;
+  rightEngine: Engine;
+  coupling: Coupling;
+  springs: Array<RopeSpring | LinearSpring> = [];
+
+  constructor(position: Vector, racerDef = Anakin) {
+    super();
+    this.layer = "world";
+    this.racerDef = racerDef;
+    const podPosition = position.add(this.racerDef.podPosition);
+    const leftEnginePosition = position.add(this.racerDef.leftEnginePosition);
+    const rightEnginePosition = position.add(this.racerDef.rightEnginePosition);
+    this.pod = new Pod(podPosition, this.racerDef.pod);
+    this.leftEngine = new Engine(
+      leftEnginePosition,
+      "left",
+      this.racerDef.engine
+    );
+    this.rightEngine = new Engine(
+      rightEnginePosition,
+      "right",
+      this.racerDef.engine
+    );
+
+    // The visible coupling
+    this.coupling = new Coupling(
+      this.leftEngine,
+      this.rightEngine,
+      0,
+      0,
+      0xff22aa,
+      1
+    );
+
+    this.addRopeSpring(this.leftEngine, this.pod.leftRopePoint as Vector);
+    this.addRopeSpring(this.rightEngine, this.pod.rightRopePoint as Vector);
+
+    this.addCouplingSpring(-1, -1);
+    this.addCouplingSpring(-1, 1);
+    this.addCouplingSpring(1, -1);
+    this.addCouplingSpring(1, 1);
+  }
+
+  private addRopeSpring(engine: Engine, podPoint: Vector): void {
+    this.springs.push(
+      new RopeSpring(this.pod.body, engine.body, {
+        localAnchorA: podPoint,
+        localAnchorB: engine.ropePoint as Vector,
+        stiffness: this.racerDef.rope.stiffness,
+        damping: this.racerDef.rope.damping
+      })
+    );
+  }
+
+  private addCouplingSpring(y1: number, y2: number): void {
+    this.springs.push(
+      new LinearSpring(this.leftEngine.body, this.rightEngine.body, {
+        localAnchorA: [0, this.racerDef.engine.size[1] * y1],
+        localAnchorB: [0, this.racerDef.engine.size[1] * y2],
+        stiffness: this.racerDef.coupling.stiffness,
+        damping: this.racerDef.coupling.damping
+      })
+    );
+  }
+
+  onAdd(game: Game) {
+    game.addEntity(this.pod);
+    game.addEntity(this.leftEngine);
+    game.addEntity(this.rightEngine);
+
+    game.addEntity(this.coupling);
+
+    this.springs.forEach(spring => {
+      game.world.addSpring(spring);
+    });
+  }
+
+  onRender() {
+    if (!this.pod) {
+      return;
+    }
+
+    const width = this.racerDef.rope.size; // width in meters of the rope
+    const color = this.racerDef.rope.color;
+
+    if (this.leftEngine) {
+      const podLeftPoint = this.pod.localToWorld(this.pod
+        .leftRopePoint as Vector);
+      const leftEnginePoint = this.leftEngine.localToWorld(this.leftEngine
+        .ropePoint as Vector);
+      this.game.draw.line(podLeftPoint, leftEnginePoint, width, color);
+    }
+
+    if (this.rightEngine) {
+      const podRightPoint = this.pod.localToWorld(this.pod
+        .rightRopePoint as Vector);
+      const rightEnginePoint = this.rightEngine.localToWorld(this.rightEngine
+        .ropePoint as Vector);
+      this.game.draw.line(podRightPoint, rightEnginePoint, width, color);
+    }
+  }
+
+  // Set the control value on all the racer's flaps
+  // `left` and `right` should each be between 0 and 1
+  setFlaps(left: number, right: number) {
+    if (!isFinite(left) || !isFinite(right)) {
+      throw new Error(`not finite: ${[left, right]}`);
+    }
+    if (this.pod) {
+      this.pod.setFlaps(left, right);
+    }
+    if (this.leftEngine) {
+      this.leftEngine.setFlaps(left, right);
+    }
+    if (this.rightEngine) {
+      this.rightEngine.setFlaps(left, right);
+    }
+  }
+
+  getVelocity(): Vector {
+    const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter(
+      x => x
+    );
+    const x =
+      existingParts.reduce((prev, curr) => prev + curr.body.velocity[0], 0) /
+        existingParts.length || 0;
+    const y =
+      existingParts.reduce((prev, curr) => prev + curr.body.velocity[1], 0) /
+        existingParts.length || 0;
+    return [x, y] as Vector;
+  }
+
+  getWorldCenter(): Vector {
+    const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter(
+      x => x
+    );
+    const x =
+      existingParts.reduce((prev, curr) => prev + curr.body.position[0], 0) /
+        existingParts.length || 0;
+    const y =
+      existingParts.reduce((prev, curr) => prev + curr.body.position[1], 0) /
+        existingParts.length || 0;
+    return [x, y] as Vector;
+  }
+
+  onDestroy() {
+    for (let spring of this.springs) {
+      this.game.world.removeSpring(spring);
+    }
+  }
+
+  afterTick() {
+    this.springs.forEach(spring => {
+      if (
+        !(spring.bodyA as HasOwner).owner.game ||
+        !(spring.bodyB as HasOwner).owner.game
+      ) {
+        console.log("removing spring");
+        this.game.world.removeSpring(spring);
+      }
+    });
+    if (this.leftEngine && !this.leftEngine.game) {
+      console.log("left engine destroyed");
+      this.leftEngine = null;
+    }
+    if (this.rightEngine && !this.rightEngine.game) {
+      console.log("right engine destroyed");
+      this.rightEngine = null;
+    }
+    if (this.pod && !this.pod.game) {
+      console.log("pod destroyed");
+      this.pod = null;
+    }
+  }
+}

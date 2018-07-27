@@ -4,13 +4,17 @@
     "Michael Wiktorek (https://github.com/michaelwiktorek)"
   ],
   "dependencies": {
+    "@types/fontfaceobserver": "^0.0.6",
+    "@types/p2": "^0.7.31",
+    "@types/pixi.js": "^4.8.0",
+    "fontfaceobserver": "^2.0.13",
     "p2": "^0.7.1",
-    "pixi.js": "^4.4.4",
+    "pixi.js": "^4.8.1",
     "prettier": "^1.13.7",
     "transform-loader": "^0.2.3",
     "ts-loader": "^4.4.2",
     "tslint": "^5.11.0",
-    "typescript": "^2.9.2",
+    "typescript": "^3.1.0-dev.20180726",
     "webpack": "^4.16.2",
     "webpack-command": "^0.4.1",
     "webpack-serve": "^2.0.2"
