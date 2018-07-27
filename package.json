@@ -22,6 +22,7 @@
     "webpack-serve": "^2.0.2"
   },
   "devDependencies": {
+    "speed-measure-webpack-plugin": "^1.2.2",
     "webpack-bundle-analyzer": "^2.13.1"
   },
   "description": "",

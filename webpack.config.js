@@ -1,7 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 
-module.exports = {
+module.exports = new SpeedMeasurePlugin().wrap({
   devtool: "source-map",
   entry: "./src/index",
   mode: process.env.NODE_ENV || "production",
@@ -9,7 +10,13 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: {
+          loader: "ts-loader",
+          options: {
+            transpileOnly: true,
+            experimentalWatchApi: true
+          }
+        },
         exclude: /node_modules/
       },
       {
@@ -26,4 +33,4 @@ module.exports = {
     path: path.resolve(__dirname, "dist")
   },
   plugins: [new HtmlWebpackPlugin({ template: "src/index.html" })]
-};
+});
