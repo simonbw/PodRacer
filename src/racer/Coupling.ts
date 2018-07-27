@@ -52,7 +52,7 @@ export default class Coupling extends BaseEntity {
     this.game.draw.line(left, right, width, this.color, alpha);
   }
 
-  afterTick() {
+  afterPhysics() {
     if (this.leftEngine.game == null || this.rightEngine.game == null) {
       this.destroy();
     }

@@ -5,8 +5,8 @@ export default interface GameEventHandler {
   onAdd?(game: Game): void;
   // Called right after being added to the game
   afterAdded?(game: Game): void;
-  // Called after the tick happens
-  afterTick?(): void;
+  // Called after physics
+  afterPhysics?(): void;
   // Called before the tick happens
   beforeTick?(): void;
   // Called before rendering

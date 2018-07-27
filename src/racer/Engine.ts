@@ -27,20 +27,27 @@ export default class Engine extends BaseEntity {
   soundController: RacerSoundController;
   health: number;
   conditions = new ConditionList();
-  boosting: boolean;
-  throttle: number;
-  ropePoint: Vector;
-  flaps: ControlFlap[];
+  boosting: boolean = false;
+  throttle: number = 0.0;
+  flaps: ControlFlap[] = [];
   colliding: boolean;
   lastMomentum: Momentum;
   collisionLength: number;
 
-  constructor([x, y]: Vector, side: "left" | "right", engineDef: EngineDef) {
+  constructor(position: Vector, side: "left" | "right", engineDef: EngineDef) {
     super();
     this.side = side;
     this.engineDef = engineDef;
-    const [w, h] = engineDef.size;
+    this.health = this.engineDef.maxHealth;
+    this.soundController = new RacerSoundController(this);
 
+    this.makeBody(position);
+    this.makeSprite();
+    this.makeFlaps();
+  }
+
+  makeSprite() {
+    const [w, h] = this.engineDef.size;
     this.sprite.beginFill(this.engineDef.color);
     this.sprite.drawRect(-0.5 * w, -0.5 * h, w, h);
     this.sprite.endFill();
@@ -53,17 +60,16 @@ export default class Engine extends BaseEntity {
 
     this.healthMeter = new Pixi.Graphics();
     this.sprite.addChild(this.healthMeter);
+  }
 
-    this.soundController = new RacerSoundController(this);
-
-    this.health = this.engineDef.health;
-
+  makeBody(position: Vector) {
+    const [w, h] = this.engineDef.size;
     const bodyProps = {
       angularDamping: 0.3,
       damping: 0.0,
       mass: this.engineDef.mass,
       material: Materials.RACER,
-      position: [x, y]
+      position
     };
     this.body = new p2.Body(bodyProps);
 
@@ -80,34 +86,30 @@ export default class Engine extends BaseEntity {
     const shape2 = new p2.Convex({ vertices: shape2Vertices });
     (shape2 as any).aerodynamicsEnabled = false;
     this.body.addShape(shape2, [0, 0], 0);
+  }
 
-    this.boosting = false;
-    this.throttle = 0.0;
-    if (this.side === "right") {
-      this.ropePoint = [-0.4 * w, 0.45 * h] as Vector; // point the rope connects in local coordinates
-    } else {
-      this.ropePoint = [0.4 * w, 0.45 * h] as Vector;
-    }
-
-    this.flaps = [];
-    this.engineDef.flaps.forEach(engineFlapDef => {
+  makeFlaps() {
+    for (const engineFlapDef of this.engineDef.flaps) {
       const isLeftFlap =
         (this.side === "left" && engineFlapDef.side === "outside") ||
         (this.side === "right" && engineFlapDef.side === "inside");
+
       const position = [
         ((isLeftFlap ? -1 : 1) * this.engineDef.size[0]) / 2,
         engineFlapDef.y
       ] as Vector;
+
       const direction = isLeftFlap
         ? ControlFlapDirection.Left
         : ControlFlapDirection.Right;
+
       const flapDef: FlapDef & WithPosition = {
         ...engineFlapDef,
         position,
         direction
       };
       this.flaps.push(new ControlFlap(this.body, flapDef));
-    });
+    }
   }
 
   get size(): Vector {
@@ -116,6 +118,14 @@ export default class Engine extends BaseEntity {
 
   get velocity(): Vector {
     return this.body.velocity as Vector;
+  }
+
+  // point the rope connects in local coordinates
+  get ropePoint(): Vector {
+    const [w, h] = this.engineDef.size;
+    return this.side === "right"
+      ? ([-0.4 * w, 0.45 * h] as Vector)
+      : ([0.4 * w, 0.45 * h] as Vector);
   }
 
   get position(): Vector {
@@ -174,7 +184,7 @@ export default class Engine extends BaseEntity {
     this.healthMeter.moveTo(0, 0.4 * this.engineDef.size[1]);
     this.healthMeter.lineTo(
       0,
-      (-0.4 * this.engineDef.size[1] * this.health) / this.engineDef.health
+      (-0.4 * this.engineDef.size[1] * this.health) / this.engineDef.maxHealth
     );
 
     const left = [

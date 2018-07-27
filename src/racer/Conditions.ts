@@ -8,8 +8,6 @@ export enum Condition {
   ThrottleStuck = "ThrottleStuck"
 }
 
-console.log(Condition);
-
 export class ConditionList {
   conditionTimes = new Map<Condition, number>();
 

@@ -101,9 +101,11 @@ export default abstract class ListMenu extends BaseEntity {
         this.activateOption();
         break;
       case Keys.UP:
+      case Keys.W:
         this.selectOption(this.currentOption - 1);
         break;
       case Keys.DOWN:
+      case Keys.S:
         this.selectOption(this.currentOption + 1);
         break;
       case Keys.ESCAPE:

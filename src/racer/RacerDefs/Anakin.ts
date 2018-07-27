@@ -25,7 +25,7 @@ export const Anakin: RacerDef = {
       }
     ],
     fragility: 2,
-    health: 100,
+    maxHealth: 100,
     healthMeterBackColor: 0x003355,
     healthMeterBackWidth: 0.07,
     healthMeterColor: 0x00ffff,

@@ -119,7 +119,7 @@ export default class Game {
         this.world.step(this.tickTimestep);
       }
     }
-    this.afterTick();
+    this.afterPhysics();
 
     this.render();
   }
@@ -236,11 +236,11 @@ export default class Game {
   }
 
   // Called after physics.
-  afterTick() {
+  afterPhysics() {
     this.cleanupEntities();
-    for (const entity of this.entities.filtered.afterTick) {
+    for (const entity of this.entities.filtered.afterPhysics) {
       if (!(this.paused && entity.pausable)) {
-        entity.afterTick();
+        entity.afterPhysics();
       }
     }
   }

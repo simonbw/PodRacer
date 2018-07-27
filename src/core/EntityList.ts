@@ -5,7 +5,7 @@ export default class EntityList implements Iterable<Entity> {
   all = new Set<Entity>();
 
   filtered = {
-    afterTick: new FilterList<Entity>(e => Boolean(e.afterTick)),
+    afterPhysics: new FilterList<Entity>(e => Boolean(e.afterPhysics)),
     beforeTick: new FilterList<Entity>(e => Boolean(e.beforeTick)),
     onRender: new FilterList<Entity>(e => Boolean(e.onRender)),
     onTick: new FilterList<Entity>(e => Boolean(e.onTick)),

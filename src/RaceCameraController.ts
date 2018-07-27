@@ -2,7 +2,7 @@ import BaseEntity from "./core/BaseEntity";
 import Racer from "./racer/Racer";
 import Camera from "./core/Camera";
 
-export default class CameraController extends BaseEntity {
+export default class RaceCameraController extends BaseEntity {
   racer: Racer;
   camera: Camera;
 
@@ -12,7 +12,7 @@ export default class CameraController extends BaseEntity {
     this.camera = camera;
   }
 
-  afterTick() {
+  afterPhysics() {
     if (this.racer.pod) {
       const vel = this.racer.getVelocity();
       const lookAhead = vel.clone();

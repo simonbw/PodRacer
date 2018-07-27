@@ -7,7 +7,7 @@ export interface EngineDef {
   drag: number;
   flaps: Array<FlapDef & WithSide>;
   fragility: number;
-  health: number;
+  maxHealth: number;
   healthMeterBackColor: number;
   healthMeterBackWidth: number;
   healthMeterColor: number;

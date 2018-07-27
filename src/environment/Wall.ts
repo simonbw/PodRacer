@@ -28,11 +28,12 @@ export default class Wall extends BaseEntity {
     this.sprite.beginFill(0x000000);
     this.sprite.drawPolygon(this.corners);
     this.sprite.endFill();
-    this.body = new p2.Body({
+    const bodyProps = {
       mass: 0,
       material: Materials.WALL,
       position: [x, y]
-    } as any);
+    };
+    this.body = new p2.Body(bodyProps);
     const shape = new p2.Box({ width: this.w, height: this.h });
     this.body.addShape(shape, [0, 0], 0);
   }

@@ -131,29 +131,35 @@ export default class Racer extends BaseEntity {
     }
   }
 
+  // Returns some average velocity of existing parts
   getVelocity(): Vector {
-    const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter(
-      x => x
+    let x = 0;
+    let y = 0;
+    const parts = [this.leftEngine, this.rightEngine, this.pod].filter(
+      part => part
     );
-    const x =
-      existingParts.reduce((prev, curr) => prev + curr.body.velocity[0], 0) /
-        existingParts.length || 0;
-    const y =
-      existingParts.reduce((prev, curr) => prev + curr.body.velocity[1], 0) /
-        existingParts.length || 0;
+    for (const part of parts) {
+      if (part) {
+        x += part.body.velocity[0] / parts.length;
+        y += part.body.velocity[1] / parts.length;
+      }
+    }
     return [x, y] as Vector;
   }
 
+  // Returns the average position of existing parts
   getWorldCenter(): Vector {
-    const existingParts = [this.leftEngine, this.rightEngine, this.pod].filter(
-      x => x
+    let x = 0;
+    let y = 0;
+    const parts = [this.leftEngine, this.rightEngine, this.pod].filter(
+      part => part
     );
-    const x =
-      existingParts.reduce((prev, curr) => prev + curr.body.position[0], 0) /
-        existingParts.length || 0;
-    const y =
-      existingParts.reduce((prev, curr) => prev + curr.body.position[1], 0) /
-        existingParts.length || 0;
+    for (const part of parts) {
+      if (part) {
+        x += part.body.position[0] / parts.length;
+        y += part.body.position[1] / parts.length;
+      }
+    }
     return [x, y] as Vector;
   }
 
@@ -163,7 +169,7 @@ export default class Racer extends BaseEntity {
     }
   }
 
-  afterTick() {
+  afterPhysics() {
     this.springs.forEach(spring => {
       if (
         !(spring.bodyA as HasOwner).owner.game ||

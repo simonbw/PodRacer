@@ -1,16 +1,20 @@
 import * as Pixi from "pixi.js";
 import BaseEntity from "../core/BaseEntity";
+import { imageUrls } from "../images";
+
+const SIZE = 100000;
 
 export default class Ground extends BaseEntity {
-  sprite = Pixi.extras.TilingSprite.fromImage(
-    "images/ground.jpg",
-    1000000,
-    1000000
-  );
+  sprite: Pixi.Sprite;
   layer = "world_back";
 
   constructor() {
     super();
+    this.sprite = new Pixi.extras.TilingSprite(
+      Pixi.loader.resources[imageUrls.ground].texture,
+      SIZE,
+      SIZE
+    );
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
     this.sprite.scale.x = 0.04;
@@ -26,15 +30,17 @@ export default class Ground extends BaseEntity {
 }
 
 class Dust extends BaseEntity {
-  sprite = Pixi.extras.TilingSprite.fromImage(
-    "images/ground.jpg",
-    1000000,
-    1000000
-  );
+  sprite: Pixi.Sprite;
 
   constructor(level = 1) {
     super();
     this.layer = `dust_${level}`;
+
+    this.sprite = new Pixi.extras.TilingSprite(
+      Pixi.loader.resources[imageUrls.ground].texture,
+      SIZE,
+      SIZE
+    );
 
     this.sprite.anchor.x = Math.random();
     this.sprite.anchor.y = Math.random();

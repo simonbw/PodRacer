@@ -108,7 +108,7 @@ export default class PlayerRacerController extends BaseEntity {
 
   // this might cause bugs
   // TODO: remove, restructure
-  afterTick() {
+  afterPhysics() {
     if (!this.racer.pod) {
       this.game.removeAll(); // TODO: maybe we can do better?
       this.game.addEntity(new Ground());
