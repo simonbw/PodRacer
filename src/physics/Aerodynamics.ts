@@ -21,7 +21,7 @@ export function applyAerodynamics(
   dragAmount: number,
   liftAmount: number
 ) {
-  body.shapes.forEach(shape => {
+  for (const shape of body.shapes) {
     if (isAerodynamicShape(shape)) {
       for (let i = 0; i < shape.vertices.length; i++) {
         const v1 = shape.vertices[i];
@@ -29,7 +29,7 @@ export function applyAerodynamics(
         applyAerodynamicsToEdge(body, v1, v2, dragAmount, liftAmount);
       }
     }
-  });
+  }
 }
 
 export function applyAerodynamicsToEdge(

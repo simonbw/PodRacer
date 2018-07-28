@@ -148,7 +148,7 @@ export default class Engine extends BaseEntity {
 
   // Set the control value on all the engine's flaps
   setFlaps(left: number, right: number): void {
-    this.flaps.forEach(flap => {
+    for (const flap of this.flaps) {
       switch (flap.direction) {
         case ControlFlapDirection.Left:
           if (!this.conditions.has(Condition.LeftFlapStuck)) {
@@ -161,14 +161,14 @@ export default class Engine extends BaseEntity {
           }
           break;
       }
-    });
+    }
   }
 
   onAdd(): void {
     this.game.addEntity(this.soundController);
-    this.flaps.forEach(flap => {
+    for (const flap of this.flaps) {
       this.game.addEntity(flap);
-    });
+    }
   }
 
   onRender(): void {
@@ -266,9 +266,9 @@ export default class Engine extends BaseEntity {
 
   onDestroy() {
     this.soundController.destroy();
-    this.flaps.forEach(flap => {
+    for (const flap of this.flaps) {
       flap.destroy();
-    });
+    }
   }
 
   onBeginContact(other: Entity) {

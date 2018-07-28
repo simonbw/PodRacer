@@ -35,7 +35,9 @@ export default abstract class ListMenu extends BaseEntity {
     this.game.addEntity(this.cameraController);
     this.lastMoveTime = Date.now();
     this.options = this.makeOptions();
-    this.options.forEach(option => this.game.addEntity(option));
+    for (const option of this.options) {
+      this.game.addEntity(option);
+    }
     this.currentOption = 0;
     this.selectOption(0);
     this.frameAdded = this.game.framenumber;
@@ -120,6 +122,8 @@ export default abstract class ListMenu extends BaseEntity {
 
   onDestroy() {
     this.cameraController.destroy();
-    this.options.forEach(option => option.destroy());
+    for (const option of this.options) {
+      option.destroy();
+    }
   }
 }

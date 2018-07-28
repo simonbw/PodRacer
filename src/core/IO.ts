@@ -5,33 +5,6 @@ import { Vector } from "./Vector";
 import IOEventHandler from "./Entity/IOEventHandler";
 import IOHandlerList from "./IOHandlerList";
 
-export enum IOEvents {
-  BUTTON_DOWN = "buttondown",
-  BUTTON_UP = "buttonup",
-  CLICK = "click",
-  KEY_DOWN = "keydown",
-  KEY_UP = "keyup",
-  MOUSE_DOWN = "mousedown",
-  MOUSE_MOVE = "mousemove",
-  MOUSE_UP = "mouseup",
-  RIGHT_CLICK = "rightclick",
-  RIGHT_DOWN = "rightdown",
-  RIGHT_UP = "rightup"
-}
-
-const METHODS_TO_EVENTS = {
-  onButtonDown: IOEvents.BUTTON_DOWN,
-  onButtonUp: IOEvents.BUTTON_UP,
-  onKeyDown: IOEvents.KEY_DOWN,
-  onKeyUp: IOEvents.KEY_UP,
-  onMouseDown: IOEvents.MOUSE_DOWN,
-  onMouseUp: IOEvents.MOUSE_UP,
-  onRightClick: IOEvents.RIGHT_CLICK,
-  onRightDown: IOEvents.RIGHT_DOWN,
-  onRightUp: IOEvents.RIGHT_UP,
-  onClick: IOEvents.CLICK
-};
-
 const GAMEPAD_MINIMUM = 0.2; // TODO: allow user configuration
 const GAMEPAD_MAXIMUM = 0.95; // TODO: allow user configuration
 
@@ -96,7 +69,7 @@ export class IOManager {
     if (gamepad) {
       const buttons = gamepad.buttons.map(button => button.pressed);
 
-      buttons.forEach((button, buttonIndex) => {
+      for (const [buttonIndex, button] of buttons.entries()) {
         if (button && !this.lastButtons[buttonIndex]) {
           this.usingGamepad = true;
           for (const handler of this.handlers.filtered.onButtonDown) {
@@ -107,7 +80,7 @@ export class IOManager {
             handler.onButtonUp(buttonIndex);
           }
         }
-      });
+      }
       this.lastButtons = buttons;
     } else {
       this.lastButtons = [];

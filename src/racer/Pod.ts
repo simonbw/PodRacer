@@ -50,7 +50,7 @@ export default class Pod extends BaseEntity {
     this.rightRopePoint = [0.4 * w, -0.45 * h] as Vector; // point the right rope connects in local coordinates
 
     this.flaps = [];
-    this.podDef.flaps.forEach(flapDef => {
+    for (const flapDef of this.podDef.flaps) {
       const leftDef: FlapDef & WithPosition = {
         ...flapDef,
         direction: ControlFlapDirection.Left,
@@ -63,7 +63,7 @@ export default class Pod extends BaseEntity {
       };
       this.flaps.push(new ControlFlap(this.body, leftDef));
       this.flaps.push(new ControlFlap(this.body, rightDef));
-    });
+    }
   }
 
   get size(): Vector {
@@ -85,9 +85,9 @@ export default class Pod extends BaseEntity {
   }
 
   onAdd(game: Game) {
-    this.flaps.forEach(flap => {
+    for (const flap of this.flaps) {
       game.addEntity(flap);
-    });
+    }
   }
 
   onRender() {
@@ -101,9 +101,9 @@ export default class Pod extends BaseEntity {
   }
 
   onDestroy() {
-    this.flaps.forEach(flap => {
+    for (const flap of this.flaps) {
       flap.destroy();
-    });
+    }
   }
 
   onImpact() {

@@ -1,26 +1,13 @@
 import Drawing from "../util/Drawing";
 import GameRenderer from "./GameRenderer";
 import p2 from "p2";
-import { IOEvents, IOManager } from "./IO";
+import { IOManager } from "./IO";
 import * as Materials from "../physics/Materials";
 import Entity from "./Entity/index";
 import Camera from "./Camera";
 import FilterList from "../util/FilterList";
 import EntityList from "./EntityList";
 import HasOwner from "./HasOwner";
-
-const METHODS_TO_EVENTS = {
-  onButtonDown: IOEvents.BUTTON_DOWN,
-  onButtonUp: IOEvents.BUTTON_UP,
-  onKeyDown: IOEvents.KEY_DOWN,
-  onKeyUp: IOEvents.KEY_UP,
-  onMouseDown: IOEvents.MOUSE_DOWN,
-  onMouseUp: IOEvents.MOUSE_UP,
-  onRightClick: IOEvents.RIGHT_CLICK,
-  onRightDown: IOEvents.RIGHT_DOWN,
-  onRightUp: IOEvents.RIGHT_UP,
-  onClick: IOEvents.CLICK
-};
 
 // Top Level control structure
 export default class Game {
@@ -40,7 +27,6 @@ export default class Game {
   framerate: number = 60;
   framenumber: number = 0;
   ticknumber: number = 0;
-  slowFrameCount: number = 0;
   lastFrameTime: number = window.performance.now();
   tickIterations: number = 5; // number of ticks per frame drawn
 
@@ -60,9 +46,9 @@ export default class Game {
     this.world = new p2.World({
       gravity: [0, 0]
     });
-    Materials.CONTACTS.forEach(material => {
+    for (const material of Materials.CONTACTS) {
       this.world.addContactMaterial(material);
-    });
+    }
     this.world.on("beginContact", this.beginContact, null);
     this.world.on("endContact", this.endContact, null);
     this.world.on("impact", this.impact, null);
@@ -72,19 +58,17 @@ export default class Game {
     this.masterGain.connect(this.audio.destination);
   }
 
+  // The intended time between renders in seconds
   get renderTimestep(): number {
     return 1 / this.framerate;
   }
 
-  // Number of seconds between ticks.
+  // The intended time between ticks in seconds
   get tickTimestep(): number {
     return this.renderTimestep / this.tickIterations;
   }
 
-  getSlowFrameRatio(): number {
-    return this.slowFrameCount / this.framenumber || 0;
-  }
-
+  // Total amount of game time elapsed since starting
   get elapsedTime(): number {
     return this.ticknumber / (this.framerate * this.tickIterations);
   }
@@ -100,11 +84,6 @@ export default class Game {
   loop(time: number): void {
     window.requestAnimationFrame(t => this.loop(t));
     this.framenumber += 1;
-    const duration = time - this.lastFrameTime;
-    if (duration > this.renderTimestep * 1000 * 1.01) {
-      console.warn("slow frame");
-      this.slowFrameCount += 1;
-    }
     this.lastFrameTime = time;
 
     for (let i = 0; i < this.tickIterations; i++) {
@@ -194,7 +173,7 @@ export default class Game {
 
   // Actually remove all the entities slated for removal from the game.
   cleanupEntities() {
-    this.entitiesToRemove.forEach(entity => {
+    for (const entity of this.entitiesToRemove) {
       this.entities.remove(entity);
       this.io.removeHandler(entity);
 
@@ -209,7 +188,7 @@ export default class Game {
         entity.onDestroy(this);
       }
       entity.game = null;
-    });
+    }
     this.entitiesToRemove.clear();
   }
 

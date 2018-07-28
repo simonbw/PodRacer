@@ -3,13 +3,15 @@ import BaseEntity from "../core/BaseEntity";
 import { HEADING_FONT } from "../core/fonts";
 
 export default class FPSMeter extends BaseEntity {
+  layer = "hud";
+
   lastUpdate: number;
   averageDuration: number;
   sprite: Pixi.Text;
+  slowFrameCount: number = 0;
 
   constructor() {
     super();
-    this.layer = "hud";
     this.sprite = new Pixi.Text("Super Pod Racer", {
       fontFamily: HEADING_FONT,
       fontSize: "12px",
@@ -18,13 +20,16 @@ export default class FPSMeter extends BaseEntity {
     this.sprite.x = 10;
     this.sprite.y = 10;
     this.lastUpdate = performance.now();
-    this.averageDuration = 60;
+  }
+
+  onAdd() {
+    this.averageDuration = this.game.renderTimestep;
   }
 
   onRender() {
     const now = performance.now();
-    this.averageDuration =
-      0.9 * this.averageDuration + 0.1 * (now - this.lastUpdate);
+    const duration = now - this.lastUpdate;
+    this.averageDuration = 0.9 * this.averageDuration + 0.1 * duration;
     this.lastUpdate = now;
     this.sprite.text = String(Math.round(1000 / this.averageDuration));
   }

@@ -23,7 +23,9 @@ export default class Race extends BaseEntity {
   }
 
   onAdd() {
-    this.waypoints.forEach(waypoint => this.game.addEntity(waypoint));
+    for (const waypoint of this.waypoints) {
+      this.game.addEntity(waypoint);
+    }
   }
 
   addWaypoint(center: Vector, radius = 20) {

@@ -1,12 +1,17 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"editor.formatOnSave": true,
-		"typescript.tsdk": "node_modules/typescript/lib",
-		"editor.tabSize": 2
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.tabSize": 2,
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "pod-racer/dist/": true
+    }
+  }
 }

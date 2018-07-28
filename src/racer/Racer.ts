@@ -84,9 +84,9 @@ export default class Racer extends BaseEntity {
 
     game.addEntity(this.coupling);
 
-    this.springs.forEach(spring => {
+    for (const spring of this.springs) {
       game.world.addSpring(spring);
-    });
+    }
   }
 
   onRender() {
@@ -170,7 +170,7 @@ export default class Racer extends BaseEntity {
   }
 
   afterPhysics() {
-    this.springs.forEach(spring => {
+    for (const spring of this.springs) {
       if (
         !(spring.bodyA as HasOwner).owner.game ||
         !(spring.bodyB as HasOwner).owner.game
@@ -178,15 +178,18 @@ export default class Racer extends BaseEntity {
         console.log("removing spring");
         this.game.world.removeSpring(spring);
       }
-    });
+    }
+
     if (this.leftEngine && !this.leftEngine.game) {
       console.log("left engine destroyed");
       this.leftEngine = null;
     }
+
     if (this.rightEngine && !this.rightEngine.game) {
       console.log("right engine destroyed");
       this.rightEngine = null;
     }
+
     if (this.pod && !this.pod.game) {
       console.log("pod destroyed");
       this.pod = null;
