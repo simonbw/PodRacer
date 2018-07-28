@@ -1,11 +1,10 @@
 import * as Pixi from "pixi.js";
 import Camera from "./Camera";
-import LayerInfo from "./LayerInfo";
+import { LayerName, LayerInfo, Layers } from "./Layers";
 
 // The thing that renders stuff to the screen. Mostly for handling layers.
 export default class GameRenderer {
-  private layerInfos: LayerInfo[] = [];
-  private layerInfosByName: { [name: string]: LayerInfo } = {};
+  private layerInfos: Map<LayerName, LayerInfo> = new Map();
 
   pixiRenderer: Pixi.WebGLRenderer | Pixi.CanvasRenderer;
   stage: Pixi.Container;
@@ -27,22 +26,14 @@ export default class GameRenderer {
 
     window.addEventListener("resize", () => this.handleResize());
 
-    this.addLayer(new LayerInfo("world_back", 1));
-    this.addLayer(new LayerInfo("world", 1));
-    this.addLayer(new LayerInfo("world_front", 1));
-    this.addLayer(new LayerInfo("world_overlay", 1));
-    this.addLayer(new LayerInfo("hud", 0));
-    this.addLayer(new LayerInfo("menu", 0));
+    for (const [layerName, layerInfo] of Object.entries(Layers)) {
+      this.stage.addChildAt(layerInfo.layer, this.layerInfos.size);
+      this.layerInfos.set(layerName as LayerName, layerInfo);
+    }
   }
 
-  private addLayer(layerInfo: LayerInfo) {
-    this.stage.addChildAt(layerInfo.layer, this.layerInfos.length);
-    this.layerInfosByName[layerInfo.name] = layerInfo;
-    this.layerInfos.push(layerInfo);
-  }
-
-  private getLayerInfo(layerName: string) {
-    const layerInfo = this.layerInfosByName[layerName];
+  private getLayerInfo(layerName: LayerName) {
+    const layerInfo = this.layerInfos.get(layerName);
     if (!layerInfo) {
       throw new Error(`Cannot find layer: ${layerInfo}`);
     }
@@ -55,7 +46,7 @@ export default class GameRenderer {
 
   // Render the current frame.
   render() {
-    for (const layerInfo of this.layerInfos) {
+    for (const layerInfo of this.layerInfos.values()) {
       this.camera.updateLayer(layerInfo);
     }
     this.pixiRenderer.render(this.stage);
@@ -63,14 +54,14 @@ export default class GameRenderer {
 
   add(
     sprite: Pixi.DisplayObject,
-    layerName: string = "world"
+    layerName: LayerName = "world"
   ): Pixi.DisplayObject {
     this.getLayerInfo(layerName).layer.addChild(sprite);
     return sprite;
   }
 
   // Remove a child from a specific layer.
-  remove(sprite: Pixi.DisplayObject, layerName: string = "world"): void {
+  remove(sprite: Pixi.DisplayObject, layerName: LayerName = "world"): void {
     this.getLayerInfo(layerName).layer.removeChild(sprite);
   }
 }

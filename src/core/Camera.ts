@@ -2,7 +2,7 @@ import { Matrix, Point } from "pixi.js";
 import BaseEntity from "./BaseEntity";
 import GameRenderer from "./GameRenderer";
 import { Vector } from "./Vector";
-import LayerInfo from "./LayerInfo";
+import { LayerInfo } from "./Layers";
 
 //  Controls the viewport.
 export default class Camera extends BaseEntity {

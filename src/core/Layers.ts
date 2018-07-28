@@ -1,0 +1,24 @@
+import * as Pixi from "pixi.js";
+
+// Info about a rendering layer
+export class LayerInfo {
+  readonly layer: Pixi.Container;
+  readonly scroll: number;
+
+  constructor(scroll: number) {
+    this.scroll = scroll;
+    this.layer = new Pixi.Container();
+  }
+}
+
+// CAUTION: Order matters in this object
+export const Layers = {
+  world_back: new LayerInfo(1),
+  world: new LayerInfo(1),
+  world_front: new LayerInfo(1),
+  world_overlay: new LayerInfo(1),
+  hud: new LayerInfo(0),
+  menu: new LayerInfo(0)
+};
+
+export type LayerName = keyof typeof Layers;

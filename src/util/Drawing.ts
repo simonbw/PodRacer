@@ -1,11 +1,12 @@
 import * as Pixi from "pixi.js";
 import BaseEntity from "../core/BaseEntity";
 import { Vector } from "../core/Vector";
+import { LayerName } from "../core/Layers";
 
 // Class used to make drawing primitives easy
 export default class Drawing extends BaseEntity {
   pausable = false;
-  sprites: Map<string, Pixi.Graphics> = new Map();
+  sprites: Map<LayerName, Pixi.Graphics> = new Map();
 
   line(
     [x1, y1]: Vector,
@@ -13,7 +14,7 @@ export default class Drawing extends BaseEntity {
     width = 0.01,
     color = 0xffffff,
     alpha = 1.0,
-    layer = "world"
+    layer: LayerName = "world"
   ) {
     const sprite = this.getLayerSprite(layer);
     sprite.lineStyle(width, color, alpha);
@@ -27,7 +28,7 @@ export default class Drawing extends BaseEntity {
     three: Vector,
     color = 0xff0000,
     alpha = 1.0,
-    layer = "world"
+    layer: LayerName = "world"
   ) {
     const sprite = this.getLayerSprite(layer);
     sprite.lineStyle();
@@ -36,7 +37,7 @@ export default class Drawing extends BaseEntity {
     sprite.endFill();
   }
 
-  getLayerSprite(layerName: string): Pixi.Graphics {
+  getLayerSprite(layerName: LayerName): Pixi.Graphics {
     if (!this.sprites.has(layerName)) {
       const sprite = new Pixi.Graphics();
       this.sprites.set(layerName, sprite);

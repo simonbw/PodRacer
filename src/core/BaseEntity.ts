@@ -3,6 +3,7 @@ import p2 from "p2";
 import Entity from "./Entity/index";
 import Pixi from "pixi.js";
 import { Vector } from "./Vector";
+import { LayerName } from "./Layers";
 
 /**
  * Base class for lots of stuff in the game
@@ -11,7 +12,7 @@ export default abstract class BaseEntity implements Entity {
   game: Game;
   sprite: Pixi.DisplayObject;
   body: p2.Body;
-  layer: string;
+  layer: LayerName;
   pausable: boolean = true;
 
   // Convert local coordinates to world coordinates.
