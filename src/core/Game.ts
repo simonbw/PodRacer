@@ -36,17 +36,18 @@ export default class Game {
   audio: AudioContext;
   masterGain: GainNode;
 
-  paused: boolean;
-  framerate: number;
-  framenumber: number;
-  slowFrameCount: number;
-  lastFrameTime: number;
-  tickIterations: number;
+  paused: boolean = false;
+  framerate: number = 60;
+  framenumber: number = 0;
+  ticknumber: number = 0;
+  slowFrameCount: number = 0;
+  lastFrameTime: number = window.performance.now();
+  tickIterations: number = 5; // number of ticks per frame drawn
 
   /**
    * Create a new Game.
    */
-  constructor() {
+  constructor(audio: AudioContext) {
     this.entities = new EntityList();
     this.entitiesToRemove = new Set();
 
@@ -66,16 +67,9 @@ export default class Game {
     this.world.on("endContact", this.endContact, null);
     this.world.on("impact", this.impact, null);
 
-    this.audio = new AudioContext();
+    this.audio = audio;
     this.masterGain = this.audio.createGain();
     this.masterGain.connect(this.audio.destination);
-
-    this.paused = false;
-    this.framerate = 60;
-    this.framenumber = 0;
-    this.slowFrameCount = 0;
-    this.lastFrameTime = window.performance.now();
-    this.tickIterations = 5;
   }
 
   get renderTimestep(): number {
@@ -92,7 +86,7 @@ export default class Game {
   }
 
   get elapsedTime(): number {
-    return this.framenumber / this.framerate;
+    return this.ticknumber / (this.framerate * this.tickIterations);
   }
 
   // Start the event loop for the game.
@@ -147,7 +141,7 @@ export default class Game {
   }
 
   // Add an entity to the game.
-  addEntity = (entity: Entity) => {
+  addEntity = <T extends Entity>(entity: T): T => {
     entity.game = this;
     if (entity.onAdd) {
       entity.onAdd(this);
@@ -221,6 +215,7 @@ export default class Game {
 
   // Called before physics.
   tick() {
+    this.ticknumber += 1;
     this.cleanupEntities();
     for (const entity of this.entities.filtered.beforeTick) {
       if (!(this.paused && entity.pausable)) {

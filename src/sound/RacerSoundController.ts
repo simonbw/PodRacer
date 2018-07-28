@@ -2,128 +2,93 @@ import BaseEntity from "../core/BaseEntity";
 import PositionSoundFilter from "./PositionSoundFilter";
 import Engine from "../racer/Engine";
 import { Vector } from "../core/Vector";
+import { sounds } from "../sounds";
+import { Utils } from "../../node_modules/@types/p2/index";
+import { clamp } from "../util/Util";
+import { startAtRandomOffset } from "../util/AudioUtils";
 
 export default class RacerSoundController extends BaseEntity {
   engine: Engine;
-  positionFilter: PositionSoundFilter;
+
   out: GainNode;
-  noise: AudioBufferSourceNode;
-  noiseFilter: BiquadFilterNode;
-  noiseGain: GainNode;
-  triangleGain: GainNode;
-  sawtoothGain: GainNode;
-  oscillatorFilter: BiquadFilterNode;
-  triangleOscillator: OscillatorNode;
-  sawtoothOscillator: OscillatorNode;
-  modulatorOscillator: OscillatorNode;
-  modulatorFilter: BiquadFilterNode;
-  modulatorGain: GainNode;
-  modulatorThrough: GainNode;
-  compressor: DynamicsCompressorNode;
+  chugGain: GainNode;
+  chugSource: AudioBufferSourceNode;
+  positionFilter: PositionSoundFilter;
+  whineGain: GainNode;
+  whineSource: AudioBufferSourceNode;
+  growlSource: AudioBufferSourceNode;
+  growlGain: GainNode;
 
   constructor(engine: Engine) {
     super();
     this.engine = engine;
-    this.positionFilter = new PositionSoundFilter();
   }
 
   onAdd() {
-    this.game.addEntity(this.positionFilter);
+    this.positionFilter = this.game.addEntity(new PositionSoundFilter());
+
+    this.chugSource = this.game.audio.createBufferSource();
+    this.chugSource.buffer = sounds.get("engineChug");
+    this.chugSource.loop = true;
+    startAtRandomOffset(this.chugSource);
+    this.chugGain = this.game.audio.createGain();
+    this.chugGain.gain.value = 0;
+    this.chugSource.connect(this.chugGain);
+    this.chugGain.connect(this.positionFilter.in);
+
+    this.whineSource = this.game.audio.createBufferSource();
+    this.whineSource.buffer = sounds.get("engineWhine");
+    this.whineSource.loop = true;
+    startAtRandomOffset(this.whineSource);
+    this.whineGain = this.game.audio.createGain();
+    this.whineGain.gain.value = 0;
+    this.whineSource.connect(this.whineGain);
+    this.whineGain.connect(this.positionFilter.in);
+
+    this.growlSource = this.game.audio.createBufferSource();
+    this.growlSource.buffer = sounds.get("engineGrowl");
+    this.growlSource.loop = true;
+    startAtRandomOffset(this.growlSource);
+    this.growlGain = this.game.audio.createGain();
+    this.growlGain.gain.value = 0;
+    this.growlSource.connect(this.growlGain);
+    this.growlGain.connect(this.positionFilter.in);
+
     this.out = this.game.audio.createGain();
-    this.out.connect(this.positionFilter.in);
-
-    this.noise = this.game.audio.createBufferSource();
-    this.noiseFilter = this.game.audio.createBiquadFilter();
-    this.noiseGain = this.game.audio.createGain();
-    this.triangleGain = this.game.audio.createGain();
-    this.sawtoothGain = this.game.audio.createGain();
-    this.oscillatorFilter = this.game.audio.createBiquadFilter();
-    this.triangleOscillator = this.game.audio.createOscillator();
-    this.sawtoothOscillator = this.game.audio.createOscillator();
-    this.modulatorOscillator = this.game.audio.createOscillator();
-    this.modulatorFilter = this.game.audio.createBiquadFilter();
-    this.modulatorGain = this.game.audio.createGain();
-    this.modulatorThrough = this.game.audio.createGain();
-    this.compressor = this.game.audio.createDynamicsCompressor();
-
-    this.noise.buffer = this.game.audio.createBuffer(
-      1,
-      2 ** 16,
-      this.game.audio.sampleRate
-    );
-    this.noise.loop = true;
-
-    this.noiseFilter.type = "lowpass";
-    this.noiseFilter.frequency.value = 100;
-    this.noiseFilter.Q.value = 0.5;
-
-    const noiseData = this.noise.buffer.getChannelData(0).map(Math.random);
-
-    this.noiseGain.gain.value = 0;
-    this.triangleGain.gain.value = 0;
-    this.sawtoothGain.gain.value = 0;
-
-    this.oscillatorFilter.type = "lowpass";
-    this.oscillatorFilter.frequency.value = 100;
-    this.oscillatorFilter.Q.value = 0.1;
-
-    this.triangleOscillator.type = "triangle";
-    this.triangleOscillator.frequency.value = 1;
-    this.triangleOscillator.start();
-
-    this.sawtoothOscillator.type = "sawtooth";
-    this.sawtoothOscillator.frequency.value = 1;
-    this.sawtoothOscillator.start();
-
-    this.modulatorOscillator.type = "sawtooth";
-    this.modulatorOscillator.frequency.value = 5;
-    this.modulatorOscillator.start();
-    this.modulatorFilter.type = "lowpass";
-    this.modulatorFilter.frequency.value = 400;
-    this.modulatorFilter.Q.value = 0.5;
-    this.modulatorGain.gain.value = -1.0;
-
-    this.compressor.threshold.value = -25;
-    this.compressor.attack.value = 0.003;
-    this.compressor.release.value = 0.008;
-
-    this.noise.connect(this.noiseFilter);
-    this.noiseFilter.connect(this.noiseGain);
-    this.noiseGain.connect(this.out);
-    this.triangleOscillator.connect(this.triangleGain);
-    this.triangleGain.connect(this.oscillatorFilter);
-    this.sawtoothOscillator.connect(this.sawtoothGain);
-    this.sawtoothGain.connect(this.oscillatorFilter);
-    this.oscillatorFilter.connect(this.compressor);
-    this.compressor.connect(this.modulatorThrough);
-    this.modulatorThrough.connect(this.out);
-    this.modulatorOscillator.connect(this.modulatorFilter);
-    this.modulatorFilter.connect(this.modulatorGain);
-    this.modulatorGain.connect(this.modulatorThrough.gain);
-    this.noise.start();
+    this.positionFilter.out.connect(this.out);
+    this.out.connect(this.game.masterGain);
   }
 
   onTick() {
-    const speed = this.engine.velocity.magnitude;
-    const throttle = this.engine.throttle;
     this.positionFilter.position.set(this.engine.position);
 
-    this.modulatorOscillator.frequency.value = 6 + throttle + speed / 15;
-    this.modulatorGain.gain.value =
-      -0.9 * (1 - Math.min(throttle * speed * 0.01, 1));
+    const speed = this.engine.velocity.magnitude / 200;
+    const throttle = this.engine.throttle;
+    const now = this.game.audio.currentTime;
 
-    this.noiseGain.gain.value = this.engine.boosting ? 5 : 0;
-    this.triangleGain.gain.value = 0.15 + throttle / 3;
-    this.sawtoothGain.gain.value =
-      0.1 * throttle * (0.05 + Math.min(speed / 100, 0.9));
+    const whineVolume = clamp(speed ** 1.4 * (0.7 + 0.3 * throttle) * 2.0);
+    const whineSpeed = 1.2 + speed ** 2.2 * 4 * (0.8 + 0.2 * throttle);
 
-    const f =
-      80 + (0.4 * throttle + 0.6) * (30 + speed * 3) + Math.random() * 12;
-    this.triangleOscillator.frequency.value = f;
-    this.sawtoothOscillator.frequency.value = f;
-    this.noiseFilter.frequency.value = 100 + 1.5 * speed;
-    this.oscillatorFilter.frequency.value =
-      2500 + throttle * (30 + speed * 8) + 500 * Math.random();
+    const growlVolume = 0.09 * clamp(0.2 + throttle * 0.8) + speed * 0.05;
+    const growlSpeed = 1 + speed ** 2 * 0.2;
+
+    const chugVolume = clamp(
+      0.1 + throttle / 5 - speed ** 1.5 * 0.35 * (0.15 + 0.85 * throttle),
+      0.008,
+      1.0
+    );
+    const chugSpeed =
+      1.5 +
+      25 * speed ** 1.5 * (0.9 + 0.1 * throttle) +
+      throttle * 0.3 +
+      Math.random() * 0.05;
+
+    this.whineSource.playbackRate.setTargetAtTime(whineSpeed, now, 0.02);
+    this.whineGain.gain.setTargetAtTime(whineVolume, now, 0.05);
+    this.chugSource.playbackRate.setTargetAtTime(chugSpeed, now, 0.02);
+    this.chugGain.gain.setTargetAtTime(chugVolume, now, 0.1);
+    this.growlSource.playbackRate.setTargetAtTime(growlSpeed, now, 0.02);
+    this.growlGain.gain.setTargetAtTime(growlVolume, now, 0.1);
   }
 
   onPause() {
@@ -151,9 +116,8 @@ export default class RacerSoundController extends BaseEntity {
   }
 
   onDestroy() {
-    this.noise.stop();
-    this.triangleOscillator.stop();
-    this.sawtoothOscillator.stop();
+    this.chugSource.stop();
+    this.whineSource.stop();
     this.positionFilter.destroy();
   }
 }

@@ -11,6 +11,7 @@ export default class PositionSoundFilter extends BaseEntity {
   position: Vector;
   pan: StereoPannerNode;
   in: AudioNode;
+  out: AudioNode;
   gain: GainNode;
   filter: BiquadFilterNode;
   delay: DelayNode;
@@ -19,6 +20,7 @@ export default class PositionSoundFilter extends BaseEntity {
     this.position = [0, 0] as Vector;
     this.in = this.pan = this.game.audio.createStereoPanner();
     this.gain = this.game.audio.createGain();
+    this.out = this.game.audio.createGain();
     this.filter = this.game.audio.createBiquadFilter();
     this.filter.type = "lowpass";
     this.filter.frequency.value = MAX_FREQUENCY;
@@ -30,7 +32,7 @@ export default class PositionSoundFilter extends BaseEntity {
     this.pan.connect(this.filter);
     this.filter.connect(this.gain);
     this.gain.connect(this.delay);
-    this.delay.connect(this.game.masterGain);
+    this.delay.connect(this.out);
   }
 
   onTick() {

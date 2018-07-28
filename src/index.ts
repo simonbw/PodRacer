@@ -6,6 +6,7 @@ import Ground from "./environment/Ground";
 import MainMenu from "./menu/MainMenu";
 import { waitForFontsLoaded } from "./core/fonts";
 import { loadPixiAssets } from "./images";
+import { loadAllSounds } from "./sounds";
 
 declare global {
   interface Window {
@@ -17,11 +18,17 @@ declare global {
 }
 
 window.addEventListener("load", () => {
+  const audioContext = new AudioContext();
+
   console.log("window load");
-  Promise.all([loadPixiAssets(), waitForFontsLoaded()]).then(() => {
+  Promise.all([
+    loadPixiAssets(),
+    waitForFontsLoaded(),
+    loadAllSounds(audioContext)
+  ]).then(() => {
     console.log("after await");
 
-    const game = new Game();
+    const game = new Game(audioContext);
     game.addEntity(new FPSMeter());
     game.addEntity(new MainMenu());
     game.addEntity(new Ground());

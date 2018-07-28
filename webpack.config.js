@@ -20,7 +20,7 @@ module.exports = new SpeedMeasurePlugin().wrap({
         exclude: /node_modules/
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(gif|jpg|mp3|ogg|png|svg|wav)$/,
         use: ["file-loader"]
       }
     ]
