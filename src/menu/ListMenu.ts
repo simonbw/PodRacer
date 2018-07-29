@@ -1,5 +1,3 @@
-import * as GamepadAxes from "../core/constants/GamepadAxes";
-import * as GamepadButtons from "../core/constants/GamepadButtons";
 import * as Keys from "../core/constants/Keys";
 import * as Pixi from "pixi.js";
 import BaseEntity from "../core/BaseEntity";
@@ -7,12 +5,14 @@ import MenuCameraController from "../MenuCameraController";
 import * as Util from "../util/Util";
 import MenuOption from "./MenuOption";
 import { HEADING_FONT } from "../core/fonts";
+import { ControllerAxis, ControllerButton } from "../core/constants/Gamepad";
+import Entity from "../core/Entity/index";
 
 const DOWN_THRESHOLD = 250;
 
 export default abstract class ListMenu extends BaseEntity {
   pausable = false;
-  layer = "menu";
+  layer: "menu" = "menu";
   sprite = new Pixi.Graphics();
 
   text: Pixi.Text;
@@ -46,17 +46,16 @@ export default abstract class ListMenu extends BaseEntity {
   abstract makeOptions(): MenuOption[];
 
   onTick() {
-    const axis = this.game.io.getAxis(GamepadAxes.LEFT_Y);
-    let currentTime;
-    if (Math.abs(axis) > 0.3) {
-      // TODO: why 0.3?
-      currentTime = Date.now();
-    }
-    if (currentTime - this.lastMoveTime >= DOWN_THRESHOLD) {
+    const axis = this.game.io.getAxis(ControllerAxis.LEFT_Y);
+    const currentTime = Date.now();
+    if (Math.abs(axis) < 0.2) {
+      this.lastMoveTime = 0;
+    } else if (
+      Math.abs(axis) > 0.3 &&
+      currentTime - this.lastMoveTime >= DOWN_THRESHOLD
+    ) {
       this.lastMoveTime = currentTime;
       this.selectOption(this.currentOption + Math.sign(axis));
-    } else if (Math.abs(axis) < 0.2) {
-      this.lastMoveTime = 0;
     }
   }
 
@@ -71,22 +70,22 @@ export default abstract class ListMenu extends BaseEntity {
     // Override me
   }
 
-  onButtonDown(button: number) {
+  onButtonDown(button: ControllerButton) {
     // Don't accept input on the very first frame
     if (this.game.framenumber === this.frameAdded) {
       return;
     }
     switch (button) {
-      case GamepadButtons.A:
+      case ControllerButton.A:
         this.activateOption();
         break;
-      case GamepadButtons.D_UP:
+      case ControllerButton.D_UP:
         this.selectOption(this.currentOption - 1);
         break;
-      case GamepadButtons.D_DOWN:
+      case ControllerButton.D_DOWN:
         this.selectOption(this.currentOption + 1);
         break;
-      case GamepadButtons.B:
+      case ControllerButton.B:
         this.cancel();
         break;
     }

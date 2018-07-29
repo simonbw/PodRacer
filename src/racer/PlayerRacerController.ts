@@ -1,11 +1,10 @@
-import * as GamepadAxes from "../core/constants/GamepadAxes";
-import * as GamepadButtons from "../core/constants/GamepadButtons";
 import * as Keys from "../core/constants/Keys";
-import * as Util from "../util/Util";
 import BaseEntity from "../core/BaseEntity";
 import Ground from "../environment/Ground";
 import MainMenu from "../menu/MainMenu";
 import Racer from "./Racer";
+import { clamp } from "../util/Util";
+import { ControllerAxis, ControllerButton } from "../core/constants/Gamepad";
 
 // TODO: Put these in a config file or something
 // Keys
@@ -16,10 +15,10 @@ const K_RIGHT_FLAP = Keys.SLASH;
 const K_LEFT_BOOST = Keys.C;
 const K_RIGHT_BOOST = Keys.COMMA;
 // Buttons
-const B_LEFT_BOOST = GamepadButtons.LB;
-const B_RIGHT_BOOST = GamepadButtons.RB;
-const B_LEFT_FLAP = GamepadButtons.LT;
-const B_RIGHT_FLAP = GamepadButtons.RT;
+const B_LEFT_BOOST = ControllerButton.LB;
+const B_RIGHT_BOOST = ControllerButton.RB;
+const B_LEFT_FLAP = ControllerButton.LT;
+const B_RIGHT_FLAP = ControllerButton.RT;
 
 export default class PlayerRacerController extends BaseEntity {
   racer: Racer;
@@ -30,34 +29,32 @@ export default class PlayerRacerController extends BaseEntity {
   }
 
   beforeTick() {
-    const stickTransform = (value: number) => Util.clamp(value, 0, 1) ** 1.2;
-    const leftStick = stickTransform(-this.game.io.getAxis(GamepadAxes.LEFT_Y));
+    const stickTransform = (value: number) => clamp(value) ** 1.2;
+    const leftStick = stickTransform(
+      -this.game.io.getAxis(ControllerAxis.LEFT_Y)
+    );
     const rightStick = stickTransform(
-      -this.game.io.getAxis(GamepadAxes.RIGHT_Y)
+      -this.game.io.getAxis(ControllerAxis.RIGHT_Y)
     );
 
     if (this.racer.leftEngine) {
       this.racer.leftEngine.setThrottle(
-        Util.clamp(leftStick + (this.game.io.keys[K_LEFT_THROTTLE] ? 1 : 0))
+        clamp(leftStick + (this.game.io.keys[K_LEFT_THROTTLE] ? 1 : 0))
       );
     }
     if (this.racer.rightEngine) {
       this.racer.rightEngine.setThrottle(
-        Util.clamp(rightStick + (this.game.io.keys[K_RIGHT_THROTTLE] ? 1 : 0))
+        clamp(rightStick + (this.game.io.keys[K_RIGHT_THROTTLE] ? 1 : 0))
       );
     }
 
-    const leftFlap = Util.clamp(
+    const leftFlap = clamp(
       this.game.io.getButton(B_LEFT_FLAP) +
-        (this.game.io.keys[K_LEFT_FLAP] ? 1 : 0),
-      0,
-      1
+        (this.game.io.keys[K_LEFT_FLAP] ? 1 : 0)
     );
-    const rightFlap = Util.clamp(
+    const rightFlap = clamp(
       this.game.io.getButton(B_RIGHT_FLAP) +
-        (this.game.io.keys[K_RIGHT_FLAP] ? 1 : 0),
-      0,
-      1
+        (this.game.io.keys[K_RIGHT_FLAP] ? 1 : 0)
     );
     this.racer.setFlaps(leftFlap, rightFlap);
   }

@@ -1,3 +1,5 @@
+import { ControllerButton } from "../constants/Gamepad";
+
 export default interface IOEventHandler {
   // Called when the mouse is left clicked anywhere
   onClick?(): void;
@@ -16,7 +18,7 @@ export default interface IOEventHandler {
   // called when a keyboard key is released
   onKeyUp?(key: number): void;
   // Called when a gamepad button is pressed
-  onButtonDown?(button: number): void;
+  onButtonDown?(button: ControllerButton): void;
   // Called when a gamepad button is released
-  onButtonUp?(button: number): void;
+  onButtonUp?(button: ControllerButton): void;
 }

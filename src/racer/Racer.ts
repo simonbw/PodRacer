@@ -1,25 +1,27 @@
 import Coupling from "./Coupling";
 import Engine from "./Engine";
 import BaseEntity from "../core/BaseEntity";
-import p2, { LinearSpring } from "p2";
+import { LinearSpring } from "p2";
 import Pod from "./Pod";
 import RopeSpring from "../physics/RopeSpring";
 import { Vector } from "../core/Vector";
 import Game from "../core/Game";
 import { RacerDef, Anakin } from "./RacerDefs/index";
-import HasOwner from "../core/HasOwner";
+import { RacerSoundController } from "../sound/RacerSoundController";
 
 export default class Racer extends BaseEntity {
+  layer: "world" = "world";
+
   racerDef: RacerDef;
   pod: Pod;
   leftEngine: Engine;
   rightEngine: Engine;
   coupling: Coupling;
   springs: Array<RopeSpring | LinearSpring> = [];
+  soundController: RacerSoundController;
 
   constructor(position: Vector, racerDef = Anakin) {
     super();
-    this.layer = "world";
     this.racerDef = racerDef;
     const podPosition = position.add(this.racerDef.podPosition);
     const leftEnginePosition = position.add(this.racerDef.leftEnginePosition);
@@ -53,6 +55,8 @@ export default class Racer extends BaseEntity {
     this.addCouplingSpring(-1, 1);
     this.addCouplingSpring(1, -1);
     this.addCouplingSpring(1, 1);
+
+    this.soundController = new RacerSoundController(this);
   }
 
   private addRopeSpring(engine: Engine, podPoint: Vector): void {
@@ -81,6 +85,7 @@ export default class Racer extends BaseEntity {
     game.addEntity(this.pod);
     game.addEntity(this.leftEngine);
     game.addEntity(this.rightEngine);
+    game.addEntity(this.soundController);
 
     game.addEntity(this.coupling);
 
@@ -164,6 +169,10 @@ export default class Racer extends BaseEntity {
   }
 
   onDestroy() {
+    this.soundController.destroy();
+    this.pod.destroy();
+    this.leftEngine.destroy();
+    this.rightEngine.destroy();
     for (let spring of this.springs) {
       this.game.world.removeSpring(spring);
     }
@@ -171,28 +180,10 @@ export default class Racer extends BaseEntity {
 
   afterPhysics() {
     for (const spring of this.springs) {
-      if (
-        !(spring.bodyA as HasOwner).owner.game ||
-        !(spring.bodyB as HasOwner).owner.game
-      ) {
+      if (!spring.bodyA.owner!.game || !spring.bodyB.owner!.game) {
         console.log("removing spring");
         this.game.world.removeSpring(spring);
       }
-    }
-
-    if (this.leftEngine && !this.leftEngine.game) {
-      console.log("left engine destroyed");
-      this.leftEngine = null;
-    }
-
-    if (this.rightEngine && !this.rightEngine.game) {
-      console.log("right engine destroyed");
-      this.rightEngine = null;
-    }
-
-    if (this.pod && !this.pod.game) {
-      console.log("pod destroyed");
-      this.pod = null;
     }
   }
 }

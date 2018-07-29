@@ -1,18 +1,16 @@
-import { Vector } from "../core/Vector";
-
 // Modulo operator for modular arithmetic
 export function mod(a: number, b: number): number {
   return ((a % b) + b) % b;
 }
 
 // Limit a value to be in a range.
-export function clamp(value: number, min = -1, max = 1): number {
+export function clamp(value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value));
 }
 
 // The smoothstep function between 0 and 1
 export function smoothStep(value: number): number {
-  value = clamp(value, 0, 1);
+  value = clamp(value);
   return value * value * (3 - 2 * value);
 }
 

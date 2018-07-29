@@ -70,12 +70,15 @@ export default class Camera extends BaseEntity {
   }
 
   // Move the camera toward being centered on a position, with a target velocity
-  smoothCenter([x, y]: Vector, [vx, vy]: Vector, smooth: number = 0.9) {
-    // TODO: make velocity transition smooth
+  smoothCenter(
+    [x, y]: Vector,
+    [vx, vy]: Vector = [0, 0] as Vector,
+    smooth: number = 0.9
+  ) {
     const dx = (x - this.x) * this.game.framerate;
     const dy = (y - this.y) * this.game.framerate;
-    this.vx = vx + (1 - smooth) * dx;
-    this.vy = vy + (1 - smooth) * dy;
+    this.vx = 0.1 * this.vx + 0.9 * (vx + (1 - smooth) * dx);
+    this.vy = 0.1 * this.vy + 0.9 * (vy + (1 - smooth) * dy);
   }
 
   // Move the camera part of the way to the desired zoom.

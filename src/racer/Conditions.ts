@@ -29,13 +29,13 @@ export class ConditionList {
   has(condition: Condition): boolean {
     return (
       this.conditionTimes.has(condition) &&
-      this.conditionTimes.get(condition) <= 0
+      this.conditionTimes.get(condition)! <= 0
     );
   }
 
   remaining(condition: Condition): number {
     if (this.has(condition)) {
-      return this.conditionTimes.get(condition);
+      return this.conditionTimes.get(condition)!;
     }
     return 0;
   }

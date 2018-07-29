@@ -1,10 +1,9 @@
 import BaseEntity from "../core/BaseEntity";
-import * as Util from "../util/Util";
 import { Vector } from "../core/Vector";
+import { clamp } from "../util/Util";
 
 const MAX_DELAY = 1.0;
 const PAN_DISTANCE = 100;
-const REF_DISTANCE = 100;
 const MAX_FREQUENCY = 22050;
 
 export default class PositionSoundFilter extends BaseEntity {
@@ -36,19 +35,18 @@ export default class PositionSoundFilter extends BaseEntity {
   }
 
   onTick() {
+    const now = this.game.audio.currentTime;
     const diff = this.position.sub(this.game.camera.position);
     const distance = diff.magnitude;
-    this.gain.gain.value = Util.clamp((REF_DISTANCE / distance) ** 1.2);
-    this.pan.pan.value =
-      Math.cos(diff.angle) * Util.clamp(distance / PAN_DISTANCE - 0.1);
-    this.filter.frequency.value = Util.clamp(
-      2 ** 22 / (distance ** 1.4 + 0.1),
-      0,
-      MAX_FREQUENCY
-    );
 
-    // Doppler effect. Needs work
-    //delayTime = Math.min(distance / 800, MAX_DELAY);
-    //this.delay.delayTime.linearRampToValueAtTime(delayTime, this.game.audio.currentTime + this.game.tickTimestep);
+    const targetGain = clamp((160 / distance ** 1.2) ** 1.2);
+    const targetPan =
+      Math.cos(diff.angle) * clamp(distance / PAN_DISTANCE - 0.1);
+    const targetFrequency = clamp(1 / (0.01 * distance + 1)) * MAX_FREQUENCY;
+    this.gain.gain.setTargetAtTime(targetGain, now, 0.01);
+    this.pan.pan.setTargetAtTime(targetPan, now, 0.01);
+    this.filter.frequency.setTargetAtTime(targetFrequency, now, 0.01);
+
+    // TODO: Doppler effect.
   }
 }

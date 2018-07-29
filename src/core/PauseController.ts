@@ -1,7 +1,7 @@
-import * as GamepadButtons from "./constants/GamepadButtons";
 import * as Keys from "./constants/Keys";
 import BaseEntity from "./BaseEntity";
 import PauseMenu from "../menu/PauseMenu";
+import { ControllerButton } from "./constants/Gamepad";
 
 export default class PauseController extends BaseEntity {
   pausable = false;
@@ -21,7 +21,7 @@ export default class PauseController extends BaseEntity {
   }
 
   onButtonDown(button: number) {
-    if (button === GamepadButtons.START) {
+    if (button === ControllerButton.START) {
       this.pause();
     }
   }

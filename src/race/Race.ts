@@ -1,4 +1,3 @@
-import * as Pixi from "pixi.js";
 import BaseEntity from "../core/BaseEntity";
 import * as Util from "../util/Util";
 import { Waypoint } from "./Waypoint";
@@ -13,13 +12,10 @@ export default class Race extends BaseEntity {
   racerWaypointIndexes = new Map<Racer, number>();
   // stores the index of the waypoint a racer is currently on
   racerLaps = new Map<Racer, number>();
-  // Callback when the race has ended
-  onEnd: () => void;
 
-  constructor(laps: number = 3, onEnd: () => void = null) {
+  constructor(laps: number = 3) {
     super();
     this.laps = laps; // total number of laps in the race
-    this.onEnd = onEnd;
   }
 
   onAdd() {
@@ -43,16 +39,16 @@ export default class Race extends BaseEntity {
       const waypoint = this.getRacerWaypoint(racer);
       const distance = racer.getWorldCenter().sub(waypoint.center).magnitude;
       if (distance <= waypoint.radius + 1) {
-        const current = this.racerWaypointIndexes.get(racer);
+        const current = this.racerWaypointIndexes.get(racer)!;
         this.racerWaypointIndexes.set(
           racer,
           (current + 1) % this.waypoints.length
         );
         console.log("waypoint reached", current);
         if (current === 0) {
-          this.racerLaps.set(racer, this.racerLaps.get(racer) + 1);
+          this.racerLaps.set(racer, this.racerLaps.get(racer)! + 1);
           console.log("new lap");
-          if (this.racerLaps.get(racer) > this.laps) {
+          if (this.racerLaps.get(racer)! > this.laps) {
             console.log("RACE OVER");
             this.destroy();
             break;
@@ -79,7 +75,7 @@ export default class Race extends BaseEntity {
   getRacerWaypoint(racer: Racer, next: number = 0) {
     return this.waypoints[
       Util.mod(
-        this.racerWaypointIndexes.get(racer) + next,
+        this.racerWaypointIndexes.get(racer)! + next,
         this.waypoints.length
       )
     ];
@@ -87,13 +83,13 @@ export default class Race extends BaseEntity {
 
   getRacerLap(racer: Racer) {
     return Math.floor(
-      this.racerWaypointIndexes.get(racer) / this.waypoints.length
+      this.racerWaypointIndexes.get(racer)! / this.waypoints.length
     );
   }
 
   onDestroy() {
     while (this.waypoints.length) {
-      this.waypoints.pop().destroy();
+      this.waypoints.pop()!.destroy();
     }
   }
 }

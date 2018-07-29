@@ -13,7 +13,7 @@ module.exports = new SpeedMeasurePlugin().wrap({
         use: {
           loader: "ts-loader",
           options: {
-            transpileOnly: true,
+            transpileOnly: false,
             experimentalWatchApi: true
           }
         },
@@ -30,7 +30,8 @@ module.exports = new SpeedMeasurePlugin().wrap({
   },
   output: {
     filename: "js/bundle.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
+    pathinfo: false // speeds things up. I don't think we need it
   },
   plugins: [new HtmlWebpackPlugin({ template: "src/index.html" })]
 });

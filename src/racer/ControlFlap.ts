@@ -26,7 +26,7 @@ export default class ControlFlap extends BaseEntity {
   }
 
   setControl(value: number) {
-    this.control = Util.clamp(value, 0, 1);
+    this.control = Util.clamp(value);
   }
 
   getAngle() {

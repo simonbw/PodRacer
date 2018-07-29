@@ -3,7 +3,7 @@ import BaseEntity from "../core/BaseEntity";
 import { HEADING_FONT } from "../core/fonts";
 
 export default class FPSMeter extends BaseEntity {
-  layer = "hud";
+  layer: "hud" = "hud";
 
   lastUpdate: number;
   averageDuration: number;

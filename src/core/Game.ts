@@ -5,9 +5,7 @@ import { IOManager } from "./IO";
 import * as Materials from "../physics/Materials";
 import Entity from "./Entity/index";
 import Camera from "./Camera";
-import FilterList from "../util/FilterList";
 import EntityList from "./EntityList";
-import HasOwner from "./HasOwner";
 
 // Top Level control structure
 export default class Game {
@@ -108,14 +106,14 @@ export default class Game {
   pause() {
     this.paused = true;
     for (const entity of this.entities.filtered.onPause) {
-      entity.onPause();
+      entity.onPause!();
     }
   }
 
   unpause() {
     this.paused = false;
     for (const entity of this.entities.filtered.onUnpause) {
-      entity.onUnpause();
+      entity.onUnpause!();
     }
   }
 
@@ -198,13 +196,13 @@ export default class Game {
     this.cleanupEntities();
     for (const entity of this.entities.filtered.beforeTick) {
       if (!(this.paused && entity.pausable)) {
-        entity.beforeTick();
+        entity.beforeTick!();
       }
     }
     this.cleanupEntities();
     for (const entity of this.entities.filtered.onTick) {
       if (!(this.paused && entity.pausable)) {
-        entity.onTick();
+        entity.onTick!();
       }
     }
   }
@@ -214,7 +212,7 @@ export default class Game {
     this.cleanupEntities();
     for (const entity of this.entities.filtered.afterPhysics) {
       if (!(this.paused && entity.pausable)) {
-        entity.afterPhysics();
+        entity.afterPhysics!();
       }
     }
   }
@@ -223,7 +221,7 @@ export default class Game {
   render() {
     this.cleanupEntities();
     for (const entity of this.entities.filtered.onRender) {
-      entity.onRender();
+      entity.onRender!();
     }
     this.renderer.render();
   }
@@ -231,10 +229,10 @@ export default class Game {
   // Handle beginning of collision between things.
   // Fired during narrowphase.
   beginContact = (e: {
-    bodyA: p2.Body & HasOwner;
-    bodyB: p2.Body & HasOwner;
-    shapeA: p2.Shape & HasOwner;
-    shapeB: p2.Shape & HasOwner;
+    bodyA: p2.Body;
+    bodyB: p2.Body;
+    shapeA: p2.Shape;
+    shapeB: p2.Shape;
   }) => {
     const ownerA = e.shapeA.owner || e.bodyA.owner;
     const ownerB = e.shapeB.owner || e.bodyB.owner;
@@ -249,10 +247,10 @@ export default class Game {
   // Handle end of collision between things.
   // Fired during narrowphase.
   endContact = (e: {
-    bodyA: p2.Body & HasOwner;
-    bodyB: p2.Body & HasOwner;
-    shapeA: p2.Shape & HasOwner;
-    shapeB: p2.Shape & HasOwner;
+    bodyA: p2.Body;
+    bodyB: p2.Body;
+    shapeA: p2.Shape;
+    shapeB: p2.Shape;
   }) => {
     const ownerA = e.shapeA.owner || e.bodyA.owner;
     const ownerB = e.shapeB.owner || e.bodyB.owner;
@@ -266,7 +264,7 @@ export default class Game {
 
   // Handle collision between things.
   // Fired after physics step.
-  impact = (e: { bodyA: p2.Body & HasOwner; bodyB: p2.Body & HasOwner }) => {
+  impact = (e: { bodyA: p2.Body; bodyB: p2.Body }) => {
     const ownerA = e.bodyA.owner;
     const ownerB = e.bodyB.owner;
     if (ownerA && ownerA.onImpact) {

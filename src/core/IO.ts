@@ -1,9 +1,9 @@
-import * as GamepadAxes from "./constants/GamepadAxes";
 import * as Keys from "./constants/Keys";
 import * as MouseButtons from "./constants/MouseButtons";
 import { Vector } from "./Vector";
 import IOEventHandler from "./Entity/IOEventHandler";
 import IOHandlerList from "./IOHandlerList";
+import { ControllerAxis, ControllerButton } from "./constants/Gamepad";
 
 const GAMEPAD_MINIMUM = 0.2; // TODO: allow user configuration
 const GAMEPAD_MAXIMUM = 0.95; // TODO: allow user configuration
@@ -13,13 +13,13 @@ export class IOManager {
   handlers = new IOHandlerList();
 
   keys: boolean[];
-  lastButtons: any[];
+  lastButtons: boolean[];
   mouseButtons = [false, false, false, false, false, false];
   mousePosition = [0, 0] as Vector;
   usingGamepad: boolean = false; // True if the gamepad is the main input device
   view: HTMLCanvasElement;
 
-  constructor(view: any) {
+  constructor(view: HTMLCanvasElement) {
     this.view = view;
 
     this.view.onclick = e => this.onClick(e);
@@ -73,11 +73,11 @@ export class IOManager {
         if (button && !this.lastButtons[buttonIndex]) {
           this.usingGamepad = true;
           for (const handler of this.handlers.filtered.onButtonDown) {
-            handler.onButtonDown(buttonIndex);
+            handler.onButtonDown!(buttonIndex);
           }
         } else if (!button && this.lastButtons[buttonIndex]) {
           for (const handler of this.handlers.filtered.onButtonUp) {
-            handler.onButtonUp(buttonIndex);
+            handler.onButtonUp!(buttonIndex);
           }
         }
       }
@@ -108,12 +108,12 @@ export class IOManager {
     switch (event.button) {
       case MouseButtons.LEFT:
         for (const handler of this.handlers.filtered.onClick) {
-          handler.onClick();
+          handler.onClick!();
         }
         break;
       case MouseButtons.RIGHT:
         for (const handler of this.handlers.filtered.onRightClick) {
-          handler.onRightClick();
+          handler.onRightClick!();
         }
         break;
     }
@@ -127,12 +127,12 @@ export class IOManager {
     switch (event.button) {
       case MouseButtons.LEFT:
         for (const handler of this.handlers.filtered.onMouseDown) {
-          handler.onMouseDown();
+          handler.onMouseDown!();
         }
         break;
       case MouseButtons.RIGHT:
         for (const handler of this.handlers.filtered.onRightDown) {
-          handler.onRightDown();
+          handler.onRightDown!();
         }
         break;
     }
@@ -146,12 +146,12 @@ export class IOManager {
     switch (event.button) {
       case MouseButtons.LEFT:
         for (const handler of this.handlers.filtered.onMouseUp) {
-          handler.onMouseUp();
+          handler.onMouseUp!();
         }
         break;
       case MouseButtons.RIGHT:
         for (const handler of this.handlers.filtered.onRightUp) {
-          handler.onRightUp();
+          handler.onRightUp!();
         }
         break;
     }
@@ -176,7 +176,7 @@ export class IOManager {
     this.keys[key] = true;
     if (!wasPressed) {
       for (const handler of this.handlers.filtered.onKeyDown) {
-        handler.onKeyDown(key);
+        handler.onKeyDown!(key);
       }
     }
     if (this.shouldPreventDefault(key)) {
@@ -190,7 +190,7 @@ export class IOManager {
     const key = event.which;
     this.keys[key] = false;
     for (const handler of this.handlers.filtered.onKeyUp) {
-      handler.onKeyUp(key);
+      handler.onKeyUp!(key);
     }
     if (this.shouldPreventDefault(key)) {
       event.preventDefault();
@@ -199,16 +199,18 @@ export class IOManager {
   }
 
   // Return the value of a gamepad axis.
-  getAxis(axis: number): number {
+  getAxis(axis: ControllerAxis): number {
     switch (axis) {
-      case GamepadAxes.LEFT_X:
-        return this.getStick(GamepadAxes.LEFT).x;
-      case GamepadAxes.LEFT_Y:
-        return this.getStick(GamepadAxes.LEFT).y;
-      case GamepadAxes.RIGHT_X:
-        return this.getStick(GamepadAxes.RIGHT).x;
-      case GamepadAxes.RIGHT_Y:
-        return this.getStick(GamepadAxes.RIGHT).y;
+      case ControllerAxis.LEFT_X:
+        return this.getStick("left").x;
+      case ControllerAxis.LEFT_Y:
+        return this.getStick("left").y;
+      case ControllerAxis.RIGHT_X:
+        return this.getStick("right").x;
+      case ControllerAxis.RIGHT_Y:
+        return this.getStick("right").y;
+      default:
+        throw new Error("unknown axis");
     }
   }
 
@@ -216,12 +218,12 @@ export class IOManager {
     const axes = [0, 0] as Vector;
     const gamepad = navigator.getGamepads()[0];
     if (gamepad) {
-      if (stick === GamepadAxes.LEFT) {
-        axes.x = gamepad.axes[GamepadAxes.LEFT_X];
-        axes.y = gamepad.axes[GamepadAxes.LEFT_Y];
+      if (stick === "left") {
+        axes.x = gamepad.axes[ControllerAxis.LEFT_X];
+        axes.y = gamepad.axes[ControllerAxis.LEFT_Y];
       } else {
-        axes.x = gamepad.axes[GamepadAxes.RIGHT_X];
-        axes.y = gamepad.axes[GamepadAxes.RIGHT_Y];
+        axes.x = gamepad.axes[ControllerAxis.RIGHT_X];
+        axes.y = gamepad.axes[ControllerAxis.RIGHT_Y];
       }
       const gamepadRange = GAMEPAD_MAXIMUM - GAMEPAD_MINIMUM;
       axes.magnitude = Math.max(
@@ -235,7 +237,7 @@ export class IOManager {
   }
 
   //  Return the value of a button.
-  getButton(button: number): number {
+  getButton(button: ControllerButton): number {
     const gamepad = navigator.getGamepads()[0];
     if (gamepad) {
       return gamepad.buttons[button].value; // TODO: Value or nothing?

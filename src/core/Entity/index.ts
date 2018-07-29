@@ -4,20 +4,20 @@ import p2 from "p2";
 import PhysicsHandler from "./PhysicsHandler";
 import GameEventHandler from "./GameEventHandler";
 import IOEventHandler from "./IOEventHandler";
-import HasOwner from "../HasOwner";
+import { LayerName } from "../Layers";
 
 export default interface Entity
   extends GameEventHandler,
     PhysicsHandler,
     IOEventHandler {
   // The game this entity belongs to.
-  game: Game;
+  game: Game | null;
 
-  readonly sprite?: Pixi.DisplayObject & HasOwner;
+  readonly sprite?: Pixi.DisplayObject;
 
-  readonly body?: p2.Body & HasOwner;
+  readonly body?: p2.Body;
 
-  readonly layer: string;
+  readonly layer: LayerName;
 
   // True if this entity will stop updating when the game is paused.
   readonly pausable: boolean;

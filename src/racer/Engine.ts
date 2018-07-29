@@ -5,7 +5,7 @@ import * as Util from "../util/Util";
 import ControlFlap from "./ControlFlap";
 import BaseEntity from "../core/BaseEntity";
 import p2 from "p2";
-import RacerSoundController from "../sound/RacerSoundController";
+import EngineSoundController from "../sound/EngineSoundController";
 import { applyAerodynamics } from "../physics/Aerodynamics";
 import { Vector } from "../core/Vector";
 import { EngineDef } from "./RacerDefs/EngineDef";
@@ -24,7 +24,6 @@ export default class Engine extends BaseEntity {
   engineDef: EngineDef;
   sprite = new Pixi.Graphics();
   healthMeter: Pixi.Graphics;
-  soundController: RacerSoundController;
   health: number;
   conditions = new ConditionList();
   boosting: boolean = false;
@@ -39,7 +38,6 @@ export default class Engine extends BaseEntity {
     this.side = side;
     this.engineDef = engineDef;
     this.health = this.engineDef.maxHealth;
-    this.soundController = new RacerSoundController(this);
 
     this.makeBody(position);
     this.makeSprite();
@@ -134,7 +132,7 @@ export default class Engine extends BaseEntity {
 
   setThrottle(value: number) {
     // TODO: These conditions better
-    value = Util.clamp(value, 0, 1);
+    value = Util.clamp(value);
     if (this.conditions.has(Condition.Stutter)) {
       value *= Math.random();
     }
@@ -142,7 +140,7 @@ export default class Engine extends BaseEntity {
       !this.conditions.has(Condition.ThrottleStuck) &&
       !this.conditions.has(Condition.NoThrust)
     ) {
-      this.throttle = Util.clamp(value, 0, 1);
+      this.throttle = Util.clamp(value);
     }
   }
 
@@ -165,7 +163,6 @@ export default class Engine extends BaseEntity {
   }
 
   onAdd(): void {
-    this.game.addEntity(this.soundController);
     for (const flap of this.flaps) {
       this.game.addEntity(flap);
     }
@@ -265,7 +262,6 @@ export default class Engine extends BaseEntity {
   }
 
   onDestroy() {
-    this.soundController.destroy();
     for (const flap of this.flaps) {
       flap.destroy();
     }
@@ -283,7 +279,7 @@ export default class Engine extends BaseEntity {
   }
 
   doCollisionDamage() {
-    this.collisionLength += 1;
+    this.collisionLength += this.game.tickTimestep;
     const momentum = this.getMomentum();
     const xDifference = Math.abs(momentum[0] - this.lastMomentum[0]);
     const yDifference = Math.abs(momentum[1] - this.lastMomentum[1]);

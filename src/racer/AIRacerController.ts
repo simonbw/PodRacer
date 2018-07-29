@@ -14,7 +14,7 @@ const TURN_FACTOR_NEAR = 0.005;
 
 export default class PlayerRacerController extends BaseEntity {
   racer: Racer;
-  race: Race;
+  race?: Race;
 
   constructor(racer: Racer, race: Race) {
     super();
@@ -23,8 +23,9 @@ export default class PlayerRacerController extends BaseEntity {
   }
 
   beforeTick() {
+    // TODO: The race should be in charge of destroying things it created
     if (this.race && !this.race.game) {
-      this.race = null;
+      this.race = undefined;
     }
 
     if (this.race) {
@@ -73,7 +74,7 @@ export default class PlayerRacerController extends BaseEntity {
         turnAmount ** 3 * TURN_FACTOR_LINEAR + turnAmount * TURN_FACTOR_CUBIC; // TODO: Tune this
       turnAmount /=
         1 + TURN_FACTOR_NEAR * Math.sqrt(waypointDistance / (speed + 1));
-      turnAmount = Util.clamp(turnAmount);
+      turnAmount = Util.clamp(turnAmount, -1, 1);
 
       this.racer.leftEngine.setThrottle((1.0 + turnAmount) * MAX_THROTTLE);
       this.racer.rightEngine.setThrottle((1.0 - turnAmount) * MAX_THROTTLE);

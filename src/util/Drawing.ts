@@ -43,7 +43,7 @@ export default class Drawing extends BaseEntity {
       this.sprites.set(layerName, sprite);
       this.game.renderer.add(sprite, layerName);
     }
-    return this.sprites.get(layerName);
+    return this.sprites.get(layerName)!;
   }
 
   beforeTick() {

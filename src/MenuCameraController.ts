@@ -9,12 +9,10 @@ export default class MenuCameraController extends BaseEntity {
 
   onAdd() {
     this.camera = this.game.camera;
-    this.camera.vx = 0;
-    this.camera.vy = 0;
   }
 
   onRender() {
-    this.camera.x += 0.05 * Math.sin(-this.game.elapsedTime / 2); // TODO: make non-framerate dependent
-    this.camera.y += 0.05 * Math.cos(-this.game.elapsedTime / 2);
+    this.camera.vx = 3 * Math.sin(-this.game.elapsedTime / 3);
+    this.camera.vy = 3 * Math.cos(-this.game.elapsedTime / 3);
   }
 }
