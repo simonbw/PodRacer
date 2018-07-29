@@ -1,5 +1,5 @@
 import FilterList from "../util/FilterList";
-import Entity from "./Entity/index";
+import Entity from "./entity/Entity";
 
 export default class EntityList implements Iterable<Entity> {
   all = new Set<Entity>();

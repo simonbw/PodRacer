@@ -4,9 +4,9 @@ import FPSMeter from "./util/FPSMeter";
 import Game from "./core/Game";
 import Ground from "./environment/Ground";
 import MainMenu from "./menu/MainMenu";
-import { waitForFontsLoaded } from "./core/fonts";
-import { loadPixiAssets } from "./images";
-import { loadAllSounds } from "./sounds";
+import { waitForFontsLoaded } from "./core/resources/fonts";
+import { loadPixiAssets } from "./core/resources/images";
+import { loadAllSounds } from "./core/resources/sounds";
 
 declare global {
   interface Window {

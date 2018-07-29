@@ -1,6 +1,6 @@
-import BaseEntity from "./core/BaseEntity";
-import Camera from "./core/Camera";
-import { Vector } from "./core/Vector";
+import BaseEntity from "../core/entity/BaseEntity";
+import Camera from "../core/Camera";
+import { Vector } from "../core/Vector";
 
 export default class MenuCameraController extends BaseEntity {
   zoom = 0.1;

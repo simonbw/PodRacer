@@ -1,5 +1,5 @@
 import { Matrix, Point } from "pixi.js";
-import BaseEntity from "./BaseEntity";
+import BaseEntity from "./entity/BaseEntity";
 import GameRenderer from "./GameRenderer";
 import { Vector } from "./Vector";
 import { LayerInfo } from "./Layers";

@@ -2,7 +2,7 @@ import * as Materials from "../physics/Materials";
 import * as Pixi from "pixi.js";
 import { applyAerodynamics } from "../physics/Aerodynamics";
 import ControlFlap from "./ControlFlap";
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import p2 from "p2";
 import {
   FlapDef,
@@ -12,7 +12,7 @@ import {
 import { Vector } from "../core/Vector";
 import { PodDef } from "./RacerDefs/PodDef";
 import Game from "../core/Game";
-import Entity from "../core/Entity/index";
+import Entity from "../core/entity/Entity";
 
 export default class Pod extends BaseEntity {
   sprite = new Pixi.Graphics();
@@ -68,6 +68,10 @@ export default class Pod extends BaseEntity {
 
   get size(): Vector {
     return this.podDef.size;
+  }
+
+  get velocity(): Vector {
+    return this.body.velocity as Vector;
   }
 
   // Set the control value on all the racer's flaps

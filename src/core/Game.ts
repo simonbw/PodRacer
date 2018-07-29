@@ -3,7 +3,7 @@ import GameRenderer from "./GameRenderer";
 import p2 from "p2";
 import { IOManager } from "./IO";
 import * as Materials from "../physics/Materials";
-import Entity from "./Entity/index";
+import Entity from "./entity/Entity";
 import Camera from "./Camera";
 import EntityList from "./EntityList";
 

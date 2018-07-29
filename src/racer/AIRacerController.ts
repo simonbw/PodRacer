@@ -1,4 +1,4 @@
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import p2 from "p2";
 import * as Util from "../util/Util";
 import Racer from "./Racer";

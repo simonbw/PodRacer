@@ -1,6 +1,6 @@
 import * as Pixi from "pixi.js";
-import BaseEntity from "../core/BaseEntity";
-import { MAIN_FONT } from "../core/fonts";
+import BaseEntity from "../core/entity/BaseEntity";
+import { MAIN_FONT } from "../core/resources/fonts";
 
 const WIDTH = 300;
 const HEIGHT = 80;

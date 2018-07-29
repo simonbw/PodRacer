@@ -1,9 +1,9 @@
-import Game from "./Game";
+import Game from "../Game";
 import p2 from "p2";
-import Entity from "./Entity/index";
+import Entity from "./Entity";
 import Pixi from "pixi.js";
-import { Vector } from "./Vector";
-import { LayerName } from "./Layers";
+import { Vector } from "../Vector";
+import { LayerName } from "../Layers";
 
 /**
  * Base class for lots of stuff in the game

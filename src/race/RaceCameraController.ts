@@ -1,6 +1,6 @@
-import BaseEntity from "./core/BaseEntity";
-import Racer from "./racer/Racer";
-import Camera from "./core/Camera";
+import BaseEntity from "../core/entity/BaseEntity";
+import Racer from "../racer/Racer";
+import Camera from "../core/Camera";
 
 export default class RaceCameraController extends BaseEntity {
   racer: Racer;

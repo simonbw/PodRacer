@@ -1,4 +1,4 @@
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import { Vector } from "../core/Vector";
 import { clamp } from "../util/Util";
 

@@ -1,5 +1,5 @@
 import * as Pixi from "pixi.js";
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import * as Materials from "../physics/Materials";
 import p2 from "p2";
 

@@ -1,6 +1,6 @@
 import * as Pixi from "pixi.js";
-import BaseEntity from "../core/BaseEntity";
-import { HEADING_FONT } from "../core/fonts";
+import BaseEntity from "../core/entity/BaseEntity";
+import { HEADING_FONT } from "../core/resources/fonts";
 
 export default class FPSMeter extends BaseEntity {
   layer: "hud" = "hud";

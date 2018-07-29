@@ -1,6 +1,6 @@
 import * as Pixi from "pixi.js";
-import BaseEntity from "../core/BaseEntity";
-import { imageUrls } from "../images";
+import BaseEntity from "../core/entity/BaseEntity";
+import { imageUrls } from "../core/resources/images";
 
 const SIZE = 100000;
 

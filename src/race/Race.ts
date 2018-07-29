@@ -1,4 +1,4 @@
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import * as Util from "../util/Util";
 import { Waypoint } from "./Waypoint";
 import Racer from "../racer/Racer";

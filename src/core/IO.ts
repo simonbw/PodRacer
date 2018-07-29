@@ -1,7 +1,7 @@
 import * as Keys from "./constants/Keys";
 import * as MouseButtons from "./constants/MouseButtons";
 import { Vector } from "./Vector";
-import IOEventHandler from "./Entity/IOEventHandler";
+import IOEventHandler from "./entity/IOEventHandler";
 import IOHandlerList from "./IOHandlerList";
 import { ControllerAxis, ControllerButton } from "./constants/Gamepad";
 

@@ -5,10 +5,11 @@ import MenuOption from "./MenuOption";
 import PauseController from "../core/PauseController";
 import PlayerRacerController from "../racer/PlayerRacerController";
 import Race from "../race/Race";
-import RaceCameraController from "../RaceCameraController";
+import RaceCameraController from "../race/RaceCameraController";
 import Racer from "../racer/Racer";
 import { Vector } from "../core/Vector";
 import { Anakin } from "../racer/RacerDefs/index";
+import PlayerSoundController from "../sound/PlayerSoundController";
 
 export default class NewGameMenu extends ListMenu {
   makeOptions() {
@@ -63,6 +64,7 @@ export default class NewGameMenu extends ListMenu {
 
     this.game.addEntity(racer);
     this.game.addEntity(new PlayerRacerController(racer));
+    this.game.addEntity(new PlayerSoundController(racer));
     this.game.addEntity(new RaceCameraController(racer, this.game.camera));
 
     this.destroy();

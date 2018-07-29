@@ -1,4 +1,4 @@
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 
 export class MuteOnPause extends BaseEntity {
   out: GainNode;

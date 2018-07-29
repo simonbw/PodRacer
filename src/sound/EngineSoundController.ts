@@ -1,9 +1,9 @@
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import PositionSoundFilter from "./PositionSoundFilter";
 import Engine from "../racer/Engine";
-import { sounds } from "../sounds";
+import { sounds } from "../core/resources/sounds";
 import { clamp } from "../util/Util";
-import { startAtRandomOffset } from "../util/AudioUtils";
+import { startAtRandomOffset, createLoopingSource } from "../util/AudioUtils";
 
 export default class EngineSoundController extends BaseEntity {
   engine: Engine;
@@ -23,32 +23,25 @@ export default class EngineSoundController extends BaseEntity {
   }
 
   onAdd() {
-    this.out = this.game.audio.createGain();
+    const audio = this.game.audio;
+
+    this.out = audio.createGain();
     this.positionFilter = this.game.addEntity(new PositionSoundFilter());
 
-    this.chugSource = this.game.audio.createBufferSource();
-    this.chugSource.buffer = sounds.get("engineChug")!;
-    this.chugSource.loop = true;
-    startAtRandomOffset(this.chugSource);
-    this.chugGain = this.game.audio.createGain();
+    this.chugSource = createLoopingSource(audio, "engineChug");
+    this.chugGain = audio.createGain();
     this.chugGain.gain.value = 0;
     this.chugSource.connect(this.chugGain);
     this.chugGain.connect(this.positionFilter.in);
 
-    this.whineSource = this.game.audio.createBufferSource();
-    this.whineSource.buffer = sounds.get("engineWhine")!;
-    this.whineSource.loop = true;
-    startAtRandomOffset(this.whineSource);
-    this.whineGain = this.game.audio.createGain();
+    this.whineSource = createLoopingSource(audio, "engineWhine");
+    this.whineGain = audio.createGain();
     this.whineGain.gain.value = 0;
     this.whineSource.connect(this.whineGain);
     this.whineGain.connect(this.positionFilter.in);
 
-    this.growlSource = this.game.audio.createBufferSource();
-    this.growlSource.buffer = sounds.get("engineGrowl")!;
-    this.growlSource.loop = true;
-    startAtRandomOffset(this.growlSource);
-    this.growlGain = this.game.audio.createGain();
+    this.growlSource = createLoopingSource(audio, "engineGrowl");
+    this.growlGain = audio.createGain();
     this.growlGain.gain.value = 0;
     this.growlSource.connect(this.growlGain);
     this.growlGain.connect(this.positionFilter.in);

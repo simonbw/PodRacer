@@ -1,12 +1,12 @@
 import * as Keys from "../core/constants/Keys";
 import * as Pixi from "pixi.js";
-import BaseEntity from "../core/BaseEntity";
-import MenuCameraController from "../MenuCameraController";
+import BaseEntity from "../core/entity/BaseEntity";
+import MenuCameraController from "./MenuCameraController";
 import * as Util from "../util/Util";
 import MenuOption from "./MenuOption";
-import { HEADING_FONT } from "../core/fonts";
+import { HEADING_FONT } from "../core/resources/fonts";
 import { ControllerAxis, ControllerButton } from "../core/constants/Gamepad";
-import Entity from "../core/Entity/index";
+import Entity from "../core/entity/Entity";
 
 const DOWN_THRESHOLD = 250;
 

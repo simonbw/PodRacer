@@ -1,6 +1,6 @@
 import * as Pixi from "pixi.js";
 
-import ground from "./assets/images/ground.jpg";
+import ground from "../../assets/images/ground.jpg";
 
 export const imageUrls = {
   ground

@@ -1,15 +1,18 @@
 import * as Pixi from "pixi.js";
 
-import engineChug from "./assets/audio/engine-chug1.wav";
-import engineGrowl from "./assets/audio/engine-growl1.wav";
-import engineWhine from "./assets/audio/engine-whine1.wav";
+import engineChug from "../../assets/sounds/engine-chug1.wav";
+import engineGrowl from "../../assets/sounds/engine-growl1.wav";
+import engineWhine from "../../assets/sounds/engine-whine1.wav";
+import wind from "../../assets/sounds/wind1.wav";
 
 const soundUrls = {
   engineChug,
   engineGrowl,
-  engineWhine
+  engineWhine,
+  wind
 };
-type SoundName = keyof typeof soundUrls;
+
+export type SoundName = keyof typeof soundUrls;
 
 export const sounds: Map<SoundName, AudioBuffer> = new Map();
 

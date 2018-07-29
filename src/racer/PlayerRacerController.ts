@@ -1,5 +1,5 @@
 import * as Keys from "../core/constants/Keys";
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import Ground from "../environment/Ground";
 import MainMenu from "../menu/MainMenu";
 import Racer from "./Racer";

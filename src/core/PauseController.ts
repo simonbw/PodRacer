@@ -1,5 +1,5 @@
 import * as Keys from "./constants/Keys";
-import BaseEntity from "./BaseEntity";
+import BaseEntity from "./entity/BaseEntity";
 import PauseMenu from "../menu/PauseMenu";
 import { ControllerButton } from "./constants/Gamepad";
 

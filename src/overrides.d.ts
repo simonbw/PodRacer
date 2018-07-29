@@ -1,6 +1,6 @@
 import p2 from "p2";
 import * as Pixi from "pixi.js";
-import Entity from "./core/Entity/index";
+import Entity from "./core/entity/Entity";
 
 export default interface MaybeHasOwner {
   owner?: Entity;

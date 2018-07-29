@@ -1,6 +1,6 @@
 import Coupling from "./Coupling";
 import Engine from "./Engine";
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import { LinearSpring } from "p2";
 import Pod from "./Pod";
 import RopeSpring from "../physics/RopeSpring";

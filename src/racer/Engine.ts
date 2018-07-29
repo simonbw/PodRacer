@@ -3,7 +3,7 @@ import * as Pixi from "pixi.js";
 import * as Random from "../util/Random";
 import * as Util from "../util/Util";
 import ControlFlap from "./ControlFlap";
-import BaseEntity from "../core/BaseEntity";
+import BaseEntity from "../core/entity/BaseEntity";
 import p2 from "p2";
 import EngineSoundController from "../sound/EngineSoundController";
 import { applyAerodynamics } from "../physics/Aerodynamics";
@@ -14,7 +14,7 @@ import {
   FlapDef,
   WithPosition
 } from "./RacerDefs/FlapDef";
-import Entity from "../core/Entity/index";
+import Entity from "../core/entity/Entity";
 import { ConditionList, Condition } from "./Conditions";
 
 type Momentum = [number, number, number];
