@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "pod-racer",
+  "alias": ["pod-racer", "podracer.simonbw.com"],
+  "builds": [{ "src": "./dist/**", "use": "@now/static" }],
+  "routes": [{ "src": "/?(.*)", "dest": "/dist/$1" }]
+}
