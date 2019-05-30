@@ -17,7 +17,7 @@ export default abstract class ListMenu extends BaseEntity {
 
   text: Pixi.Text;
   options: MenuOption[];
-  cameraController = new MenuCameraController();
+  cameraController? = new MenuCameraController();
   lastMoveTime: number;
   currentOption: number;
   frameAdded: number;
@@ -32,8 +32,9 @@ export default abstract class ListMenu extends BaseEntity {
     this.sprite.x = 20;
     this.sprite.y = 100;
     this.sprite.addChild(this.text);
-    this.game.addEntity(this.cameraController);
+
     this.lastMoveTime = Date.now();
+
     this.options = this.makeOptions();
     for (const option of this.options) {
       this.game.addEntity(option);
@@ -41,6 +42,12 @@ export default abstract class ListMenu extends BaseEntity {
     this.currentOption = 0;
     this.selectOption(0);
     this.frameAdded = this.game.framenumber;
+
+    if (this.cameraController) {
+      this.game.addEntity(this.cameraController);
+    }
+
+    this.game.renderer.hideCursor();
   }
 
   abstract makeOptions(): MenuOption[];
@@ -120,7 +127,9 @@ export default abstract class ListMenu extends BaseEntity {
   }
 
   onDestroy() {
-    this.cameraController.destroy();
+    if (this.cameraController) {
+      this.cameraController.destroy();
+    }
     for (const option of this.options) {
       option.destroy();
     }

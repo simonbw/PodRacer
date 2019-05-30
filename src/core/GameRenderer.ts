@@ -5,6 +5,7 @@ import { LayerName, LayerInfo, Layers } from "./Layers";
 // The thing that renders stuff to the screen. Mostly for handling layers.
 export default class GameRenderer {
   private layerInfos: Map<LayerName, LayerInfo> = new Map();
+  private cursor: string = "none";
 
   pixiRenderer: Pixi.WebGLRenderer | Pixi.CanvasRenderer;
   stage: Pixi.Container;
@@ -21,6 +22,8 @@ export default class GameRenderer {
       }
     );
     document.body.appendChild(this.pixiRenderer.view);
+    this.hideCursor();
+
     this.stage = new Pixi.Container();
     this.camera = new Camera(this);
 
@@ -44,12 +47,21 @@ export default class GameRenderer {
     this.pixiRenderer.resize(window.innerWidth, window.innerHeight);
   }
 
+  hideCursor() {
+    this.cursor = "none";
+  }
+
+  showCursor() {
+    this.cursor = "auto";
+  }
+
   // Render the current frame.
   render() {
     for (const layerInfo of this.layerInfos.values()) {
       this.camera.updateLayer(layerInfo);
     }
     this.pixiRenderer.render(this.stage);
+    this.pixiRenderer.view.style.cursor = this.cursor;
   }
 
   add(

@@ -1,4 +1,6 @@
 import BaseEntity from "../core/entity/BaseEntity";
+import TrackEditCameraController from "./TrackEditCameraController";
+import PauseController from "../core/PauseController";
 
 export class TrackEditMode extends BaseEntity {
   constructor() {
@@ -6,6 +8,9 @@ export class TrackEditMode extends BaseEntity {
   }
 
   onAdd() {
-    console.log("add your track");
+    this.game.addEntity(new TrackEditCameraController());
+    this.game.addEntity(new PauseController());
   }
+
+  onDestroy() {}
 }

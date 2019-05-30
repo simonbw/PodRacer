@@ -1,12 +1,12 @@
 import BaseEntity from "../core/entity/BaseEntity";
 import * as Util from "../util/Util";
-import { Waypoint } from "./Waypoint";
+import { WaypointMarker } from "./Waypoint";
 import Racer from "../racer/Racer";
 import { Vector } from "../core/Vector";
 
 export default class Race extends BaseEntity {
   laps: number;
-  waypoints: Waypoint[] = [];
+  waypoints: WaypointMarker[] = [];
   racers: Racer[] = [];
   // stores the index of the waypoint a racer is currently on
   racerWaypointIndexes = new Map<Racer, number>();
@@ -25,7 +25,7 @@ export default class Race extends BaseEntity {
   }
 
   addWaypoint(center: Vector, radius = 20) {
-    this.waypoints.push(new Waypoint(center, radius));
+    this.waypoints.push(new WaypointMarker(center, radius));
   }
 
   addRacer(racer: Racer) {

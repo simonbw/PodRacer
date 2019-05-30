@@ -4,6 +4,8 @@ import MainMenu from "./MainMenu";
 import MenuOption from "./MenuOption";
 
 export default class PauseMenu extends ListMenu {
+  cameraController: undefined;
+
   makeOptions() {
     return [
       new MenuOption("Continue", 20, 180, () => this.unPause()),

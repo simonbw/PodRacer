@@ -3,8 +3,6 @@ import Camera from "../core/Camera";
 import { Vector } from "../core/Vector";
 
 export default class MenuCameraController extends BaseEntity {
-  zoom = 0.1;
-  position = [0, 0] as Vector;
   camera: Camera;
 
   onAdd() {

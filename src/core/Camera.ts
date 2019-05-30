@@ -3,6 +3,7 @@ import BaseEntity from "./entity/BaseEntity";
 import GameRenderer from "./GameRenderer";
 import { Vector } from "./Vector";
 import { LayerInfo } from "./Layers";
+import { lerp, lerpOrSnap } from "../util/Util";
 
 //  Controls the viewport.
 export default class Camera extends BaseEntity {
@@ -77,8 +78,12 @@ export default class Camera extends BaseEntity {
   ) {
     const dx = (x - this.x) * this.game.framerate;
     const dy = (y - this.y) * this.game.framerate;
-    this.vx = 0.1 * this.vx + 0.9 * (vx + (1 - smooth) * dx);
-    this.vy = 0.1 * this.vy + 0.9 * (vy + (1 - smooth) * dy);
+    this.smoothSetVelocity([vx + dx, vy + dy] as Vector, smooth);
+  }
+
+  smoothSetVelocity([vx, vy]: Vector, smooth: number = 0.9) {
+    this.vx = lerpOrSnap(this.vx, vx, smooth);
+    this.vy = lerpOrSnap(this.vy, vy, smooth);
   }
 
   // Move the camera part of the way to the desired zoom.

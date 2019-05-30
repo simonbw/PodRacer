@@ -14,6 +14,22 @@ export function smoothStep(value: number): number {
   return value * value * (3 - 2 * value);
 }
 
+export function lerp(a: number, b: number, t: number = 0.5): number {
+  return (1 - t) * a + t * b;
+}
+
+export function lerpOrSnap(
+  a: number,
+  b: number,
+  t: number = 0.5,
+  threshold: number = 0.01
+): number {
+  if (Math.abs(b - a) < threshold) {
+    return b;
+  }
+  return lerp(a, b, t);
+}
+
 // Return the difference between two angles
 export function angleDelta(a: number, b: number): number {
   return mod(b - a + Math.PI, Math.PI * 2) - Math.PI;

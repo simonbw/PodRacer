@@ -35,6 +35,9 @@ export const X = 88;
 export const Y = 89;
 export const Z = 90;
 
+export const EQUALS = 187;
+export const PLUS = 187;
 export const COMMA = 188;
+export const MINUS = 189;
 export const PERIOD = 190;
 export const SLASH = 191;

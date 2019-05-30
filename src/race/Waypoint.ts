@@ -2,7 +2,7 @@ import BaseEntity from "../core/entity/BaseEntity";
 import { Vector } from "../core/Vector";
 import * as Pixi from "pixi.js";
 
-export class Waypoint extends BaseEntity {
+export class WaypointMarker extends BaseEntity {
   center: Vector;
   radius: number;
   sprite = new Pixi.Graphics();
