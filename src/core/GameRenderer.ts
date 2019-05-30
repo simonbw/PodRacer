@@ -13,14 +13,12 @@ export default class GameRenderer {
 
   constructor() {
     Pixi.settings.RESOLUTION = window.devicePixelRatio || 1;
-    this.pixiRenderer = Pixi.autoDetectRenderer(
-      window.innerWidth,
-      window.innerHeight,
-      {
-        antialias: false,
-        resolution: Pixi.settings.RESOLUTION
-      }
-    );
+    this.pixiRenderer = Pixi.autoDetectRenderer({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      antialias: false,
+      resolution: Pixi.settings.RESOLUTION
+    });
     document.body.appendChild(this.pixiRenderer.view);
     this.hideCursor();
 

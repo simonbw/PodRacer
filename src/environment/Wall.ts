@@ -2,6 +2,7 @@ import * as Pixi from "pixi.js";
 import BaseEntity from "../core/entity/BaseEntity";
 import * as Materials from "../physics/Materials";
 import p2 from "p2";
+import { Vector } from "../core/Vector";
 
 export default class Wall extends BaseEntity {
   sprite = new Pixi.Graphics();
@@ -31,7 +32,7 @@ export default class Wall extends BaseEntity {
     const bodyProps = {
       mass: 0,
       material: Materials.WALL,
-      position: [x, y]
+      position: [x, y] as Vector
     };
     this.body = new p2.Body(bodyProps);
     const shape = new p2.Box({ width: this.w, height: this.h });

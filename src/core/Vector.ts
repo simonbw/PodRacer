@@ -1,4 +1,5 @@
 type ArrayNumLength2 = [number, number];
+
 export interface Vector extends ArrayNumLength2 {
   // Alias for v[0]
   x: number;

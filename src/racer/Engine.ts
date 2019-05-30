@@ -226,7 +226,7 @@ export default class Engine extends BaseEntity {
   onTick() {
     applyAerodynamics(this.body, this.engineDef.drag, this.engineDef.drag);
     const force = this.getCurrentForce();
-    const forcePoint = [0, 0.5 * this.engineDef.size[1]];
+    const forcePoint = [0, 0.5 * this.engineDef.size[1]] as Vector;
     this.body.applyForceLocal([0, -force], forcePoint);
 
     this.conditions.cooldown(this.game.tickTimestep);
