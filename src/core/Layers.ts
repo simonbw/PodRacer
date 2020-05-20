@@ -5,9 +5,10 @@ export class LayerInfo {
   readonly layer: Pixi.Container;
   readonly scroll: number;
 
-  constructor(scroll: number) {
+  constructor(scroll: number, filters: Pixi.Filter<any>[] = []) {
     this.scroll = scroll;
     this.layer = new Pixi.Container();
+    this.layer.filters = filters;
   }
 }
 

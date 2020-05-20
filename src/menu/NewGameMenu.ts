@@ -16,7 +16,7 @@ export default class NewGameMenu extends ListMenu {
     return [
       new MenuOption("Free Play", 20, 180, () => this.startFreePlay()),
       new MenuOption("Race", 20, 280, () => this.startRace()),
-      new MenuOption("Back", 20, 380, () => this.cancel())
+      new MenuOption("Back", 20, 380, () => this.cancel()),
     ];
   }
 

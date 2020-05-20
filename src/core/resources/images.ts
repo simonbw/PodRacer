@@ -1,9 +1,11 @@
 import * as Pixi from "pixi.js";
 
 import ground from "../../assets/images/ground.jpg";
+import displace from "../../assets/images/displace.png";
 
 export const imageUrls = {
-  ground
+  ground,
+  displace
 };
 
 export function loadPixiAssets() {

@@ -4,6 +4,8 @@
     "Michael Wiktorek (https://github.com/michaelwiktorek)"
   ],
   "dependencies": {
+    "@pixi/filter-bulge-pinch": "^3.0.3",
+    "@pixi/filter-motion-blur": "^3.0.3",
     "@types/fontfaceobserver": "^0.0.6",
     "@types/p2": "^0.7.32",
     "@types/pixi.js": "^4.8.7",

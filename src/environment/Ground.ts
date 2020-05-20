@@ -1,12 +1,13 @@
 import * as Pixi from "pixi.js";
 import BaseEntity from "../core/entity/BaseEntity";
 import { imageUrls } from "../core/resources/images";
+import { LayerName } from "../core/Layers";
 
 const SIZE = 100000;
 
 export default class Ground extends BaseEntity {
   sprite: Pixi.Sprite;
-  layer: "world_back" = "world_back";
+  layer: LayerName = "world_back";
 
   constructor() {
     super();

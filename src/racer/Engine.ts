@@ -12,10 +12,11 @@ import { EngineDef } from "./RacerDefs/EngineDef";
 import {
   ControlFlapDirection,
   FlapDef,
-  WithPosition
+  WithPosition,
 } from "./RacerDefs/FlapDef";
 import Entity from "../core/entity/Entity";
 import { ConditionList, Condition } from "./Conditions";
+import HeatEffect from "../effects/heatEffect";
 
 type Momentum = [number, number, number];
 
@@ -67,7 +68,7 @@ export default class Engine extends BaseEntity {
       damping: 0.0,
       mass: this.engineDef.mass,
       material: Materials.RACER,
-      position
+      position,
     };
     this.body = new p2.Body(bodyProps);
 
@@ -79,7 +80,7 @@ export default class Engine extends BaseEntity {
     const shape2Vertices = [
       [0.5 * w, -0.5 * h],
       [-0.5 * w, -0.5 * h],
-      [0, -0.7 * h]
+      [0, -0.7 * h],
     ];
     const shape2 = new p2.Convex({ vertices: shape2Vertices });
     (shape2 as any).aerodynamicsEnabled = false;
@@ -94,7 +95,7 @@ export default class Engine extends BaseEntity {
 
       const position = [
         ((isLeftFlap ? -1 : 1) * this.engineDef.size[0]) / 2,
-        engineFlapDef.y
+        engineFlapDef.y,
       ] as Vector;
 
       const direction = isLeftFlap
@@ -104,7 +105,7 @@ export default class Engine extends BaseEntity {
       const flapDef: FlapDef & WithPosition = {
         ...engineFlapDef,
         position,
-        direction
+        direction,
       };
       this.flaps.push(new ControlFlap(this.body, flapDef));
     }
@@ -186,11 +187,11 @@ export default class Engine extends BaseEntity {
 
     const left = [
       -0.5 * this.engineDef.size[0],
-      0.5 * this.engineDef.size[1]
+      0.5 * this.engineDef.size[1],
     ] as Vector;
     const right = [
       0.5 * this.engineDef.size[0],
-      0.5 * this.engineDef.size[1]
+      0.5 * this.engineDef.size[1],
     ] as Vector;
     const leftWorld = this.localToWorld(left);
     const rightWorld = this.localToWorld(right);
@@ -200,25 +201,25 @@ export default class Engine extends BaseEntity {
     let endPoint;
     endPoint = this.localToWorld([
       (left[0] + right[0]) / 2,
-      (2.5 + rand) * this.throttle + 0.5 * this.engineDef.size[1]
+      (2.5 + rand) * this.throttle + 0.5 * this.engineDef.size[1],
     ] as Vector);
     this.game.draw.triangle(leftWorld, endPoint, rightWorld, 0x0000ff, 0.2);
 
     endPoint = this.localToWorld([
       (left[0] + right[0]) / 2,
-      (1.6 + rand) * this.throttle + 0.5 * this.engineDef.size[1]
+      (1.6 + rand) * this.throttle + 0.5 * this.engineDef.size[1],
     ] as Vector);
     this.game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00aaff, 0.4);
 
     endPoint = this.localToWorld([
       (left[0] + right[0]) / 2,
-      (0.5 + rand) * this.throttle + 0.5 * this.engineDef.size[1]
+      (0.5 + rand) * this.throttle + 0.5 * this.engineDef.size[1],
     ] as Vector);
     this.game.draw.triangle(leftWorld, endPoint, rightWorld, 0x00ffff, 0.6);
 
     endPoint = this.localToWorld([
       (left[0] + right[0]) / 2,
-      (0.15 + rand) * this.throttle + 0.5 * this.engineDef.size[1]
+      (0.15 + rand) * this.throttle + 0.5 * this.engineDef.size[1],
     ] as Vector);
     this.game.draw.triangle(leftWorld, endPoint, rightWorld, 0xffffff, 0.8);
   }

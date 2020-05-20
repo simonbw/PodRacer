@@ -16,7 +16,7 @@ export default class GameRenderer {
     this.pixiRenderer = Pixi.autoDetectRenderer({
       width: window.innerWidth,
       height: window.innerHeight,
-      antialias: false,
+      antialias: true,
       resolution: Pixi.settings.RESOLUTION
     });
     document.body.appendChild(this.pixiRenderer.view);
@@ -73,5 +73,11 @@ export default class GameRenderer {
   // Remove a child from a specific layer.
   remove(sprite: Pixi.DisplayObject, layerName: LayerName = "world"): void {
     this.getLayerInfo(layerName).layer.removeChild(sprite);
+  }
+
+  addFilter(filter: Pixi.Filter<any>, layerName: LayerName): void {
+    const layer = this.getLayerInfo(layerName).layer;
+    layer.filters = [...layer.filters!, filter];
+    console.log(`filter added to ${layerName}`, filter);
   }
 }
